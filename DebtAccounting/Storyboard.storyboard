@@ -199,7 +199,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="JAB-WN-36T">
-                                <rect key="frame" x="20" y="152.99999999999997" width="300" height="354.33333333333326"/>
+                                <rect key="frame" x="16" y="137.99999999999997" width="300" height="354.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="U2k-k3-cp8">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="62.333333333333336"/>
@@ -212,7 +212,7 @@
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Wdc-Sl-WBe">
                                                 <rect key="frame" x="0.0" y="28.333333333333343" width="300" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                         </subviews>
@@ -274,12 +274,12 @@
                         <viewLayoutGuide key="safeArea" id="jLr-ta-rLr"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="JAB-WN-36T" firstAttribute="top" secondItem="jLr-ta-rLr" secondAttribute="top" constant="50" id="To1-dn-XRY"/>
-                            <constraint firstItem="JAB-WN-36T" firstAttribute="leading" secondItem="jLr-ta-rLr" secondAttribute="leading" constant="20" id="msR-OM-h4R"/>
+                            <constraint firstItem="JAB-WN-36T" firstAttribute="top" secondItem="jLr-ta-rLr" secondAttribute="top" constant="35" id="m0o-ql-wAe"/>
+                            <constraint firstItem="JAB-WN-36T" firstAttribute="leading" secondItem="jLr-ta-rLr" secondAttribute="leading" constant="16" id="msR-OM-h4R"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="27.11.2004" id="ph1-mB-v1i">
-                        <barButtonItem key="leftBarButtonItem" title="Item" image="Backward Black" id="0px-tZ-990">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="chevron.backward" catalog="system" id="0px-tZ-990">
                             <color key="tintColor" name="YP Black"/>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="4IW-4Q-2SH">
@@ -579,6 +579,7 @@
     <resources>
         <image name="Backward Black" width="24" height="24"/>
         <image name="checkmark" catalog="system" width="128" height="114"/>
+        <image name="chevron.backward" catalog="system" width="97" height="128"/>
         <image name="clock.fill" catalog="system" width="128" height="123"/>
         <image name="gobackward" catalog="system" width="119" height="128"/>
         <image name="house.circle.fill" catalog="system" width="128" height="123"/>

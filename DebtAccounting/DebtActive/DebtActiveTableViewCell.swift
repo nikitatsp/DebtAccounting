@@ -1,13 +1,18 @@
 import UIKit
 
-class TableViewCell: UITableViewCell {
-    static let reuseIdentifier = "cell"
+protocol DebtActiveTableViewCellDelegate: AnyObject {
+    func didDoneButtonTapped(_ cell: DebtActiveTableViewCell)
+}
+
+class DebtActiveTableViewCell: UITableViewCell {
+    static let reuseIdentifier = "Activecell"
     
     var nameLabel = UILabel()
     var sumLabel = UILabel()
     private let stackView = UIStackView()
-    private lazy var backButton = UIButton()
-    private lazy var doneButton = UIButton()
+    var doneButton = UIButton()
+    
+    weak var delegate: DebtActiveTableViewCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -15,6 +20,7 @@ class TableViewCell: UITableViewCell {
         configureNameLabel()
         configureSumLabel()
         configureStackView()
+        configureDoneButton()
         setConstraints()
     }
     
@@ -46,36 +52,18 @@ class TableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func setConstraints() {
-        NSLayoutConstraint.activate([
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16)
-        ])
-    }
-    
-    func addBackButton() {
-        backButton.setImage(UIImage(systemName: "gobackward"), for: .normal)
-        contentView.addSubview(backButton)
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.tintColor = UIColor(named: "YP Black")
-        
-        NSLayoutConstraint.activate([
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44),
-            backButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            backButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
-        ])
-    }
-    
-    func addDoneButton() {
+    func configureDoneButton() {
         doneButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
         contentView.addSubview(doneButton)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         doneButton.tintColor = UIColor(named: "YP Black")
-        
+    }
+    
+    private func setConstraints() {
         NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             doneButton.widthAnchor.constraint(equalToConstant: 44),
             doneButton.heightAnchor.constraint(equalToConstant: 44),
             doneButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -83,6 +71,7 @@ class TableViewCell: UITableViewCell {
         ])
     }
     
-    @objc func backButtonTapped() {}
-    @objc func doneButtonTapped() {}
+    @objc func doneButtonTapped() {
+        delegate?.didDoneButtonTapped(self)
+    }
 }

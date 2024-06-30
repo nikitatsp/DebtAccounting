@@ -20,10 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.tintColor = UIColor(named: "YP Black")
         
         let mainViewController = UINavigationController(rootViewController: MainViewController())
-        let activeViewController = TableViewController()
-        activeViewController.tittle = "Активные долги"
-        let historyViewController = TableViewController()
-        historyViewController.tittle = "История"
+        let activeViewController = DebtActiveTableViewController()
+        let historyViewController = DebtHistoryTableViewController()
         
         mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)

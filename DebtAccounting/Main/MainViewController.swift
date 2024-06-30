@@ -1,7 +1,8 @@
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
+    private let model = SumProfile.shared
     private let barButtonItem = UIBarButtonItem()
     private let segmentedControl = UISegmentedControl()
     private let sumLabel = UILabel()
@@ -10,10 +11,18 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setupViews()
         configureNavigationItem()
         configureSegmentedControl()
-        configureSumLabel(sum: 1000, currencyIsRub: true)
+        configureSumLabel(sum: model.sumITo, currencyIsRub: true)
         setConstraints()
+    }
+    
+    private func setupViews() {
+        view.addSubview(segmentedControl)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(sumLabel)
+        sumLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureNavigationItem() {
@@ -24,16 +33,14 @@ class MainViewController: UIViewController {
     }
     
     private func configureSegmentedControl() {
-        view.addSubview(segmentedControl)
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.insertSegment(withTitle: "Я должен", at: 0, animated: false)
         segmentedControl.insertSegment(withTitle: "Мне должны", at: 1, animated: false)
         segmentedControl.selectedSegmentIndex = 0
+        
+        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
     }
     
     private func configureSumLabel(sum: Int, currencyIsRub: Bool) {
-        view.addSubview(sumLabel)
-        sumLabel.translatesAutoresizingMaskIntoConstraints = false
         sumLabel.font = UIFont.systemFont(ofSize: 35, weight: .bold)
         sumLabel.textColor = UIColor(named: "YP Black")
         if currencyIsRub {
@@ -52,6 +59,14 @@ class MainViewController: UIViewController {
             sumLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             sumLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    @objc private func segmentedControlValueChanged() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            configureSumLabel(sum: model.sumITo, currencyIsRub: true)
+        } else {
+            configureSumLabel(sum: model.sumToMe, currencyIsRub: true)
+        }
     }
 }
 
