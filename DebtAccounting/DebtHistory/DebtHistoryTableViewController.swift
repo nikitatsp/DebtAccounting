@@ -2,6 +2,7 @@ import UIKit
 
 final class DebtHistoryTableViewController: UIViewController {
     
+    private let sumProfile = SumProfile.shared
     private let activeProfile = ActiveProfile.shared
     private let historyProfile = HistoryProfile.shared
     
@@ -103,11 +104,11 @@ final class DebtHistoryTableViewController: UIViewController {
         cell.delegate = self
         
         if segmentedControl.selectedSegmentIndex == 0 {
-            cell.nameLabel.text = historyProfile.histIToArr[indexPath.row].name
-            cell.sumLabel.text = "\(historyProfile.histIToArr[indexPath.row].sum)"
+            cell.model = historyProfile.histIToArr[indexPath.row]
+            cell.setDataInCell()
         } else {
-            cell.nameLabel.text = historyProfile.histToMeArr[indexPath.row].name
-            cell.sumLabel.text = "\(historyProfile.histToMeArr[indexPath.row].sum)"
+            cell.model = historyProfile.histToMeArr[indexPath.row]
+            cell.setDataInCell()
         }
     }
     
@@ -124,14 +125,18 @@ extension DebtHistoryTableViewController: DebtHistoryTableViewCellDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         if segmentedControl.selectedSegmentIndex == 0 {
             activeProfile.activeIToArr.append(historyProfile.histIToArr[indexPath.row])
+            sumProfile.sumITo += historyProfile.histIToArr[indexPath.row].sum
             historyProfile.histIToArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: activeProfile.didChangeActiveIToArr, object: nil)
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
             activeProfile.activeToMeArr.append(historyProfile.histToMeArr[indexPath.row])
+            sumProfile.sumToMe += historyProfile.histToMeArr[indexPath.row].sum
             historyProfile.histToMeArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: activeProfile.didChangeActiveToMeArr, object: nil)
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
     }
 }
@@ -162,7 +167,36 @@ extension DebtHistoryTableViewController: UITableViewDataSource {
 
 extension DebtHistoryTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let dataVC = DataEditViewController()
+        dataVC.delegate = self
+        dataVC.indexPath = indexPath
+        
+        if segmentedControl.selectedSegmentIndex == 0 {
+            dataVC.model = historyProfile.histIToArr[indexPath.row]
+        } else {
+            dataVC.model = historyProfile.histToMeArr[indexPath.row]
+        }
+        
+        navigationController?.pushViewController(dataVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+extension DebtHistoryTableViewController: DataEditViewControllerDelegate {
+    func didTapBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model) {
+        navigationController?.popViewController(animated: true)
+        if segmentedControl.selectedSegmentIndex == 0 {
+            historyProfile.histIToArr[indexPath.row] = model
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
+        } else {
+            historyProfile.histToMeArr[indexPath.row] = model
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
+        }
+        tableView.reloadData()
     }
 }
 

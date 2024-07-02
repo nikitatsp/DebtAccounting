@@ -2,6 +2,7 @@ import UIKit
 
 final class DebtActiveTableViewController: UIViewController {
     
+    private let sumProfile = SumProfile.shared
     private let activeProfile = ActiveProfile.shared
     private let historyProfile = HistoryProfile.shared
     
@@ -23,19 +24,6 @@ final class DebtActiveTableViewController: UIViewController {
         configureTableHeaderView()
         configureTittleTableLabel()
         setConstraints()
-    }
-    
-    private func addObserver() {
-        
-        NotificationCenter.default.addObserver(forName: activeProfile.didChangeActiveIToArr, object: nil, queue: .main) { [weak self] notification in
-            guard let self else {return}
-            self.tableView.reloadData()
-        }
-        
-        NotificationCenter.default.addObserver(forName: activeProfile.didChangeActiveToMeArr, object: nil, queue: .main) { [weak self] notification in
-            guard let self else {return}
-            self.tableView.reloadData()
-        }
     }
     
     private func configureNavigationItem() {
@@ -105,21 +93,8 @@ final class DebtActiveTableViewController: UIViewController {
         ])
     }
     
-    private func configureCell(cell: DebtActiveTableViewCell, indexPath: IndexPath) {
-        cell.delegate = self
-        
-        if segmentedControl.selectedSegmentIndex == 0 {
-            cell.nameLabel.text = activeProfile.activeIToArr[indexPath.row].name
-            cell.sumLabel.text = "\(activeProfile.activeIToArr[indexPath.row].sum)"
-        } else {
-            cell.nameLabel.text = activeProfile.activeToMeArr[indexPath.row].name
-            cell.sumLabel.text = "\(activeProfile.activeToMeArr[indexPath.row].sum)"
-        }
-    }
-    
     @objc private func addBarButtonTapped() {
-        let dataVC = DataViewController()
-        dataVC.date = Date()
+        let dataVC = DataCreateViewController()
         dataVC.delegate = self
         if segmentedControl.selectedSegmentIndex == 0 {
             dataVC.isToMe = false
@@ -135,6 +110,39 @@ final class DebtActiveTableViewController: UIViewController {
     }
 }
 
+//MARK: - Observer
+
+extension DebtActiveTableViewController {
+    private func addObserver() {
+        
+        NotificationCenter.default.addObserver(forName: activeProfile.didChangeActiveIToArr, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            self.tableView.reloadData()
+        }
+        
+        NotificationCenter.default.addObserver(forName: activeProfile.didChangeActiveToMeArr, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            self.tableView.reloadData()
+        }
+    }
+}
+
+//MARK: - ConfigureTableViewCell
+
+extension DebtActiveTableViewController {
+    private func configureCell(cell: DebtActiveTableViewCell, indexPath: IndexPath) {
+        cell.delegate = self
+        
+        if segmentedControl.selectedSegmentIndex == 0 {
+            cell.model = activeProfile.activeIToArr[indexPath.row]
+            cell.setDataInCell()
+        } else {
+            cell.model = activeProfile.activeToMeArr[indexPath.row]
+            cell.setDataInCell()
+        }
+    }
+}
+
 //MARK: - DebtActiveTableViewCellDelegate
 
 extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
@@ -142,15 +150,19 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
     func didDoneButtonTapped(_ cell: DebtActiveTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         if segmentedControl.selectedSegmentIndex == 0 {
+            sumProfile.sumITo -= activeProfile.activeIToArr[indexPath.row].sum
             historyProfile.histIToArr.append(activeProfile.activeIToArr[indexPath.row])
             activeProfile.activeIToArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryIToArr, object: nil)
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
+            sumProfile.sumToMe -= activeProfile.activeToMeArr[indexPath.row].sum
             historyProfile.histToMeArr.append(activeProfile.activeToMeArr[indexPath.row])
             activeProfile.activeToMeArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryToMeArr, object: nil)
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
     }
 }
@@ -181,24 +193,58 @@ extension DebtActiveTableViewController: UITableViewDataSource {
 
 extension DebtActiveTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let dataVC = DataEditViewController()
+        dataVC.delegate = self
+        dataVC.indexPath = indexPath
+        
+        if segmentedControl.selectedSegmentIndex == 0 {
+            dataVC.model = activeProfile.activeIToArr[indexPath.row]
+        } else {
+            dataVC.model = activeProfile.activeToMeArr[indexPath.row]
+        }
+        
+        navigationController?.pushViewController(dataVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 
-//MARK: - DataViewControllerDelegate
+//MARK: - DataEditViewControllerDelegate
 
-extension DebtActiveTableViewController: DataViewControllerDelegate {
-    func didTapSaveBarButton(model: Model) {
+extension DebtActiveTableViewController: DataEditViewControllerDelegate {
+    func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model) {
+        navigationController?.popViewController(animated: true)
+        if segmentedControl.selectedSegmentIndex == 0 {
+            activeProfile.activeIToArr[indexPath.row] = model
+            sumProfile.sumITo = sumProfile.sumITo - firstModel.sum + model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
+        } else {
+            activeProfile.activeToMeArr[indexPath.row] = model
+            sumProfile.sumToMe = sumProfile.sumToMe - firstModel.sum + model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
+        }
+        tableView.reloadData()
+    }
+}
+
+//MARK: - DataCreateViewControllerDelegate
+
+extension DebtActiveTableViewController: DataCreateViewControllerDelegate {
+    func didTapCreateSaveBarButton(model: Model) {
         navigationController?.popViewController(animated: true)
         var indexPath = IndexPath()
         if segmentedControl.selectedSegmentIndex == 0 {
             activeProfile.activeIToArr.append(model)
             indexPath = IndexPath(row: activeProfile.activeIToArr.count - 1, section: 0)
+            sumProfile.sumITo += model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
             activeProfile.activeToMeArr.append(model)
             indexPath = IndexPath(row: activeProfile.activeToMeArr.count - 1, section: 0)
+            sumProfile.sumToMe += model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
         tableView.insertRows(at: [indexPath], with: .fade)
+        print(model)
     }
     
     func didTapBackButton() {

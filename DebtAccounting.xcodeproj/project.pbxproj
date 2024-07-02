@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */; };
 		4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */; };
-		4A9D95962C2E16F4000F4D45 /* DataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95952C2E16F4000F4D45 /* DataViewController.swift */; };
+		4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */; };
 		4A9D959E2C309ADF000F4D45 /* HistoryProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D959D2C309ADF000F4D45 /* HistoryProfile.swift */; };
 		4ACA63B92C31D1F4001DD177 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63B82C31D1F4001DD177 /* Model.swift */; };
 		4ACA63BB2C31D281001DD177 /* DebtHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63BA2C31D281001DD177 /* DebtHistoryTableViewController.swift */; };
@@ -18,6 +18,8 @@
 		4ACA63C22C31FDE0001DD177 /* ActiveProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63C12C31FDE0001DD177 /* ActiveProfile.swift */; };
 		4ACA63C42C31FE1E001DD177 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63C32C31FE1E001DD177 /* DateFormatter.swift */; };
 		4ACA63C62C3201FE001DD177 /* DateProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63C52C3201FE001DD177 /* DateProfile.swift */; };
+		4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63C72C3316F3001DD177 /* DataEditViewController.swift */; };
+		4ACA63EE2C344F73001DD177 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */; };
 		4AFEE39E2C2CAEFB0044EC71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39D2C2CAEFB0044EC71 /* AppDelegate.swift */; };
 		4AFEE3A02C2CAEFB0044EC71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39F2C2CAEFB0044EC71 /* SceneDelegate.swift */; };
 		4AFEE3A22C2CAEFB0044EC71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A12C2CAEFB0044EC71 /* MainViewController.swift */; };
@@ -30,7 +32,7 @@
 /* Begin PBXFileReference section */
 		4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewController.swift; sourceTree = "<group>"; };
 		4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewCell.swift; sourceTree = "<group>"; };
-		4A9D95952C2E16F4000F4D45 /* DataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
+		4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCreateViewController.swift; sourceTree = "<group>"; };
 		4A9D959D2C309ADF000F4D45 /* HistoryProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryProfile.swift; sourceTree = "<group>"; };
 		4ACA63B82C31D1F4001DD177 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4ACA63BA2C31D281001DD177 /* DebtHistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtHistoryTableViewController.swift; sourceTree = "<group>"; };
@@ -39,6 +41,8 @@
 		4ACA63C12C31FDE0001DD177 /* ActiveProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveProfile.swift; sourceTree = "<group>"; };
 		4ACA63C32C31FE1E001DD177 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4ACA63C52C3201FE001DD177 /* DateProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateProfile.swift; sourceTree = "<group>"; };
+		4ACA63C72C3316F3001DD177 /* DataEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEditViewController.swift; sourceTree = "<group>"; };
+		4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		4AFEE39A2C2CAEFB0044EC71 /* DebtAccounting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebtAccounting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AFEE39D2C2CAEFB0044EC71 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4AFEE39F2C2CAEFB0044EC71 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -90,7 +94,8 @@
 		4ACA63B62C31D1A0001DD177 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				4A9D95952C2E16F4000F4D45 /* DataViewController.swift */,
+				4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */,
+				4ACA63C72C3316F3001DD177 /* DataEditViewController.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -111,6 +116,7 @@
 				4A9D959D2C309ADF000F4D45 /* HistoryProfile.swift */,
 				4ACA63C32C31FE1E001DD177 /* DateFormatter.swift */,
 				4ACA63C52C3201FE001DD177 /* DateProfile.swift */,
+				4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -223,11 +229,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ACA63C62C3201FE001DD177 /* DateProfile.swift in Sources */,
+				4ACA63EE2C344F73001DD177 /* UIViewControllerExtensions.swift in Sources */,
 				4ACA63B92C31D1F4001DD177 /* Model.swift in Sources */,
 				4AFEE3A22C2CAEFB0044EC71 /* MainViewController.swift in Sources */,
-				4A9D95962C2E16F4000F4D45 /* DataViewController.swift in Sources */,
+				4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */,
 				4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */,
 				4ACA63BD2C31D29B001DD177 /* DebtHistoryTableViewCell.swift in Sources */,
+				4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */,
 				4ACA63C22C31FDE0001DD177 /* ActiveProfile.swift in Sources */,
 				4AFEE3A82C2CAEFB0044EC71 /* DebtAccounting.xcdatamodeld in Sources */,
 				4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */,

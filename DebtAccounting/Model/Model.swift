@@ -1,6 +1,7 @@
 import Foundation
 
 struct Model {
+    var purshase: String
     var name: String
     var sum: Int
     var telegram: String?

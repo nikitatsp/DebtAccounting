@@ -16,6 +16,23 @@ final class MainViewController: UIViewController {
         configureSegmentedControl()
         configureSumLabel(sum: model.sumITo, currencyIsRub: true)
         setConstraints()
+        addObserver()
+    }
+    
+    private func addObserver() {
+        NotificationCenter.default.addObserver(forName: model.didChangeSumITo, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            if self.segmentedControl.selectedSegmentIndex == 0 {
+                self.configureSumLabel(sum: self.model.sumITo, currencyIsRub: true)
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: model.didChangeSumToMe, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            if segmentedControl.selectedSegmentIndex == 1 {
+                self.configureSumLabel(sum: self.model.sumToMe, currencyIsRub: true)
+            }
+        }
     }
     
     private func setupViews() {
@@ -40,7 +57,8 @@ final class MainViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
     }
     
-    private func configureSumLabel(sum: Int, currencyIsRub: Bool) {
+    private func configureSumLabel(sum: Int?, currencyIsRub: Bool) {
+        guard let sum else {return}
         sumLabel.font = UIFont.systemFont(ofSize: 35, weight: .bold)
         sumLabel.textColor = UIColor(named: "YP Black")
         if currencyIsRub {

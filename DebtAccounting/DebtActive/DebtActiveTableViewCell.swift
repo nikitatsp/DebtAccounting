@@ -7,16 +7,23 @@ protocol DebtActiveTableViewCellDelegate: AnyObject {
 class DebtActiveTableViewCell: UITableViewCell {
     static let reuseIdentifier = "Activecell"
     
-    var nameLabel = UILabel()
-    var sumLabel = UILabel()
+    var model: Model?
+    
+    private var purshaseLabel = UILabel()
+    private var nameLabel = UILabel()
+    private var sumLabel = UILabel()
     private let stackView = UIStackView()
-    var doneButton = UIButton()
+    private var doneButton = UIButton()
+    
+    var isITo = true
+    var isRub = true
     
     weak var delegate: DebtActiveTableViewCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        configurePurshaseLabel()
         configureNameLabel()
         configureSumLabel()
         configureStackView()
@@ -26,6 +33,12 @@ class DebtActiveTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    private func configurePurshaseLabel() {
+        purshaseLabel.font = UIFont.systemFont(ofSize: 17)
+        purshaseLabel.textColor = UIColor(named: "YP Black")
+        purshaseLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureNameLabel() {
@@ -41,12 +54,13 @@ class DebtActiveTableViewCell: UITableViewCell {
     }
     
     private func configureStackView() {
+        stackView.addArrangedSubview(purshaseLabel)
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(sumLabel)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 20
+        stackView.spacing = 10
         
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,6 +83,23 @@ class DebtActiveTableViewCell: UITableViewCell {
             doneButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
         ])
+    }
+    
+    func setDataInCell() {
+        guard let model else {return}
+        purshaseLabel.text = "Покупка: \(model.purshase)"
+        
+        if model.isToMe {
+            nameLabel.text = "Должник: \(model.name)"
+        } else {
+            nameLabel.text = "Кому: \(model.name)"
+        }
+        
+        if isRub {
+            sumLabel.text = "Сумма: \(model.sum) руб"
+        } else {
+            sumLabel.text = "Сумма: \(model.sum) $"
+        }
     }
     
     @objc func doneButtonTapped() {
