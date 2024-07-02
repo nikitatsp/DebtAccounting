@@ -150,15 +150,19 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
     func didDoneButtonTapped(_ cell: DebtActiveTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         if segmentedControl.selectedSegmentIndex == 0 {
-            sumProfile.sumITo -= activeProfile.activeIToArr[indexPath.row].sum
-            historyProfile.histIToArr.append(activeProfile.activeIToArr[indexPath.row])
+            var model = activeProfile.activeIToArr[indexPath.row]
+            sumProfile.sumITo -= model.sum
+            model.isHist = true
+            historyProfile.histIToArr.append(model)
             activeProfile.activeIToArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryIToArr, object: nil)
             NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
-            sumProfile.sumToMe -= activeProfile.activeToMeArr[indexPath.row].sum
-            historyProfile.histToMeArr.append(activeProfile.activeToMeArr[indexPath.row])
+            var model = activeProfile.activeToMeArr[indexPath.row]
+            sumProfile.sumToMe -= model.sum
+            model.isHist = true
+            historyProfile.histToMeArr.append(model)
             activeProfile.activeToMeArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryToMeArr, object: nil)
@@ -202,7 +206,7 @@ extension DebtActiveTableViewController: UITableViewDelegate {
         } else {
             dataVC.model = activeProfile.activeToMeArr[indexPath.row]
         }
-        
+        dataVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(dataVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -244,7 +248,6 @@ extension DebtActiveTableViewController: DataCreateViewControllerDelegate {
             NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
         tableView.insertRows(at: [indexPath], with: .fade)
-        print(model)
     }
     
     func didTapBackButton() {

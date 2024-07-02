@@ -177,6 +177,7 @@ extension DebtHistoryTableViewController: UITableViewDelegate {
             dataVC.model = historyProfile.histToMeArr[indexPath.row]
         }
         
+        dataVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(dataVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
