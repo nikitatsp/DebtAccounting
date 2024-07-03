@@ -7,17 +7,18 @@ protocol DebtHistoryTableViewCellDelegate: AnyObject {
 final class DebtHistoryTableViewCell: UITableViewCell {
     static let reuseIdentifier = "cell"
     
+    private let dateService = DateService.shared
+    
     var model: Model?
+    weak var delegate: DebtHistoryTableViewCellDelegate?
+    var isRub = true
     
     private var purshaseLabel = UILabel()
     private var nameLabel = UILabel()
     private var sumLabel = UILabel()
     private let stackView = UIStackView()
     private var backButton = UIButton()
-    
-    var isRub = true
-    
-    weak var delegate: DebtHistoryTableViewCellDelegate?
+    private let dateLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -25,6 +26,7 @@ final class DebtHistoryTableViewCell: UITableViewCell {
         configurePurshaseLabel()
         configureNameLabel()
         configureSumLabel()
+        configureDateLabel()
         configureStackView()
         configureBackButton()
         setConstraints()
@@ -52,10 +54,17 @@ final class DebtHistoryTableViewCell: UITableViewCell {
         sumLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private func configureDateLabel() {
+        dateLabel.font = UIFont.systemFont(ofSize: 17)
+        dateLabel.textColor = UIColor(named: "YP Black")
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private func configureStackView() {
         stackView.addArrangedSubview(purshaseLabel)
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(sumLabel)
+        stackView.addArrangedSubview(dateLabel)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
@@ -77,6 +86,8 @@ final class DebtHistoryTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: backButton.leadingAnchor, constant: 16),
+            
             backButton.widthAnchor.constraint(equalToConstant: 44),
             backButton.heightAnchor.constraint(equalToConstant: 44),
             backButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -99,6 +110,8 @@ final class DebtHistoryTableViewCell: UITableViewCell {
         } else {
             sumLabel.text = "Сумма: \(model.sum) $"
         }
+        
+        dateLabel.text = dateService.dayMonthAndYear(date: model.date)
     }
     
     @objc func backButtonTapped() {

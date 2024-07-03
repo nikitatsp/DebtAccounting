@@ -7,18 +7,20 @@ protocol DebtActiveTableViewCellDelegate: AnyObject {
 class DebtActiveTableViewCell: UITableViewCell {
     static let reuseIdentifier = "Activecell"
     
+    let dateFormatter = DateService.shared
+    
     var model: Model?
-    
-    private var purshaseLabel = UILabel()
-    private var nameLabel = UILabel()
-    private var sumLabel = UILabel()
-    private let stackView = UIStackView()
-    private var doneButton = UIButton()
-    
+    weak var delegate: DebtActiveTableViewCellDelegate?
     var isITo = true
     var isRub = true
     
-    weak var delegate: DebtActiveTableViewCellDelegate?
+    private let purshaseLabel = UILabel()
+    private let nameLabel = UILabel()
+    private let sumLabel = UILabel()
+    private let stackView = UIStackView()
+    private let doneButton = UIButton()
+    private let dateLabel = UILabel()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -53,10 +55,17 @@ class DebtActiveTableViewCell: UITableViewCell {
         sumLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private func configureDateLabel() {
+        dateLabel.font = UIFont.systemFont(ofSize: 17)
+        dateLabel.textColor = UIColor(named: "YP Black")
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     private func configureStackView() {
         stackView.addArrangedSubview(purshaseLabel)
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(sumLabel)
+        stackView.addArrangedSubview(dateLabel)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
@@ -66,7 +75,7 @@ class DebtActiveTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    func configureDoneButton() {
+    private func configureDoneButton() {
         doneButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
         contentView.addSubview(doneButton)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -78,6 +87,8 @@ class DebtActiveTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: doneButton.leadingAnchor, constant: 16),
+            
             doneButton.widthAnchor.constraint(equalToConstant: 44),
             doneButton.heightAnchor.constraint(equalToConstant: 44),
             doneButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -100,6 +111,8 @@ class DebtActiveTableViewCell: UITableViewCell {
         } else {
             sumLabel.text = "Сумма: \(model.sum) $"
         }
+        
+        dateLabel.text = dateFormatter.dayMonthAndYear(date: model.date)
     }
     
     @objc func doneButtonTapped() {

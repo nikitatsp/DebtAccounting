@@ -6,7 +6,7 @@ protocol DataEditViewControllerDelegate: AnyObject {
 }
 
 final class DataEditViewController: UIViewController {
-    private let dateFormatter = FormatDate.shared
+    private let dateFormatter = DateService.shared
     
     var indexPath: IndexPath?
     var model: Model?

@@ -2,6 +2,7 @@ import UIKit
 
 final class DebtActiveTableViewController: UIViewController {
     
+    private let dateService = DateService.shared
     private let sumProfile = SumProfile.shared
     private let activeProfile = ActiveProfile.shared
     private let historyProfile = HistoryProfile.shared
@@ -57,7 +58,7 @@ final class DebtActiveTableViewController: UIViewController {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DebtActiveTableViewCell.self, forCellReuseIdentifier: DebtActiveTableViewCell.reuseIdentifier)
-        tableView.rowHeight = 100
+        tableView.rowHeight = 130
     }
     
     private func configureTableHeaderView() {
@@ -86,7 +87,7 @@ final class DebtActiveTableViewController: UIViewController {
             segmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             tableView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
@@ -134,10 +135,10 @@ extension DebtActiveTableViewController {
         cell.delegate = self
         
         if segmentedControl.selectedSegmentIndex == 0 {
-            cell.model = activeProfile.activeIToArr[indexPath.row]
+            cell.model = activeProfile.activeIToArr[indexPath.section].models[indexPath.row]
             cell.setDataInCell()
         } else {
-            cell.model = activeProfile.activeToMeArr[indexPath.row]
+            cell.model = activeProfile.activeToMeArr[indexPath.section].models[indexPath.row]
             cell.setDataInCell()
         }
     }
@@ -150,21 +151,53 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
     func didDoneButtonTapped(_ cell: DebtActiveTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         if segmentedControl.selectedSegmentIndex == 0 {
-            var model = activeProfile.activeIToArr[indexPath.row]
+            var model = activeProfile.activeIToArr[indexPath.section].models[indexPath.row]
             sumProfile.sumITo -= model.sum
             model.isHist = true
-            historyProfile.histIToArr.append(model)
-            activeProfile.activeIToArr.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            if let indexOfSection = dateService.indexOfSection(in: historyProfile.histIToArr, withDate: model.date) {
+                historyProfile.histIToArr[indexOfSection].models.append(model)
+                historyProfile.histIToArr[indexOfSection].models.sort { $0.date < $1.date }
+            } else {
+                historyProfile.histIToArr.append(Section(date: model.date, models: [model]))
+                historyProfile.histIToArr.sort { $0.date < $1.date }
+            }
+            
+            if activeProfile.activeIToArr[indexPath.section].models.count > 1 {
+                activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            } else {
+                activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                activeProfile.activeIToArr.remove(at: indexPath.section)
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+            }
+            
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryIToArr, object: nil)
             NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
-            var model = activeProfile.activeToMeArr[indexPath.row]
+            var model = activeProfile.activeToMeArr[indexPath.section].models[indexPath.row]
             sumProfile.sumToMe -= model.sum
             model.isHist = true
-            historyProfile.histToMeArr.append(model)
-            activeProfile.activeToMeArr.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+            if let indexOfSection = dateService.indexOfSection(in: historyProfile.histToMeArr, withDate: model.date) {
+                historyProfile.histToMeArr[indexOfSection].models.append(model)
+                historyProfile.histToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+            } else {
+                historyProfile.histToMeArr.append(Section(date: model.date, models: [model]))
+                historyProfile.histToMeArr.sort { $0.date < $1.date }
+            }
+            
+            if activeProfile.activeToMeArr[indexPath.section].models.count > 1 {
+                activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            } else {
+                activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                activeProfile.activeToMeArr.remove(at: indexPath.section)
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+            }
+            
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryToMeArr, object: nil)
             NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
@@ -180,16 +213,32 @@ extension DebtActiveTableViewController: UITableViewDataSource {
         return cell
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            activeProfile.activeIToArr.count
+        } else {
+            activeProfile.activeToMeArr.count
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if segmentedControl.selectedSegmentIndex == 0 {
-            return activeProfile.activeIToArr.count
+            return activeProfile.activeIToArr[section].models.count
         } else {
-            return activeProfile.activeToMeArr.count
+            return activeProfile.activeToMeArr[section].models.count
         }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            return dateService.monthAndYear(date: activeProfile.activeIToArr[section].date)
+        } else {
+            return dateService.monthAndYear(date: activeProfile.activeToMeArr[section].date)
+        }
     }
 }
 
@@ -202,9 +251,9 @@ extension DebtActiveTableViewController: UITableViewDelegate {
         dataVC.indexPath = indexPath
         
         if segmentedControl.selectedSegmentIndex == 0 {
-            dataVC.model = activeProfile.activeIToArr[indexPath.row]
+            dataVC.model = activeProfile.activeIToArr[indexPath.section].models[indexPath.row]
         } else {
-            dataVC.model = activeProfile.activeToMeArr[indexPath.row]
+            dataVC.model = activeProfile.activeToMeArr[indexPath.section].models[indexPath.row]
         }
         dataVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(dataVC, animated: true)
@@ -218,11 +267,65 @@ extension DebtActiveTableViewController: DataEditViewControllerDelegate {
     func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model) {
         navigationController?.popViewController(animated: true)
         if segmentedControl.selectedSegmentIndex == 0 {
-            activeProfile.activeIToArr[indexPath.row] = model
+            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeIToArr[indexPath.section].date) {
+                activeProfile.activeIToArr[indexPath.section].models[indexPath.row] = model
+                activeProfile.activeIToArr[indexPath.section].models.sort { $0.date < $1.date }
+            } else {
+                if activeProfile.activeIToArr[indexPath.section].models.count > 1 {
+                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
+                        activeProfile.activeIToArr[indexOfSection].models.append(model)
+                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeIToArr.sort { $0.date < $1.date }
+                    }
+                } else {
+                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                    activeProfile.activeIToArr.remove(at: indexPath.section)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
+                        activeProfile.activeIToArr[indexOfSection].models.append(model)
+                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeIToArr.sort { $0.date < $1.date }
+                    }
+                }
+            }
+            
             sumProfile.sumITo = sumProfile.sumITo - firstModel.sum + model.sum
             NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
-            activeProfile.activeToMeArr[indexPath.row] = model
+            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeToMeArr[indexPath.section].date) {
+                activeProfile.activeToMeArr[indexPath.section].models[indexPath.row] = model
+                activeProfile.activeToMeArr[indexPath.section].models.sort { $0.date < $1.date }
+            } else {
+                if activeProfile.activeToMeArr[indexPath.section].models.count > 1 {
+                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
+                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
+                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
+                    }
+                } else {
+                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                    activeProfile.activeToMeArr.remove(at: indexPath.section)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
+                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
+                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
+                    }
+                }
+            }
+            
             sumProfile.sumToMe = sumProfile.sumToMe - firstModel.sum + model.sum
             NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
@@ -235,22 +338,37 @@ extension DebtActiveTableViewController: DataEditViewControllerDelegate {
 extension DebtActiveTableViewController: DataCreateViewControllerDelegate {
     func didTapCreateSaveBarButton(model: Model) {
         navigationController?.popViewController(animated: true)
-        var indexPath = IndexPath()
         if segmentedControl.selectedSegmentIndex == 0 {
-            activeProfile.activeIToArr.append(model)
-            indexPath = IndexPath(row: activeProfile.activeIToArr.count - 1, section: 0)
+            if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
+                activeProfile.activeIToArr[indexOfSection].models.append(model)
+                activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
+            } else {
+                activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
+                activeProfile.activeIToArr.sort { $0.date < $1.date }
+            }
             sumProfile.sumITo += model.sum
             NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
-            activeProfile.activeToMeArr.append(model)
-            indexPath = IndexPath(row: activeProfile.activeToMeArr.count - 1, section: 0)
+            if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
+                activeProfile.activeToMeArr[indexOfSection].models.append(model)
+                activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+            } else {
+                activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
+                activeProfile.activeToMeArr.sort { $0.date < $1.date }
+            }
             sumProfile.sumToMe += model.sum
             NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
         }
-        tableView.insertRows(at: [indexPath], with: .fade)
+        tableView.reloadData()
     }
     
     func didTapBackButton() {
         navigationController?.popViewController(animated: true)
     }
+}
+
+//MARK: - ContainsDate
+
+extension DebtActiveTableViewController {
+    
 }
