@@ -7,6 +7,6 @@ final class ActiveProfile {
     let didChangeActiveIToArr = NSNotification.Name("didChangeActiveIToArr")
     let didChangeActiveToMeArr = NSNotification.Name("didChangeActiveToMeArr")
     
-    var activeIToArr: [Model] = []
-    var activeToMeArr: [Model] = []
+    var activeIToArr: [Section] = []
+    var activeToMeArr: [Section] = []
 }

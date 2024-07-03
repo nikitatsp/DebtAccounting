@@ -7,7 +7,7 @@ final class HistoryProfile {
     let didChangeHistoryIToArr = NSNotification.Name("didChangeHistoryIToArr")
     let didChangeHistoryToMeArr = NSNotification.Name("didChangeHistoryToMeArr")
     
-    var histIToArr: [Model] = []
-    var histToMeArr: [Model] = []
+    var histIToArr: [Section] = []
+    var histToMeArr: [Section] = []
 }
 

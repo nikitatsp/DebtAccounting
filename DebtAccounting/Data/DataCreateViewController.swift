@@ -6,7 +6,7 @@ protocol DataCreateViewControllerDelegate: AnyObject {
 }
 
 final class DataCreateViewController: UIViewController {
-    private let dateFormatter = FormatDate.shared
+    private let dateFormatter = DateService.shared
     
     weak var delegate: DataCreateViewControllerDelegate?
     var isToMe: Bool?
