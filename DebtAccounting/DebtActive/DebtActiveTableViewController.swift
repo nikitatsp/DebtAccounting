@@ -10,7 +10,7 @@ final class DebtActiveTableViewController: UIViewController {
     private let currencyBarButtonItem = UIBarButtonItem()
     private let addBarButtonItem = UIBarButtonItem()
     private let segmentedControl = UISegmentedControl()
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     private let tableHeaderView = UIView()
     private let tittleTableLabel = UILabel()
     
@@ -55,9 +55,11 @@ final class DebtActiveTableViewController: UIViewController {
     private func configureTableView() {
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.backgroundColor = .white
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DebtActiveTableViewCell.self, forCellReuseIdentifier: DebtActiveTableViewCell.reuseIdentifier)
+        tableView.register(TableSectionHeader.self, forHeaderFooterViewReuseIdentifier: TableSectionHeader.reuseIdentifier)
         tableView.rowHeight = 130
     }
     
@@ -233,12 +235,21 @@ extension DebtActiveTableViewController: UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        30
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TableSectionHeader.reuseIdentifier) as? TableSectionHeader else {fatalError("Header section")}
         if segmentedControl.selectedSegmentIndex == 0 {
-            return dateService.monthAndYear(date: activeProfile.activeIToArr[section].date)
+            let text = dateService.monthAndYear(date: activeProfile.activeIToArr[section].date)
+            headerView.setDataInHeader(text: text)
         } else {
-            return dateService.monthAndYear(date: activeProfile.activeToMeArr[section].date)
+            let text = dateService.monthAndYear(date: activeProfile.activeToMeArr[section].date)
+            headerView.setDataInHeader(text: text)
         }
+        
+        return headerView
     }
 }
 
@@ -367,8 +378,14 @@ extension DebtActiveTableViewController: DataCreateViewControllerDelegate {
     }
 }
 
-//MARK: - ContainsDate
+//MARK: - ScrollViewDelegate
 
-extension DebtActiveTableViewController {
-    
+extension DebtActiveTableViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > 60 {
+            navigationItem.title = "Активные долги"
+        } else {
+            navigationItem.title = ""
+        }
+    }
 }

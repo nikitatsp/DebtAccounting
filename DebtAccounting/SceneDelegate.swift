@@ -19,6 +19,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.tintColor = UIColor(named: "YP Black")
         
+        let tabBarAppearenceForScroll = UITabBarAppearance()
+        tabBarAppearenceForScroll.configureWithDefaultBackground()
+        tabBarAppearenceForScroll.backgroundColor = .white
+        tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
+        
         let mainViewController = UINavigationController(rootViewController: MainViewController())
         let activeViewController = DebtActiveTableViewController()
         let historyViewController = DebtHistoryTableViewController()

@@ -10,7 +10,7 @@ final class DebtHistoryTableViewController: UIViewController {
     private let currencyBarButtonItem = UIBarButtonItem()
     private let addBarButtonItem = UIBarButtonItem()
     private let segmentedControl = UISegmentedControl()
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .grouped)
     private let tableHeaderView = UIView()
     private let tittleTableLabel = UILabel()
     
@@ -66,6 +66,8 @@ final class DebtHistoryTableViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DebtHistoryTableViewCell.self, forCellReuseIdentifier: DebtHistoryTableViewCell.reuseIdentifier)
         tableView.rowHeight = 130
+        tableView.backgroundColor = .white
+        tableView.register(TableSectionHeader.self, forHeaderFooterViewReuseIdentifier: TableSectionHeader.reuseIdentifier)
     }
     
     private func configureTableHeaderView() {
@@ -207,12 +209,21 @@ extension DebtHistoryTableViewController: UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        30
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TableSectionHeader.reuseIdentifier) as? TableSectionHeader else {fatalError("Header section")}
         if segmentedControl.selectedSegmentIndex == 0 {
-            return dateService.monthAndYear(date: historyProfile.histIToArr[section].date)
+            let text = dateService.monthAndYear(date: historyProfile.histIToArr[section].date)
+            headerView.setDataInHeader(text: text)
         } else {
-            return dateService.monthAndYear(date: historyProfile.histToMeArr[section].date)
+            let text = dateService.monthAndYear(date: historyProfile.histToMeArr[section].date)
+            headerView.setDataInHeader(text: text)
         }
+        
+        return headerView
     }
 }
 
@@ -306,3 +317,14 @@ extension DebtHistoryTableViewController: DataEditViewControllerDelegate {
     }
 }
 
+//MARK: - ScrollViewDelegate
+
+extension DebtHistoryTableViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y > 60 {
+            navigationItem.title = "История"
+        } else {
+            navigationItem.title = ""
+        }
+    }
+}
