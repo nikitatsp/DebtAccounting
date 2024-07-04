@@ -2,10 +2,13 @@ import UIKit
 
 final class MainViewController: UIViewController {
     
+    private let conversionRateService = ConversionRateService.shared
     private let model = SumProfile.shared
     private let barButtonItem = UIBarButtonItem()
     private let segmentedControl = UISegmentedControl()
     private let sumLabel = UILabel()
+    
+    var currencyIsRub = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,14 +26,14 @@ final class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: model.didChangeSumITo, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
             if self.segmentedControl.selectedSegmentIndex == 0 {
-                self.configureSumLabel(sum: self.model.sumITo, currencyIsRub: true)
+                self.configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
             }
         }
         
         NotificationCenter.default.addObserver(forName: model.didChangeSumToMe, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
             if segmentedControl.selectedSegmentIndex == 1 {
-                self.configureSumLabel(sum: self.model.sumToMe, currencyIsRub: true)
+                self.configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
             }
         }
     }
@@ -47,6 +50,8 @@ final class MainViewController: UIViewController {
         navigationItem.rightBarButtonItem = barButtonItem
         barButtonItem.image = UIImage(systemName: "rublesign")
         barButtonItem.tintColor = UIColor(named: "YP Black")
+        barButtonItem.target = self
+        barButtonItem.action = #selector(didBarButtonTapped)
     }
     
     private func configureSegmentedControl() {
@@ -57,14 +62,15 @@ final class MainViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
     }
     
-    private func configureSumLabel(sum: Int?, currencyIsRub: Bool) {
-        guard let sum else {return}
+    private func configureSumLabel(sum: Int, currencyIsRub: Bool) {
         sumLabel.font = UIFont.systemFont(ofSize: 35, weight: .bold)
         sumLabel.textColor = UIColor(named: "YP Black")
         if currencyIsRub {
             sumLabel.text = "\(sum) руб"
         } else {
-            sumLabel.text = "\(sum) $"
+            let dollars = Double(sum) * conversionRateService.conversionRate
+            let roundedNumber = Double(String(format: "%.2f", dollars))!
+            sumLabel.text = "\(dollars) $"
         }
     }
     
@@ -80,10 +86,40 @@ final class MainViewController: UIViewController {
     }
     
     @objc private func segmentedControlValueChanged() {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            configureSumLabel(sum: model.sumITo, currencyIsRub: true)
+        if currencyIsRub {
+            if segmentedControl.selectedSegmentIndex == 0 {
+                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+            } else {
+                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+            }
         } else {
-            configureSumLabel(sum: model.sumToMe, currencyIsRub: true)
+            if segmentedControl.selectedSegmentIndex == 0 {
+                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+            } else {
+                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+            }
+        }
+    }
+    
+    @objc private func didBarButtonTapped() {
+        if currencyIsRub {
+            barButtonItem.image = UIImage(systemName: "dollarsign")
+            barButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = false
+            if segmentedControl.selectedSegmentIndex == 0 {
+                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+            } else {
+                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+            }
+        } else {
+            barButtonItem.image = UIImage(systemName: "rublesign")
+            barButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = true
+            if segmentedControl.selectedSegmentIndex == 0 {
+                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+            } else {
+                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+            }
         }
     }
 }

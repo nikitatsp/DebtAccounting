@@ -14,6 +14,8 @@ final class DebtActiveTableViewController: UIViewController {
     private let tableHeaderView = UIView()
     private let tittleTableLabel = UILabel()
     
+    var currencyIsRub = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -35,6 +37,8 @@ final class DebtActiveTableViewController: UIViewController {
         navigationItem.leftBarButtonItem = currencyBarButtonItem
         currencyBarButtonItem.image = UIImage(systemName: "rublesign")
         currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+        currencyBarButtonItem.target = self
+        currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
         
         navigationItem.rightBarButtonItem = addBarButtonItem
         addBarButtonItem.image = UIImage(systemName: "plus")
@@ -113,6 +117,24 @@ final class DebtActiveTableViewController: UIViewController {
     }
 }
 
+//MARK: - DidCurrencyBarButtonTapped
+
+extension DebtActiveTableViewController {
+    @objc private func didCurrencyBarButtonTapped() {
+        if currencyIsRub {
+            currencyBarButtonItem.image = UIImage(systemName: "dollarsign")
+            currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = false
+            tableView.reloadData()
+        } else {
+            currencyBarButtonItem.image = UIImage(systemName: "rublesign")
+            currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = true
+            tableView.reloadData()
+        }
+    }
+}
+
 //MARK: - Observer
 
 extension DebtActiveTableViewController {
@@ -138,9 +160,11 @@ extension DebtActiveTableViewController {
         
         if segmentedControl.selectedSegmentIndex == 0 {
             cell.model = activeProfile.activeIToArr[indexPath.section].models[indexPath.row]
+            cell.isRub = currencyIsRub
             cell.setDataInCell()
         } else {
             cell.model = activeProfile.activeToMeArr[indexPath.section].models[indexPath.row]
+            cell.isRub = currencyIsRub
             cell.setDataInCell()
         }
     }

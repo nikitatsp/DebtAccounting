@@ -16,24 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        let tabBarController = UITabBarController()
-        tabBarController.tabBar.tintColor = UIColor(named: "YP Black")
+        let startVC = StartViewController()
         
-        let tabBarAppearenceForScroll = UITabBarAppearance()
-        tabBarAppearenceForScroll.configureWithDefaultBackground()
-        tabBarAppearenceForScroll.backgroundColor = .white
-        tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
-        
-        let mainViewController = UINavigationController(rootViewController: MainViewController())
-        let activeViewController = DebtActiveTableViewController()
-        let historyViewController = DebtHistoryTableViewController()
-        
-        mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
-        activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)
-        historyViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "clock.fill"), selectedImage: nil)
-        
-        tabBarController.viewControllers = [mainViewController, UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
-        window?.rootViewController = tabBarController
+        window?.rootViewController = startVC
         window?.makeKeyAndVisible()
     }
 

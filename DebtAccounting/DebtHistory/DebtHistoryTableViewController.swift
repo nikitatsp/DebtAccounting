@@ -6,6 +6,7 @@ final class DebtHistoryTableViewController: UIViewController {
     private let sumProfile = SumProfile.shared
     private let activeProfile = ActiveProfile.shared
     private let historyProfile = HistoryProfile.shared
+    private let conversionRateService = ConversionRateService.shared
     
     private let currencyBarButtonItem = UIBarButtonItem()
     private let addBarButtonItem = UIBarButtonItem()
@@ -13,6 +14,8 @@ final class DebtHistoryTableViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let tableHeaderView = UIView()
     private let tittleTableLabel = UILabel()
+    
+    var currencyIsRub = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +51,8 @@ final class DebtHistoryTableViewController: UIViewController {
         navigationItem.leftBarButtonItem = currencyBarButtonItem
         currencyBarButtonItem.image = UIImage(systemName: "rublesign")
         currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+        currencyBarButtonItem.target = self
+        currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
     }
     
     private func configureSegmentedControl() {
@@ -108,9 +113,11 @@ final class DebtHistoryTableViewController: UIViewController {
         
         if segmentedControl.selectedSegmentIndex == 0 {
             cell.model = historyProfile.histIToArr[indexPath.section].models[indexPath.row]
+            cell.isRub = currencyIsRub
             cell.setDataInCell()
         } else {
             cell.model = historyProfile.histToMeArr[indexPath.section].models[indexPath.row]
+            cell.isRub = currencyIsRub
             cell.setDataInCell()
         }
     }
@@ -176,6 +183,24 @@ extension DebtHistoryTableViewController: DebtHistoryTableViewCellDelegate {
             
             NotificationCenter.default.post(name: activeProfile.didChangeActiveToMeArr, object: nil)
             NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
+        }
+    }
+}
+
+//MARK: - DidCurrencyBarButtonTapped
+
+extension DebtHistoryTableViewController {
+    @objc private func didCurrencyBarButtonTapped() {
+        if currencyIsRub {
+            currencyBarButtonItem.image = UIImage(systemName: "dollarsign")
+            currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = false
+            tableView.reloadData()
+        } else {
+            currencyBarButtonItem.image = UIImage(systemName: "rublesign")
+            currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+            currencyIsRub = true
+            tableView.reloadData()
         }
     }
 }

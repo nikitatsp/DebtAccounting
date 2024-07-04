@@ -8,6 +8,7 @@ class DebtActiveTableViewCell: UITableViewCell {
     static let reuseIdentifier = "Activecell"
     
     let dateFormatter = DateService.shared
+    private let conversionRateService = ConversionRateService.shared
     
     var model: Model?
     weak var delegate: DebtActiveTableViewCellDelegate?
@@ -109,7 +110,9 @@ class DebtActiveTableViewCell: UITableViewCell {
         if isRub {
             sumLabel.text = "Сумма: \(model.sum) руб"
         } else {
-            sumLabel.text = "Сумма: \(model.sum) $"
+            let dollars = Double(model.sum) * conversionRateService.conversionRate
+            let roundedNumber = Double(String(format: "%.2f", dollars))!
+            sumLabel.text = "Сумма: \(roundedNumber) $"
         }
         
         dateLabel.text = dateFormatter.dayMonthAndYear(date: model.date)
