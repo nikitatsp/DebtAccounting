@@ -47,7 +47,7 @@ final class MainViewController: UIViewController {
     
     private func configureNavigationItem() {
         navigationItem.title = "Главная"
-        navigationItem.rightBarButtonItem = barButtonItem
+        navigationItem.leftBarButtonItem = barButtonItem
         barButtonItem.image = UIImage(systemName: "rublesign")
         barButtonItem.tintColor = UIColor(named: "YP Black")
         barButtonItem.target = self
@@ -70,7 +70,7 @@ final class MainViewController: UIViewController {
         } else {
             let dollars = Double(sum) * conversionRateService.conversionRate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
-            sumLabel.text = "\(dollars) $"
+            sumLabel.text = "\(roundedNumber) $"
         }
     }
     

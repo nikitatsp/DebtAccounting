@@ -24,7 +24,8 @@ final class StartViewController: UIViewController {
                     self.switchToTabBar()
                 case .failure(let error):
                     ProgressHUD.dismiss()
-                    let alertVC = UIAlertController(title: "Не удалось загрузить курс валют", message: "Вы продолжите с последним сохраненным курсом: \(self.conversionRateService.conversionRate)", preferredStyle: .alert)
+                    let cource = Int(1 / Double(String(format: "%.2f", self.conversionRateService.conversionRate))!)
+                    let alertVC = UIAlertController(title: "Не удалось загрузить актуальный курс валют", message: "Вы продолжите с последним сохраненным курсом: 1 $ = \(cource) руб", preferredStyle: .alert)
                     let alertAction = UIAlertAction(title: "Ок", style: .default) { _ in
                         self.switchToTabBar()
                     }
