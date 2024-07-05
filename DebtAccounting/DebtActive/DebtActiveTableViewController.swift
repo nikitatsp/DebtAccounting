@@ -457,7 +457,7 @@ extension DebtActiveTableViewController: DataEditViewControllerDelegate {
                         let section = Section(context: context)
                         section.date = model.date
                         section.isHist = model.isHist
-                        section.isToMe = false
+                        section.isToMe = true
                         section.addToModels(model)
                         activeProfile.activeToMeArr.append(section)
                         activeProfile.activeToMeArr.sort { $0.date ?? Date() < $1.date ?? Date() }
@@ -476,7 +476,7 @@ extension DebtActiveTableViewController: DataEditViewControllerDelegate {
                         let section = Section(context: context)
                         section.date = model.date
                         section.isHist = model.isHist
-                        section.isToMe = false
+                        section.isToMe = true
                         section.addToModels(model)
                         activeProfile.activeToMeArr.append(section)
                         activeProfile.activeToMeArr.sort { $0.date ?? Date() < $1.date ?? Date() }
