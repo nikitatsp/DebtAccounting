@@ -265,14 +265,17 @@ final class DataCreateViewController: UIViewController {
         model.isHist = false
         model.date = datePicker.date
         
-//        if let phoneText = phoneTextField.text {
-//            let phone = Int(phoneText)
-//            model.phone = phone
-//        }
-//        
-//        if telegramTextField.text != "" {
-//            model.telegram = telegramTextField.text
-//        }
+        if phoneTextField.text != "" {
+            if let phoneText = phoneTextField.text {
+                if let phone = Int64(phoneText) {
+                    model.phone = phone
+                }
+            }
+        }
+        
+        if telegramTextField.text != "" {
+            model.telegram = telegramTextField.text
+        }
         
         delegate?.didTapCreateSaveBarButton(model: model)
         
