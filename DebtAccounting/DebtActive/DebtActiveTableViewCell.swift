@@ -114,7 +114,8 @@ class DebtActiveTableViewCell: UITableViewCell {
         if isRub {
             sumLabel.text = "Сумма: \(model.sum) руб"
         } else {
-            let dollars = Double(model.sum) * conversionRateService.conversionRate
+            guard let rate = conversionRateService.conversionRate?.rate else {return}
+            let dollars = Double(model.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             sumLabel.text = "Сумма: \(roundedNumber) $"
         }

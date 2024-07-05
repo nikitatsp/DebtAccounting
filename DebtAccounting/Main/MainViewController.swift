@@ -17,7 +17,7 @@ final class MainViewController: UIViewController {
         setupViews()
         configureNavigationItem()
         configureSegmentedControl()
-        configureSumLabel(sum: model.sumITo, currencyIsRub: true)
+        configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: true)
         setConstraints()
         addObserver()
     }
@@ -26,14 +26,14 @@ final class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: model.didChangeSumITo, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
             if self.segmentedControl.selectedSegmentIndex == 0 {
-                self.configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+                self.configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: currencyIsRub)
             }
         }
         
         NotificationCenter.default.addObserver(forName: model.didChangeSumToMe, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
             if segmentedControl.selectedSegmentIndex == 1 {
-                self.configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+                self.configureSumLabel(sum: model.sumToMe?.sum, currencyIsRub: currencyIsRub)
             }
         }
     }
@@ -62,13 +62,15 @@ final class MainViewController: UIViewController {
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
     }
     
-    private func configureSumLabel(sum: Int, currencyIsRub: Bool) {
+    private func configureSumLabel(sum: Int64?, currencyIsRub: Bool) {
+        guard let sum else {return}
         sumLabel.font = UIFont.systemFont(ofSize: 35, weight: .bold)
         sumLabel.textColor = UIColor(named: "YP Black")
         if currencyIsRub {
             sumLabel.text = "\(sum) руб"
         } else {
-            let dollars = Double(sum) * conversionRateService.conversionRate
+            guard let rate = conversionRateService.conversionRate?.rate else {return}
+            let dollars = Double(sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             sumLabel.text = "\(roundedNumber) $"
         }
@@ -88,15 +90,15 @@ final class MainViewController: UIViewController {
     @objc private func segmentedControlValueChanged() {
         if currencyIsRub {
             if segmentedControl.selectedSegmentIndex == 0 {
-                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: currencyIsRub)
             } else {
-                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumToMe?.sum, currencyIsRub: currencyIsRub)
             }
         } else {
             if segmentedControl.selectedSegmentIndex == 0 {
-                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: currencyIsRub)
             } else {
-                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumToMe?.sum, currencyIsRub: currencyIsRub)
             }
         }
     }
@@ -107,18 +109,18 @@ final class MainViewController: UIViewController {
             barButtonItem.tintColor = UIColor(named: "YP Black")
             currencyIsRub = false
             if segmentedControl.selectedSegmentIndex == 0 {
-                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: currencyIsRub)
             } else {
-                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumToMe?.sum, currencyIsRub: currencyIsRub)
             }
         } else {
             barButtonItem.image = UIImage(systemName: "rublesign")
             barButtonItem.tintColor = UIColor(named: "YP Black")
             currencyIsRub = true
             if segmentedControl.selectedSegmentIndex == 0 {
-                configureSumLabel(sum: model.sumITo, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumITo?.sum, currencyIsRub: currencyIsRub)
             } else {
-                configureSumLabel(sum: model.sumToMe, currencyIsRub: currencyIsRub)
+                configureSumLabel(sum: model.sumToMe?.sum, currencyIsRub: currencyIsRub)
             }
         }
     }
