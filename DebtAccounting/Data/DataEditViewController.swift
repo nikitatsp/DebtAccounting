@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 protocol DataEditViewControllerDelegate: AnyObject {
     func didTapBackButton()
@@ -7,6 +8,7 @@ protocol DataEditViewControllerDelegate: AnyObject {
 
 final class DataEditViewController: UIViewController {
     private let dateFormatter = DateService.shared
+    private let context = CoreDataService.shared.getContext()
     
     var indexPath: IndexPath?
     var model: Model?
@@ -258,18 +260,27 @@ final class DataEditViewController: UIViewController {
         }
         guard let model else {return}
         
-        var SecondModel = Model(purshase: purshaseText, name: nameText, sum: sum, isToMe: isToMe, isHist: isHist, date: datePicker.date)
+        let secondModel = Model(context: context)
+        secondModel.purshase = purshaseText
+        secondModel.name = nameText
+        secondModel.sum = Int64(sum)
+        secondModel.isToMe = isToMe
+        secondModel.isHist = isHist
+        secondModel.date = datePicker.date
         
-        if let phoneText = phoneTextField.text {
-            let phone = Int(phoneText)
-            SecondModel.phone = phone
+        if phoneTextField.text != "" {
+            if let phoneText = phoneTextField.text {
+                if let phone = Int64(phoneText) {
+                    secondModel.phone = phone
+                }
+            }
         }
         
         if telegramTextField.text != "" {
-            SecondModel.telegram = telegramTextField.text
+            secondModel.telegram = telegramTextField.text
         }
         
-        delegate?.didTapEditSaveBarButton(indexPath: indexPath, model: SecondModel, firstModel: model)
+        delegate?.didTapEditSaveBarButton(indexPath: indexPath, model: secondModel, firstModel: model)
         
     }
     
@@ -315,13 +326,19 @@ extension DataEditViewController {
 extension DataEditViewController {
     private func configureCells() {
         guard let model else {return}
-        datePicker.date = model.date
-        purshaseTextField.text = model.purshase
+        guard let date = model.date else {return}
+        guard let purshase = model.purshase else {return}
+        
+        datePicker.date = date
+        purshaseTextField.text = purshase
         nameTextField.text = model.name
         sumTextField.text = "\(model.sum)"
         telegramTextField.text = model.telegram
-        if let phone = model.phone {
-            phoneTextField.text = "\(phone)"
+        
+        if model.phone == 0 {
+            phoneTextField.text = ""
+        } else {
+            phoneTextField.text = "\(model.phone)"
         }
     }
 }

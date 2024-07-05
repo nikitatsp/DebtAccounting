@@ -1,9 +1,11 @@
 import UIKit
 import ProgressHUD
+import CoreData
 
 final class StartViewController: UIViewController {
     let exchangeRateService = ExchangeRateService.shared
     let conversionRateService = ConversionRateService.shared
+    let context = CoreDataService.shared.getContext()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,13 +20,21 @@ final class StartViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let conversionRate):
-                    self.conversionRateService.conversionRate = conversionRate
-                    print(conversionRate)
+                    self.conversionRateService.conversionRate?.rate = conversionRate
+                    
+                    do {
+                        try self.context.save()
+                        print(conversionRate)
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
                     ProgressHUD.dismiss()
                     self.switchToTabBar()
-                case .failure(let error):
+                case .failure(_):
                     ProgressHUD.dismiss()
-                    let cource = Int(1 / Double(String(format: "%.2f", self.conversionRateService.conversionRate))!)
+                    guard let rate = self.conversionRateService.conversionRate?.rate else {return}
+                    let cource = Int(1 / rate)
                     let alertVC = UIAlertController(title: "Не удалось загрузить актуальный курс валют", message: "Вы продолжите с последним сохраненным курсом: 1 $ = \(cource) руб", preferredStyle: .alert)
                     let alertAction = UIAlertAction(title: "Ок", style: .default) { _ in
                         self.switchToTabBar()

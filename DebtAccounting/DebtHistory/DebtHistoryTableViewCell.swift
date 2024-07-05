@@ -98,23 +98,28 @@ final class DebtHistoryTableViewCell: UITableViewCell {
     
     func setDataInCell() {
         guard let model else {return}
-        purshaseLabel.text = "Покупка: \(model.purshase)"
+        guard let purshase = model.purshase else {return}
+        guard let name = model.name else {return}
+        guard let date = model.date else {return}
+        
+        purshaseLabel.text = "Покупка: \(purshase)"
         
         if model.isToMe {
-            nameLabel.text = "Должник: \(model.name)"
+            nameLabel.text = "Должник: \(name)"
         } else {
-            nameLabel.text = "Кому: \(model.name)"
+            nameLabel.text = "Кому: \(name)"
         }
         
         if isRub {
             sumLabel.text = "Сумма: \(model.sum) руб"
         } else {
-            let dollars = Double(model.sum) * conversionRateService.conversionRate
+            guard let rate = conversionRateService.conversionRate?.rate else {return}
+            let dollars = Double(model.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             sumLabel.text = "Сумма: \(roundedNumber) $"
         }
         
-        dateLabel.text = dateService.dayMonthAndYear(date: model.date)
+        dateLabel.text = dateService.dayMonthAndYear(date: date)
     }
     
     @objc func backButtonTapped() {

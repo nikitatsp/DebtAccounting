@@ -29,6 +29,7 @@
 		4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63C72C3316F3001DD177 /* DataEditViewController.swift */; };
 		4ACA63EE2C344F73001DD177 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */; };
 		4ACA63F02C348BC3001DD177 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63EF2C348BC3001DD177 /* Section.swift */; };
+		4AD71FA92C37845A002AB995 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD71FA82C37845A002AB995 /* CoreDataService.swift */; };
 		4AFEE39E2C2CAEFB0044EC71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39D2C2CAEFB0044EC71 /* AppDelegate.swift */; };
 		4AFEE3A02C2CAEFB0044EC71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39F2C2CAEFB0044EC71 /* SceneDelegate.swift */; };
 		4AFEE3A22C2CAEFB0044EC71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A12C2CAEFB0044EC71 /* MainViewController.swift */; };
@@ -60,6 +61,7 @@
 		4ACA63C72C3316F3001DD177 /* DataEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataEditViewController.swift; sourceTree = "<group>"; };
 		4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		4ACA63EF2C348BC3001DD177 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		4AD71FA82C37845A002AB995 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		4AFEE39A2C2CAEFB0044EC71 /* DebtAccounting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebtAccounting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AFEE39D2C2CAEFB0044EC71 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4AFEE39F2C2CAEFB0044EC71 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				4ACA63C32C31FE1E001DD177 /* DateService.swift */,
 				4ACA63C52C3201FE001DD177 /* DateProfile.swift */,
 				4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */,
+				4AD71FA82C37845A002AB995 /* CoreDataService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */,
 				4A466BBA2C3612B300256315 /* ExchangeRateResponse.swift in Sources */,
 				4ACA63C22C31FDE0001DD177 /* ActiveProfile.swift in Sources */,
+				4AD71FA92C37845A002AB995 /* CoreDataService.swift in Sources */,
 				4ACA63F02C348BC3001DD177 /* Section.swift in Sources */,
 				4AFEE3A82C2CAEFB0044EC71 /* DebtAccounting.xcdatamodeld in Sources */,
 				4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */,

@@ -33,7 +33,8 @@ struct DateService {
         let targetComponents = calendar.dateComponents([.year, .month], from: date)
         
         for (index, section) in sections.enumerated() {
-            let sectionComponents = calendar.dateComponents([.year, .month], from: section.date)
+            guard let sectionDate = section.date else {return nil}
+            let sectionComponents = calendar.dateComponents([.year, .month], from: sectionDate)
             if sectionComponents.year == targetComponents.year && sectionComponents.month == targetComponents.month {
                 return index
             }
