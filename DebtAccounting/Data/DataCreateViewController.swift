@@ -1,4 +1,5 @@
 import UIKit
+import CoreData
 
 protocol DataCreateViewControllerDelegate: AnyObject {
     func didTapBackButton()
@@ -7,6 +8,7 @@ protocol DataCreateViewControllerDelegate: AnyObject {
 
 final class DataCreateViewController: UIViewController {
     private let dateFormatter = DateService.shared
+    let context = CoreDataService.shared.getContext()
     
     weak var delegate: DataCreateViewControllerDelegate?
     var isToMe: Bool?
@@ -255,16 +257,22 @@ final class DataCreateViewController: UIViewController {
         guard let isToMe else { print("Выход из-за isToMe")
             return}
         
-        var model = Model(purshase: purshaseText, name: nameText, sum: sum, isToMe: isToMe, isHist: false, date: datePicker.date)
+        let model = Model(context: context)
+        model.purshase = purshaseText
+        model.name = nameText
+        model.sum = Int64(sum)
+        model.isToMe = isToMe
+        model.isHist = false
+        model.date = datePicker.date
         
-        if let phoneText = phoneTextField.text {
-            let phone = Int(phoneText)
-            model.phone = phone
-        }
-        
-        if telegramTextField.text != "" {
-            model.telegram = telegramTextField.text
-        }
+//        if let phoneText = phoneTextField.text {
+//            let phone = Int(phoneText)
+//            model.phone = phone
+//        }
+//        
+//        if telegramTextField.text != "" {
+//            model.telegram = telegramTextField.text
+//        }
         
         delegate?.didTapCreateSaveBarButton(model: model)
         

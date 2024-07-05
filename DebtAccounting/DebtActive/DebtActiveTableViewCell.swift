@@ -99,12 +99,16 @@ class DebtActiveTableViewCell: UITableViewCell {
     
     func setDataInCell() {
         guard let model else {return}
-        purshaseLabel.text = "Покупка: \(model.purshase)"
+        guard let purshase = model.purshase else {return}
+        guard let name = model.name else {return}
+        guard let date = model.date else {return}
+        
+        purshaseLabel.text = "Покупка: \(purshase)"
         
         if model.isToMe {
-            nameLabel.text = "Должник: \(model.name)"
+            nameLabel.text = "Должник: \(name)"
         } else {
-            nameLabel.text = "Кому: \(model.name)"
+            nameLabel.text = "Кому: \(name)"
         }
         
         if isRub {
@@ -115,7 +119,7 @@ class DebtActiveTableViewCell: UITableViewCell {
             sumLabel.text = "Сумма: \(roundedNumber) $"
         }
         
-        dateLabel.text = dateFormatter.dayMonthAndYear(date: model.date)
+        dateLabel.text = dateFormatter.dayMonthAndYear(date: date)
     }
     
     @objc func doneButtonTapped() {
