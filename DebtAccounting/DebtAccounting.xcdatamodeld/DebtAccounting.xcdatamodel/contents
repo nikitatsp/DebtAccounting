@@ -18,7 +18,7 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isHist" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isToMe" attributeType="Boolean" usesScalarValueType="YES"/>
-        <relationship name="models" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Model" inverseName="section" inverseEntity="Model"/>
+        <relationship name="models" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Model" inverseName="section" inverseEntity="Model"/>
     </entity>
     <entity name="Sum" representedClassName="Sum" syncable="YES" codeGenerationType="class">
         <attribute name="isToMe" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

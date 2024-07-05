@@ -62,13 +62,13 @@ final class StartViewController: UIViewController {
         
         let mainViewController = UINavigationController(rootViewController: MainViewController())
         let activeViewController = DebtActiveTableViewController()
-//        let historyViewController = DebtHistoryTableViewController()
+        let historyViewController = DebtHistoryTableViewController()
         
         mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)
-//        historyViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "clock.fill"), selectedImage: nil)
+        historyViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "clock.fill"), selectedImage: nil)
         
-        tabBarController.viewControllers = [mainViewController, UINavigationController(rootViewController: activeViewController)/*, UINavigationController(rootViewController: historyViewController)*/]
+        tabBarController.viewControllers = [mainViewController, UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
         
         window.rootViewController = tabBarController
     }

@@ -158,7 +158,7 @@ extension DebtActiveTableViewController {
 
 extension DebtActiveTableViewController {
     private func configureCell(cell: DebtActiveTableViewCell, indexPath: IndexPath) {
-//        cell.delegate = self
+        cell.delegate = self
         
         if segmentedControl.selectedSegmentIndex == 0 {
             guard let model = activeProfile.activeIToArr[indexPath.section].models?[indexPath.row] as? Model else {return}
@@ -181,31 +181,40 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
     func didDoneButtonTapped(_ cell: DebtActiveTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         if segmentedControl.selectedSegmentIndex == 0 {
+            
             guard let model = activeProfile.activeIToArr[indexPath.section].models?[indexPath.row] as? Model else {return}
             guard let modelDate = model.date else {return}
             sumProfile.sumITo?.sum -= model.sum
-            model.isHist = true
+            
+            let newModel = Model(context: context)
+            newModel.name = model.name
+            newModel.sum = model.sum
+            newModel.date = model.date
+            newModel.isToMe = model.isToMe
+            newModel.purshase = model.purshase
+            newModel.isHist = true
+            newModel.phone = model.phone
+            newModel.telegram = model.telegram
             
             if let indexOfSection = dateService.indexOfSection(in: historyProfile.histIToArr, withDate: modelDate) {
-                historyProfile.histIToArr[indexOfSection].addToModels(model)
+                historyProfile.histIToArr[indexOfSection].addToModels(newModel)
                 
                 guard let sortedArr = historyProfile.histIToArr[indexOfSection].models?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
                 historyProfile.histIToArr[indexOfSection].models = NSOrderedSet(array: sortedArr)
+                
             } else {
                 let section = Section(context: context)
                 section.date = modelDate
                 section.isHist = true
                 section.isToMe = false
-                section.addToModels(model)
+                section.addToModels(newModel)
                 historyProfile.histIToArr.append(section)
                 historyProfile.histIToArr.sort { $0.date ?? Date() < $1.date ?? Date() }
             }
             
-            guard var models = activeProfile.activeIToArr[indexPath.section].models as? NSMutableOrderedSet else {return}
-            
+            guard let models = activeProfile.activeIToArr[indexPath.section].models as? NSMutableOrderedSet else {return}
             if models.count > 1 {
-                models.removeObject(at: indexPath.row)
-                activeProfile.activeIToArr[indexPath.section].models = models
+                context.delete(model)
                 do {
                     try context.save()
                 } catch {
@@ -213,7 +222,14 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
                 }
                 tableView.deleteRows(at: [indexPath], with: .fade)
             } else {
-                activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                context.delete(activeProfile.activeIToArr[indexPath.section])
+                
+                do {
+                    try context.save()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 activeProfile.activeIToArr.remove(at: indexPath.section)
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
@@ -222,23 +238,56 @@ extension DebtActiveTableViewController: DebtActiveTableViewCellDelegate {
             NotificationCenter.default.post(name: historyProfile.didChangeHistoryIToArr, object: nil)
             NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
         } else {
-            var model = activeProfile.activeToMeArr[indexPath.section].models[indexPath.row]
-            sumProfile.sumToMe -= model.sum
-            model.isHist = true
             
-            if let indexOfSection = dateService.indexOfSection(in: historyProfile.histToMeArr, withDate: model.date) {
-                historyProfile.histToMeArr[indexOfSection].models.append(model)
-                historyProfile.histToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+            guard let model = activeProfile.activeToMeArr[indexPath.section].models?[indexPath.row] as? Model else {return}
+            guard let modelDate = model.date else {return}
+            sumProfile.sumToMe?.sum -= model.sum
+            
+            let newModel = Model(context: context)
+            newModel.name = model.name
+            newModel.sum = model.sum
+            newModel.date = model.date
+            newModel.isToMe = model.isToMe
+            newModel.purshase = model.purshase
+            newModel.isHist = true
+            newModel.phone = model.phone
+            newModel.telegram = model.telegram
+            
+            if let indexOfSection = dateService.indexOfSection(in: historyProfile.histToMeArr, withDate: modelDate) {
+                historyProfile.histToMeArr[indexOfSection].addToModels(newModel)
+                
+                guard let sortedArr = historyProfile.histToMeArr[indexOfSection].models?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+                historyProfile.histToMeArr[indexOfSection].models = NSOrderedSet(array: sortedArr)
+                
             } else {
-                historyProfile.histToMeArr.append(Section(date: model.date, models: [model]))
-                historyProfile.histToMeArr.sort { $0.date < $1.date }
+                let section = Section(context: context)
+                section.date = modelDate
+                section.isHist = true
+                section.isToMe = false
+                section.addToModels(newModel)
+                historyProfile.histToMeArr.append(section)
+                historyProfile.histToMeArr.sort { $0.date ?? Date() < $1.date ?? Date() }
+            
             }
             
-            if activeProfile.activeToMeArr[indexPath.section].models.count > 1 {
-                activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+            guard let models = activeProfile.activeToMeArr[indexPath.section].models as? NSMutableOrderedSet else {return}
+            if models.count > 1 {
+                context.delete(model)
+                do {
+                    try context.save()
+                } catch {
+                    print(error.localizedDescription)
+                }
                 tableView.deleteRows(at: [indexPath], with: .fade)
             } else {
-                activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                context.delete(activeProfile.activeToMeArr[indexPath.section])
+                
+                do {
+                    try context.save()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 activeProfile.activeToMeArr.remove(at: indexPath.section)
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
@@ -322,75 +371,75 @@ extension DebtActiveTableViewController: UITableViewDelegate {
 
 //MARK: - DataEditViewControllerDelegate
 
-//extension DebtActiveTableViewController: DataEditViewControllerDelegate {
-//    func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model) {
-//        navigationController?.popViewController(animated: true)
-//        if segmentedControl.selectedSegmentIndex == 0 {
-//            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeIToArr[indexPath.section].date) {
-//                activeProfile.activeIToArr[indexPath.section].models[indexPath.row] = model
-//                activeProfile.activeIToArr[indexPath.section].models.sort { $0.date < $1.date }
-//            } else {
-//                if activeProfile.activeIToArr[indexPath.section].models.count > 1 {
-//                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
-//                    
-//                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
-//                        activeProfile.activeIToArr[indexOfSection].models.append(model)
-//                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
-//                    } else {
-//                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
-//                        activeProfile.activeIToArr.sort { $0.date < $1.date }
-//                    }
-//                } else {
-//                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
-//                    activeProfile.activeIToArr.remove(at: indexPath.section)
-//                    
-//                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
-//                        activeProfile.activeIToArr[indexOfSection].models.append(model)
-//                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
-//                    } else {
-//                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
-//                        activeProfile.activeIToArr.sort { $0.date < $1.date }
-//                    }
-//                }
-//            }
-//            
-//            sumProfile.sumITo = sumProfile.sumITo - firstModel.sum + model.sum
-//            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
-//        } else {
-//            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeToMeArr[indexPath.section].date) {
-//                activeProfile.activeToMeArr[indexPath.section].models[indexPath.row] = model
-//                activeProfile.activeToMeArr[indexPath.section].models.sort { $0.date < $1.date }
-//            } else {
-//                if activeProfile.activeToMeArr[indexPath.section].models.count > 1 {
-//                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
-//                    
-//                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
-//                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
-//                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
-//                    } else {
-//                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
-//                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
-//                    }
-//                } else {
-//                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
-//                    activeProfile.activeToMeArr.remove(at: indexPath.section)
-//                    
-//                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
-//                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
-//                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
-//                    } else {
-//                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
-//                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
-//                    }
-//                }
-//            }
-//            
-//            sumProfile.sumToMe = sumProfile.sumToMe - firstModel.sum + model.sum
-//            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
-//        }
-//        tableView.reloadData()
-//    }
-//}
+extension DebtActiveTableViewController: DataEditViewControllerDelegate {
+    func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model) {
+        navigationController?.popViewController(animated: true)
+        if segmentedControl.selectedSegmentIndex == 0 {
+            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeIToArr[indexPath.section].date) {
+                activeProfile.activeIToArr[indexPath.section].models[indexPath.row] = model
+                activeProfile.activeIToArr[indexPath.section].models.sort { $0.date < $1.date }
+            } else {
+                if activeProfile.activeIToArr[indexPath.section].models.count > 1 {
+                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
+                        activeProfile.activeIToArr[indexOfSection].models.append(model)
+                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeIToArr.sort { $0.date < $1.date }
+                    }
+                } else {
+                    activeProfile.activeIToArr[indexPath.section].models.remove(at: indexPath.row)
+                    activeProfile.activeIToArr.remove(at: indexPath.section)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeIToArr, withDate: model.date) {
+                        activeProfile.activeIToArr[indexOfSection].models.append(model)
+                        activeProfile.activeIToArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeIToArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeIToArr.sort { $0.date < $1.date }
+                    }
+                }
+            }
+            
+            sumProfile.sumITo = sumProfile.sumITo - firstModel.sum + model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumITo, object: nil)
+        } else {
+            if dateService.compareDatesIgnoringDay(model.date, activeProfile.activeToMeArr[indexPath.section].date) {
+                activeProfile.activeToMeArr[indexPath.section].models[indexPath.row] = model
+                activeProfile.activeToMeArr[indexPath.section].models.sort { $0.date < $1.date }
+            } else {
+                if activeProfile.activeToMeArr[indexPath.section].models.count > 1 {
+                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
+                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
+                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
+                    }
+                } else {
+                    activeProfile.activeToMeArr[indexPath.section].models.remove(at: indexPath.row)
+                    activeProfile.activeToMeArr.remove(at: indexPath.section)
+                    
+                    if let indexOfSection = dateService.indexOfSection(in: activeProfile.activeToMeArr, withDate: model.date) {
+                        activeProfile.activeToMeArr[indexOfSection].models.append(model)
+                        activeProfile.activeToMeArr[indexOfSection].models.sort { $0.date < $1.date }
+                    } else {
+                        activeProfile.activeToMeArr.append(Section(date: model.date, models: [model]))
+                        activeProfile.activeToMeArr.sort { $0.date < $1.date }
+                    }
+                }
+            }
+            
+            sumProfile.sumToMe = sumProfile.sumToMe - firstModel.sum + model.sum
+            NotificationCenter.default.post(name: sumProfile.didChangeSumToMe, object: nil)
+        }
+        tableView.reloadData()
+    }
+}
 
 //MARK: - DataCreateViewControllerDelegate
 
