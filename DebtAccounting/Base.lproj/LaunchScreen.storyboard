@@ -17,11 +17,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rublesign.arrow.circlepath" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="RFu-vm-TYg">
-                                <rect key="frame" x="96.666666666666686" y="327" width="200" height="198.66666666666674"/>
+                                <rect key="frame" x="117.66666666666667" y="352" width="157.66666666666663" height="148.66666666666669"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="RFu-vm-TYg" secondAttribute="height" multiplier="1:1" id="0N3-MR-DVh"/>
-                                    <constraint firstAttribute="height" constant="200" id="JpD-YB-Y0k"/>
+                                    <constraint firstAttribute="height" constant="150" id="6OT-io-UwO"/>
+                                    <constraint firstAttribute="width" secondItem="RFu-vm-TYg" secondAttribute="height" multiplier="21:20" id="Xv9-fH-mCd"/>
                                 </constraints>
                             </imageView>
                         </subviews>
