@@ -1,18 +1,21 @@
 import UIKit
-import CoreData
 
-protocol DataCreateViewControllerDelegate: AnyObject {
-    func didTapBackButton()
-    func didTapCreateSaveBarButton(model: Model)
+protocol DataScreenViewControllerInputProtocol: AnyObject {
+    func setTextInNameLabel(text: String)
+    func updateSaveButton(isEnabled: Bool)
+    func fillDataScreen(date: Date?, purshase: String?, name: String?, sum: Int64, telegram: String?, phone: String?)
 }
 
-final class DataCreateViewController: UIViewController {
-    private let dateFormatter = DateService.shared
-    let context = CoreDataService.shared.getContext()
-    
-    weak var delegate: DataCreateViewControllerDelegate?
-    var isToMe: Bool?
-    
+protocol DataScreenViewControllerOutputProtocol {
+    init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, delegate: DataScreenViewControllerDelegate)
+    func viewDidLoad()
+    func didTapBackButton()
+    func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?)
+    func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?)
+}
+
+final class DataScreenViewController: UIViewController {
+    var presenter: DataScreenViewControllerOutputProtocol!
     var activeTextField: UITextField?
     
     private let backBarButtonItem = UIBarButtonItem()
@@ -57,6 +60,8 @@ final class DataCreateViewController: UIViewController {
         setConstraints()
         hideKeyboardWhenTappedAround()
         observeKeyboard()
+        
+        presenter.viewDidLoad()
     }
     
     private func configureNavigationItem() {
@@ -100,7 +105,6 @@ final class DataCreateViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             heightContentView
         ])
-        
     }
     
     private func configureDatePicker() {
@@ -244,54 +248,21 @@ final class DataCreateViewController: UIViewController {
     }
     
     @objc private func didTapBackButton() {
-        delegate?.didTapBackButton()
+        presenter.didTapBackButton()
     }
     
     @objc private func didTapSaveButton() {
-        guard let purshaseText = purshaseTextField.text else { print("Выход из за покупки")
-            return}
-        guard let nameText = nameTextField.text else { print("Выход из за имени")
-            return}
-        guard let sumtext = sumTextField.text, let sum = Int(sumtext) else { print("Выход из за суммы")
-            return}
-        guard let isToMe else { print("Выход из-за isToMe")
-            return}
-        
-        let model = Model(context: context)
-        model.purshase = purshaseText
-        model.name = nameText
-        model.sum = Int64(sum)
-        model.isToMe = isToMe
-        model.isHist = false
-        model.date = datePicker.date
-        
-        if phoneTextField.text != "" {
-            if let phoneText = phoneTextField.text {
-                if let phone = Int64(phoneText) {
-                    model.phone = phone
-                }
-            }
-        }
-        
-        if telegramTextField.text != "" {
-            model.telegram = telegramTextField.text
-        }
-        
-        delegate?.didTapCreateSaveBarButton(model: model)
-        
+        presenter.didTapSaveButton(date: datePicker.date, purshase: purshaseTextField.text!, name: nameTextField.text!, sum: sumTextField.text!, telegram: telegramTextField.text, phone: phoneTextField.text)
     }
     
     @objc private func editingChanged() {
-        let isPurshaseFieldFilled = !(purshaseTextField.text?.isEmpty ?? true)
-        let isNameFieldFilled = !(nameTextField.text?.isEmpty ?? true)
-        let isSumFieldFilled = !(sumTextField.text?.isEmpty ?? true)
-        saveBarButtonItem.isEnabled = isNameFieldFilled && isSumFieldFilled && isPurshaseFieldFilled
+        presenter.textFieldDidChange(purshaseText: purshaseTextField.text, nameText: nameTextField.text, sumText: sumTextField.text)
     }
 }
 
 //MARK: - ObserveKeyboard
 
-extension DataCreateViewController {
+extension DataScreenViewController {
     private func observeKeyboard() {
         NotificationCenter.default.addObserver(forName: UIWindow.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
@@ -320,7 +291,7 @@ extension DataCreateViewController {
 
 //MARK: - UITextFieldDelegate
 
-extension DataCreateViewController: UITextFieldDelegate {
+extension DataScreenViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         activeTextField = textField
     }
@@ -332,3 +303,23 @@ extension DataCreateViewController: UITextFieldDelegate {
     }
 }
 
+//MARK: - DataScreenViewControllerInputProtocol
+
+extension DataScreenViewController: DataScreenViewControllerInputProtocol {
+    func setTextInNameLabel(text: String) {
+        nameLabel.text = text
+    }
+    
+    func updateSaveButton(isEnabled: Bool) {
+        saveBarButtonItem.isEnabled = isEnabled
+    }
+    
+    func fillDataScreen(date: Date?, purshase: String?, name: String?, sum: Int64, telegram: String?, phone: String?) {
+        datePicker.date = date ?? Date()
+        purshaseTextField.text = purshase
+        nameTextField.text = name
+        sumTextField.text = "\(sum)"
+        telegramTextField.text = telegram
+        phoneTextField.text = phone
+    }
+}

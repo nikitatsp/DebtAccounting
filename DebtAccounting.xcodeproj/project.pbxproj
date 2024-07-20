@@ -15,6 +15,18 @@
 		4A466BBA2C3612B300256315 /* ExchangeRateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A466BB92C3612B300256315 /* ExchangeRateResponse.swift */; };
 		4A466BBD2C36158700256315 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 4A466BBC2C36158700256315 /* ProgressHUD */; };
 		4A466BBF2C36167400256315 /* ConversionRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A466BBE2C36167400256315 /* ConversionRate.swift */; };
+		4A48583F2C47247000952463 /* DebtListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A48583E2C47247000952463 /* DebtListViewController.swift */; };
+		4A4858412C47248500952463 /* DebtListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4858402C47248500952463 /* DebtListInteractor.swift */; };
+		4A4858432C47249000952463 /* DebtListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4858422C47249000952463 /* DebtListPresenter.swift */; };
+		4A4858452C4724B500952463 /* DebtListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4858442C4724B500952463 /* DebtListRouter.swift */; };
+		4A4858472C4724C500952463 /* DebtListConfiguarator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4858462C4724C500952463 /* DebtListConfiguarator.swift */; };
+		4A7C8C6B2C4ACE1A00FA76DD /* DebtListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */; };
+		4A7C8C6E2C4AE2C100FA76DD /* DebtListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6D2C4AE2C100FA76DD /* DebtListCell.swift */; };
+		4A7C8C702C4B072400FA76DD /* DebtListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6F2C4B072400FA76DD /* DebtListPresenter.swift */; };
+		4A7C8C732C4B1DA300FA76DD /* DataScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C722C4B1DA300FA76DD /* DataScreenViewController.swift */; };
+		4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */; };
+		4A7C8C782C4B1DCF00FA76DD /* DataScreenInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */; };
+		4A7C8C7A2C4B1DE800FA76DD /* DataScreenConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C792C4B1DE800FA76DD /* DataScreenConfigurator.swift */; };
 		4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */; };
 		4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */; };
 		4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */; };
@@ -47,6 +59,18 @@
 		4A466BB62C360E9200256315 /* ExchangeRateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateService.swift; sourceTree = "<group>"; };
 		4A466BB92C3612B300256315 /* ExchangeRateResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateResponse.swift; sourceTree = "<group>"; };
 		4A466BBE2C36167400256315 /* ConversionRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionRate.swift; sourceTree = "<group>"; };
+		4A48583E2C47247000952463 /* DebtListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListViewController.swift; sourceTree = "<group>"; };
+		4A4858402C47248500952463 /* DebtListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListInteractor.swift; sourceTree = "<group>"; };
+		4A4858422C47249000952463 /* DebtListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListPresenter.swift; sourceTree = "<group>"; };
+		4A4858442C4724B500952463 /* DebtListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListRouter.swift; sourceTree = "<group>"; };
+		4A4858462C4724C500952463 /* DebtListConfiguarator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListConfiguarator.swift; sourceTree = "<group>"; };
+		4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListService.swift; sourceTree = "<group>"; };
+		4A7C8C6D2C4AE2C100FA76DD /* DebtListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListCell.swift; sourceTree = "<group>"; };
+		4A7C8C6F2C4B072400FA76DD /* DebtListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListPresenter.swift; sourceTree = "<group>"; };
+		4A7C8C722C4B1DA300FA76DD /* DataScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenViewController.swift; sourceTree = "<group>"; };
+		4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenViewPresenter.swift; sourceTree = "<group>"; };
+		4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenInteractor.swift; sourceTree = "<group>"; };
+		4A7C8C792C4B1DE800FA76DD /* DataScreenConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenConfigurator.swift; sourceTree = "<group>"; };
 		4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewController.swift; sourceTree = "<group>"; };
 		4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewCell.swift; sourceTree = "<group>"; };
 		4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCreateViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +152,40 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		4A48583D2C47243B00952463 /* DebtList */ = {
+			isa = PBXGroup;
+			children = (
+				4A7C8C6C2C4AE26300FA76DD /* Cell */,
+				4A48583E2C47247000952463 /* DebtListViewController.swift */,
+				4A4858422C47249000952463 /* DebtListPresenter.swift */,
+				4A4858402C47248500952463 /* DebtListInteractor.swift */,
+				4A4858442C4724B500952463 /* DebtListRouter.swift */,
+				4A4858462C4724C500952463 /* DebtListConfiguarator.swift */,
+				4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */,
+			);
+			path = DebtList;
+			sourceTree = "<group>";
+		};
+		4A7C8C6C2C4AE26300FA76DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4A7C8C6D2C4AE2C100FA76DD /* DebtListCell.swift */,
+				4A7C8C6F2C4B072400FA76DD /* DebtListPresenter.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		4A7C8C712C4B1D7C00FA76DD /* DataScreen */ = {
+			isa = PBXGroup;
+			children = (
+				4A7C8C722C4B1DA300FA76DD /* DataScreenViewController.swift */,
+				4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */,
+				4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */,
+				4A7C8C792C4B1DE800FA76DD /* DataScreenConfigurator.swift */,
+			);
+			path = DataScreen;
+			sourceTree = "<group>";
+		};
 		4ACA63B32C31D16B001DD177 /* DebtActive */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +263,8 @@
 		4AFEE39C2C2CAEFB0044EC71 /* DebtAccounting */ = {
 			isa = PBXGroup;
 			children = (
+				4A48583D2C47243B00952463 /* DebtList */,
+				4A7C8C712C4B1D7C00FA76DD /* DataScreen */,
 				4A466BAE2C36096500256315 /* Networking */,
 				4A466BB52C360E7100256315 /* ExchangeRate */,
 				4A466BAD2C36092F00256315 /* StrartViewController */,
@@ -303,8 +363,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A7C8C7A2C4B1DE800FA76DD /* DataScreenConfigurator.swift in Sources */,
+				4A48583F2C47247000952463 /* DebtListViewController.swift in Sources */,
 				4A466BBF2C36167400256315 /* ConversionRate.swift in Sources */,
 				4ACA63C62C3201FE001DD177 /* DateProfile.swift in Sources */,
+				4A4858432C47249000952463 /* DebtListPresenter.swift in Sources */,
 				4ACA63EE2C344F73001DD177 /* UIViewControllerExtensions.swift in Sources */,
 				4ACA63B92C31D1F4001DD177 /* Model.swift in Sources */,
 				4A466BB02C360A5000256315 /* NetworkManager.swift in Sources */,
@@ -312,20 +375,29 @@
 				4AFEE3A22C2CAEFB0044EC71 /* MainViewController.swift in Sources */,
 				4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */,
 				4A466BAC2C36092600256315 /* StartViewController.swift in Sources */,
+				4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */,
+				4A4858452C4724B500952463 /* DebtListRouter.swift in Sources */,
 				4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */,
+				4A7C8C702C4B072400FA76DD /* DebtListPresenter.swift in Sources */,
 				4ACA63BD2C31D29B001DD177 /* DebtHistoryTableViewCell.swift in Sources */,
 				4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */,
 				4A466BBA2C3612B300256315 /* ExchangeRateResponse.swift in Sources */,
 				4ACA63C22C31FDE0001DD177 /* ActiveProfile.swift in Sources */,
 				4AD71FA92C37845A002AB995 /* CoreDataService.swift in Sources */,
+				4A7C8C782C4B1DCF00FA76DD /* DataScreenInteractor.swift in Sources */,
 				4ACA63F02C348BC3001DD177 /* Section.swift in Sources */,
+				4A4858412C47248500952463 /* DebtListInteractor.swift in Sources */,
 				4AFEE3A82C2CAEFB0044EC71 /* DebtAccounting.xcdatamodeld in Sources */,
+				4A7C8C732C4B1DA300FA76DD /* DataScreenViewController.swift in Sources */,
 				4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */,
 				4AFEE39E2C2CAEFB0044EC71 /* AppDelegate.swift in Sources */,
 				4ACA63BB2C31D281001DD177 /* DebtHistoryTableViewController.swift in Sources */,
 				4ACA63C42C31FE1E001DD177 /* DateService.swift in Sources */,
 				4ACA63C02C31FDC1001DD177 /* SumProfile.swift in Sources */,
+				4A4858472C4724C500952463 /* DebtListConfiguarator.swift in Sources */,
 				4AFEE3A02C2CAEFB0044EC71 /* SceneDelegate.swift in Sources */,
+				4A7C8C6B2C4ACE1A00FA76DD /* DebtListService.swift in Sources */,
+				4A7C8C6E2C4AE2C100FA76DD /* DebtListCell.swift in Sources */,
 				4A466BAA2C35C4A000256315 /* TableSectionHeader.swift in Sources */,
 				4A9D959E2C309ADF000F4D45 /* HistoryProfile.swift in Sources */,
 				4A466BB72C360E9200256315 /* ExchangeRateService.swift in Sources */,
