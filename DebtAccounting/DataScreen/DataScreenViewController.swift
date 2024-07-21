@@ -1,5 +1,7 @@
 import UIKit
 
+//MARK: - Protocols
+
 protocol DataScreenViewControllerInputProtocol: AnyObject {
     func setTextInNameLabel(text: String)
     func updateSaveButton(isEnabled: Bool)
@@ -9,13 +11,15 @@ protocol DataScreenViewControllerInputProtocol: AnyObject {
 protocol DataScreenViewControllerOutputProtocol {
     init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, delegate: DataScreenViewControllerDelegate)
     func viewDidLoad()
-    func didTapBackButton()
     func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?)
     func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?)
 }
 
+//MARK: - DataScreenViewController
+
 final class DataScreenViewController: UIViewController {
     var presenter: DataScreenViewControllerOutputProtocol!
+    
     var activeTextField: UITextField?
     
     private let backBarButtonItem = UIBarButtonItem()
@@ -248,7 +252,7 @@ final class DataScreenViewController: UIViewController {
     }
     
     @objc private func didTapBackButton() {
-        presenter.didTapBackButton()
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func didTapSaveButton() {

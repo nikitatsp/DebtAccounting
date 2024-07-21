@@ -1,11 +1,10 @@
 import UIKit
 
 protocol DataScreenViewControllerDelegate: AnyObject {
-    func didTapBackButton()
-    func didTapCreateSaveBarButton(model: Debt)
+    func didTapSaveBarButton(lastDebt: Debt?, newDebt: Debt)
 }
 
-struct StateOfDataScreen {
+struct DataScreenModel {
     var isI: Bool
     var isActive: Bool
     var debt: Debt?
@@ -15,31 +14,27 @@ struct StateOfDataScreen {
 final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
     weak var view: DataScreenViewControllerInputProtocol!
     var interactor: DataScreenInteractorInputProtocol!
-    var stateOfDataScreen: StateOfDataScreen
+    var dataScreenModel: DataScreenModel
     
     init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, delegate: DataScreenViewControllerDelegate) {
         self.view = view
-        self.stateOfDataScreen = StateOfDataScreen(isI: isI, isActive: isActive, debt: debt, delegate: delegate)
+        self.dataScreenModel = DataScreenModel(isI: isI, isActive: isActive, debt: debt, delegate: delegate)
     }
     
     func viewDidLoad() {
-        if stateOfDataScreen.isI {
+        if dataScreenModel.isI {
             view.setTextInNameLabel(text: "Кому")
         } else {
             view.setTextInNameLabel(text: "Должник")
         }
         
-        if let debt = stateOfDataScreen.debt {
+        if let debt = dataScreenModel.debt {
             view.fillDataScreen(date: debt.date, purshase: debt.purshase, name: debt.name, sum: debt.sum, telegram: debt.telegram, phone: debt.phone)
         }
     }
     
-    func didTapBackButton() {
-        stateOfDataScreen.delegate.didTapBackButton()
-    }
-    
     func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?) {
-        interactor.makeNewDebt(date: date, purshase: purshase, name: name, sum: sum, telegram: telegram, phone: phone, isI: stateOfDataScreen.isI, isActive: stateOfDataScreen.isActive)
+        interactor.makeNewDebt(date: date, purshase: purshase, name: name, sum: sum, telegram: telegram, phone: phone, isI: dataScreenModel.isI, isActive: dataScreenModel.isActive)
     }
     
     func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?) {
@@ -54,5 +49,7 @@ final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
 //MARK: - DataScreenInteractorOutputProtocol
 
 extension DataScreenViewPresenter: DataScreenInteractorOutputProtocol {
-    
+    func didRecieveNewDebt(debt: Debt) {
+        dataScreenModel.delegate.didTapSaveBarButton(lastDebt: dataScreenModel.debt, newDebt: debt)
+    }
 }

@@ -8,12 +8,12 @@ struct StateModelDebtListCell {
     var dateFormatter = DateService.shared
     var conversionRateService = ConversionRateService.shared
     
-    var model: Model
+    var debt: Debt
     weak var delegate: DebtListCellDelegate?
     var isRub = true
     
-    init(model: Model, delegate: DebtListCellDelegate, isRub: Bool) {
-        self.model = model
+    init(debt: Debt, delegate: DebtListCellDelegate, isRub: Bool) {
+        self.debt = debt
         self.delegate = delegate
         self.isRub = isRub
     }
@@ -111,29 +111,29 @@ final class DebtListCell: UITableViewCell {
     
     private func updateData() {
         guard let stateModelDebtListCell else {return}
-        let model = stateModelDebtListCell.model
-        guard let purshase = model.purshase else {return}
-        guard let name = model.name else {return}
-        guard let date = model.date else {return}
+        let debt = stateModelDebtListCell.debt
+        guard let purshase = debt.purshase else {return}
+        guard let name = debt.name else {return}
+        guard let date = debt.date else {return}
         
         purshaseLabel.text = "Покупка: \(purshase)"
         
-        if model.isToMe {
-            nameLabel.text = "Должник: \(name)"
-        } else {
+        if debt.isI {
             nameLabel.text = "Кому: \(name)"
+        } else {
+            nameLabel.text = "Должник: \(name)"
         }
         
         if stateModelDebtListCell.isRub {
-            sumLabel.text = "Сумма: \(model.sum) руб"
+            sumLabel.text = "Сумма: \(debt.sum) руб"
         } else {
             guard let rate = stateModelDebtListCell.conversionRateService.conversionRate?.rate else {return}
-            let dollars = Double(model.sum) * rate
+            let dollars = Double(debt.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             sumLabel.text = "Сумма: \(roundedNumber) $"
         }
         
-        if model.isHist {
+        if debt.isActive {
             button.setImage(UIImage(systemName: "gobackward"), for: .normal)
         } else {
             button.setImage(UIImage(systemName: "checkmark"), for: .normal)

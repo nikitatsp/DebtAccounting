@@ -1,5 +1,7 @@
 import UIKit
 
+//MARK: - Protocols
+
 protocol DebtListViewControllerInputProtocol: AnyObject {
     func setTittleForNavigationController(text: String)
     func setTextForTableViewHeader(text: String)
@@ -7,6 +9,7 @@ protocol DebtListViewControllerInputProtocol: AnyObject {
     func setImageForRightBarButton(withSystemName name: String)
     func reloadDataForTableView()
     func toogleEditTableView()
+    func popViewController()
 }
 
 protocol DebtListViewControllerOutputProtocol {
@@ -46,11 +49,11 @@ class DebtListViewController: UIViewController {
     }
     
     private func configureNavigationItem() {
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.ypBlack]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         
         navigationItem.leftBarButtonItem = currencyBarButtonItem
         currencyBarButtonItem.image = UIImage(systemName: "rublesign")
-        currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+        currencyBarButtonItem.tintColor = .black
         currencyBarButtonItem.target = self
         currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
         
@@ -137,6 +140,10 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
     
     func toogleEditTableView() {
         tableView.setEditing(!tableView.isEditing, animated: true)
+    }
+    
+    func popViewController() {
+        navigationController?.popViewController(animated: true)
     }
 }
 

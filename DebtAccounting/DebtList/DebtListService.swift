@@ -3,13 +3,15 @@ import CoreData
 
 final class DebtListService {
     
+    static let shared = DebtListService()
     private let context = CoreDataService.shared.getContext()
     
-    func loadInitalDataITo(for typeOfInteractor: ListType) -> [Section] {
-        switch typeOfInteractor {
-        case .active:
+    private init() {}
+    
+    func loadInitalDataITo(for isActive: Bool) -> [Section] {
+        if isActive {
             let fetchRequest: NSFetchRequest<Section> = Section.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "isToMe == %d AND isHist == %d", false, false)
+            fetchRequest.predicate = NSPredicate(format: "isI == %d AND isActive == %d", true, true)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             var arr: [Section] = []
             do {
@@ -19,9 +21,9 @@ final class DebtListService {
                 print(error.localizedDescription)
                 return []
             }
-        case .history:
+        } else {
             let fetchRequest: NSFetchRequest<Section> = Section.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "isToMe == %d AND isHist == %d", false, true)
+            fetchRequest.predicate = NSPredicate(format: "isI == %d AND isActive == %d", true, false)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             var arr: [Section] = []
             do {
@@ -34,11 +36,10 @@ final class DebtListService {
         }
     }
     
-    func loadInitalDataToMe(for typeOfInteractor: ListType) -> [Section] {
-        switch typeOfInteractor {
-        case .active:
+    func loadInitalDataToMe(for isActive: Bool) -> [Section] {
+        if isActive {
             let fetchRequest: NSFetchRequest<Section> = Section.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "isToMe == %d AND isHist == %d", true, false)
+            fetchRequest.predicate = NSPredicate(format: "isI == %d AND isActive == %d", false, true)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             var arr: [Section] = []
             do {
@@ -48,9 +49,9 @@ final class DebtListService {
                 print(error.localizedDescription)
                 return []
             }
-        case .history:
+        } else {
             let fetchRequest: NSFetchRequest<Section> = Section.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "isToMe == %d AND isHist == %d", true, true)
+            fetchRequest.predicate = NSPredicate(format: "isI == %d AND isActive == %d", false, false)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
             var arr: [Section] = []
             do {

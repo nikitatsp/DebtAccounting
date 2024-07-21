@@ -2,7 +2,7 @@ import Foundation
 
 protocol DebtListRouterInputProtocol {
     init(view: DebtListViewController)
-    func openDataViewController()
+    func openDataViewController(debt: Debt?, isI: Bool, isActive: Bool, delegate: DataScreenViewControllerDelegate)
 }
 
 final class DebtListRouter: DebtListRouterInputProtocol {
@@ -12,7 +12,8 @@ final class DebtListRouter: DebtListRouterInputProtocol {
         self.view = view
     }
     
-    func openDataViewController() {
-        
+    func openDataViewController(debt: Debt?, isI: Bool, isActive: Bool, delegate: DataScreenViewControllerDelegate) {
+        let dataScreenController = DataScreenViewController()
+        DataScreenConfigurator.shared.configureDataScreen(withView: dataScreenController, debt: debt, isI: isI, isActive: isActive, delegate: delegate)
     }
 }

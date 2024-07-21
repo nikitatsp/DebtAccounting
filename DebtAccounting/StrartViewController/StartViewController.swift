@@ -61,8 +61,12 @@ final class StartViewController: UIViewController {
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
         
         let mainViewController = UINavigationController(rootViewController: MainViewController())
-        let activeViewController = DebtActiveTableViewController()
-        let historyViewController = DebtHistoryTableViewController()
+        
+        let activeViewController = DebtListViewController()
+        DebtListConfiguarator.shared.configure(withView: activeViewController, isActive: true)
+        
+        let historyViewController = DebtListViewController()
+        DebtListConfiguarator.shared.configure(withView: historyViewController, isActive: false)
         
         mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)

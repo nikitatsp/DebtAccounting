@@ -22,7 +22,6 @@
 		4A4858472C4724C500952463 /* DebtListConfiguarator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4858462C4724C500952463 /* DebtListConfiguarator.swift */; };
 		4A7C8C6B2C4ACE1A00FA76DD /* DebtListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */; };
 		4A7C8C6E2C4AE2C100FA76DD /* DebtListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6D2C4AE2C100FA76DD /* DebtListCell.swift */; };
-		4A7C8C702C4B072400FA76DD /* DebtListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C6F2C4B072400FA76DD /* DebtListPresenter.swift */; };
 		4A7C8C732C4B1DA300FA76DD /* DataScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C722C4B1DA300FA76DD /* DataScreenViewController.swift */; };
 		4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */; };
 		4A7C8C782C4B1DCF00FA76DD /* DataScreenInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */; };
@@ -42,13 +41,10 @@
 		4ACA63EE2C344F73001DD177 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63ED2C344F73001DD177 /* UIViewControllerExtensions.swift */; };
 		4ACA63F02C348BC3001DD177 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63EF2C348BC3001DD177 /* Section.swift */; };
 		4AD71FA92C37845A002AB995 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD71FA82C37845A002AB995 /* CoreDataService.swift */; };
-		4AD71FAB2C38C80A002AB995 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AD71FAA2C38C80A002AB995 /* Launch Screen.storyboard */; };
 		4AFEE39E2C2CAEFB0044EC71 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39D2C2CAEFB0044EC71 /* AppDelegate.swift */; };
 		4AFEE3A02C2CAEFB0044EC71 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE39F2C2CAEFB0044EC71 /* SceneDelegate.swift */; };
 		4AFEE3A22C2CAEFB0044EC71 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A12C2CAEFB0044EC71 /* MainViewController.swift */; };
 		4AFEE3A82C2CAEFB0044EC71 /* DebtAccounting.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A62C2CAEFB0044EC71 /* DebtAccounting.xcdatamodeld */; };
-		4AFEE3AA2C2CAEFC0044EC71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A92C2CAEFC0044EC71 /* Assets.xcassets */; };
-		4AFEE3AD2C2CAEFC0044EC71 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4AFEE3AC2C2CAEFC0044EC71 /* Base */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -263,11 +259,11 @@
 		4AFEE39C2C2CAEFB0044EC71 /* DebtAccounting */ = {
 			isa = PBXGroup;
 			children = (
+				4A466BAD2C36092F00256315 /* StrartViewController */,
 				4A48583D2C47243B00952463 /* DebtList */,
 				4A7C8C712C4B1D7C00FA76DD /* DataScreen */,
 				4A466BAE2C36096500256315 /* Networking */,
 				4A466BB52C360E7100256315 /* ExchangeRate */,
-				4A466BAD2C36092F00256315 /* StrartViewController */,
 				4A466BA82C35C48400256315 /* TableViewHeader */,
 				4ACA63B52C31D18D001DD177 /* Main */,
 				4ACA63B32C31D16B001DD177 /* DebtActive */,
@@ -295,7 +291,6 @@
 			buildPhases = (
 				4AFEE3962C2CAEFB0044EC71 /* Sources */,
 				4AFEE3972C2CAEFB0044EC71 /* Frameworks */,
-				4AFEE3982C2CAEFB0044EC71 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -345,19 +340,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		4AFEE3982C2CAEFB0044EC71 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4AD71FAB2C38C80A002AB995 /* Launch Screen.storyboard in Resources */,
-				4AFEE3AA2C2CAEFC0044EC71 /* Assets.xcassets in Resources */,
-				4AFEE3AD2C2CAEFC0044EC71 /* Base in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4AFEE3962C2CAEFB0044EC71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -378,7 +360,6 @@
 				4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */,
 				4A4858452C4724B500952463 /* DebtListRouter.swift in Sources */,
 				4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */,
-				4A7C8C702C4B072400FA76DD /* DebtListPresenter.swift in Sources */,
 				4ACA63BD2C31D29B001DD177 /* DebtHistoryTableViewCell.swift in Sources */,
 				4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */,
 				4A466BBA2C3612B300256315 /* ExchangeRateResponse.swift in Sources */,

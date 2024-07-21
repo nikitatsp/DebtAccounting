@@ -7,7 +7,7 @@ protocol DataScreenInteractorInputProtocol {
 }
 
 protocol DataScreenInteractorOutputProtocol: AnyObject {
-    
+    func didRecieveNewDebt(debt: Debt)
 }
 
 final class DataScreenInteractor: DataScreenInteractorInputProtocol {
@@ -28,5 +28,6 @@ final class DataScreenInteractor: DataScreenInteractorInputProtocol {
         debt.phone = phone
         debt.isI = isI
         debt.isActive = isActive
+        presenter.didRecieveNewDebt(debt: debt)
     }
 }

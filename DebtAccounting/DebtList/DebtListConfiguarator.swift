@@ -6,13 +6,16 @@ enum ListType {
 }
 
 protocol DebtListConfiguaratorInputProtocol {
-    func configure(withView view: DebtListViewController, andType type: ListType)
+    func configure(withView view: DebtListViewController, isActive: Bool)
 }
 
 final class DebtListConfiguarator: DebtListConfiguaratorInputProtocol {
-    func configure(withView view: DebtListViewController, andType type: ListType) {
-        let presenter = DebtListPresenter(view: view, typePresenter: type)
-        let interactor = DebtListInteractor(presenter: presenter, typeOfInteractor: type)
+    static let shared = DebtListConfiguarator()
+    private init() {}
+    
+    func configure(withView view: DebtListViewController, isActive: Bool) {
+        let presenter = DebtListPresenter(view: view, isActive: isActive)
+        let interactor = DebtListInteractor(presenter: presenter)
         let router = DebtListRouter(view: view)
         
         view.presenter = presenter

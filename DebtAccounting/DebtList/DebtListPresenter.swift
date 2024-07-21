@@ -5,9 +5,9 @@ enum IndexOfSegmentedControl {
     case second
 }
 
-struct PresenterState {
+struct DebtListModel {
     var isI = true
-    var isActive: Bool
+    let isActive: Bool
     var isRub = true
     var sectionsITo: [Section] = []
     var sectionsToMe: [Section] = []
@@ -17,71 +17,66 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     weak var view: DebtListViewControllerInputProtocol!
     var interactor: DebtListInteractorInputProtocol!
     var router: DebtListRouterInputProtocol!
-    var state: PresenterState!
-    
+    var debtListModel: DebtListModel!
     
     init(view: DebtListViewControllerInputProtocol, isActive: Bool) {
         self.view = view
-        self.state = PresenterState(isActive: isActive)
+        self.debtListModel = DebtListModel(isActive: isActive)
     }
     
     func viewDidLoad() {
-        if state.isActive {
+        if debtListModel.isActive {
             view.setTextForTableViewHeader(text: "Активные долги")
             view.setImageForRightBarButton(withSystemName: "plus")
         } else {
             view.setTextForTableViewHeader(text: "История")
             view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
         }
-        interactor.loadInitalData()
+        interactor.loadInitalData(isActive: debtListModel.isActive)
     }
     
     func didCurrencyBarButtonTapped() {
-        if state.isRub {
-            state.isRub = false
+        if debtListModel.isRub {
+            debtListModel.isRub = false
             view.setImageForCurrencyButton(withSystemName: "dollarsign")
             view.reloadDataForTableView()
         } else {
-            state.isRub = true
+            debtListModel.isRub = true
             view.setImageForCurrencyButton(withSystemName: "rublesign")
             view.reloadDataForTableView()
         }
     }
     
     func rightBarButtonTapped() {
-        if state.isActive {
-            router.openDataViewController()
+        if debtListModel.isActive {
+            router.openDataViewController(debt: nil,isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         } else {
             view.toogleEditTableView()
         }
     }
     
     func segmentedControlDidChange() {
-        if state.isI {
-            state.isI = false
-        } else {
-            state.isI = true
-        }
+        debtListModel.isI.toggle()
         view.reloadDataForTableView()
     }
     
     func numberOfSections() -> Int {
-        if state.isI {
-            return state.sectionsITo.count
+        if debtListModel.isI {
+            return debtListModel.sectionsITo.count
         } else {
-            return state.sectionsToMe.count
+            return debtListModel.sectionsToMe.count
         }
     }
     
     func numberOfRowsInSection(at index: Int) -> Int {
-        if state.isI {
-            guard let count = state.sectionsITo[index].debts?.count else {
+        if debtListModel.isI {
+            guard let count = debtListModel.sectionsITo[index].debts?.count else {
                 print("DebtListPresenter/numberOfRowsInSection: count of sectionsITo is nil")
                 return 0
             }
             return count
         } else {
-            guard let count = state.sectionsToMe[index].debts?.count else {
+            guard let count = debtListModel.sectionsToMe[index].debts?.count else {
                 print("DebtListPresenter/numberOfRowsInSection: count of sectionsToMe is nil")
                 return 0
             }
@@ -90,16 +85,20 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     }
     
     func configureCell(_ cell: DebtListCell, with indexPath: IndexPath) {
-        if state.isI {
-            guard let debt = state.sectionsITo[indexPath.section].debts?[indexPath.row] as? Debt else {
+        if debtListModel.isI {
+            guard let debt = debtListModel.sectionsITo[indexPath.section].debts?[indexPath.row] as? Debt else {
                 print("DebtListPresenter/configureCell: model is nil")
+                return
             }
-            let cellState = StateModelDebtListCell(debt: debt, delegate: self, isRub: state.isRub)
+            let cellState = StateModelDebtListCell(debt: debt, delegate: self, isRub: debtListModel.isRub)
+            cell.stateModelDebtListCell = cellState
         } else {
-            guard let model = state.sectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
+            guard let debt = debtListModel.sectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
                 print("DebtListPresenter/configureCell: model is nil")
+                return
             }
-            let cellState = StateModelDebtListCell(model: model, delegate: self, isRub: state.isRub)
+            let cellState = StateModelDebtListCell(debt: debt, delegate: self, isRub: debtListModel.isRub)
+            cell.stateModelDebtListCell = cellState
         }
     }
     
@@ -109,7 +108,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     
     func scrollViewDidScroll(_ contentOffset: CGPoint) {
         if contentOffset.y > 60 {
-            if state.isActive {
+            if debtListModel.isActive {
                 view.setTittleForNavigationController(text: "Активные долги")
             } else {
                 view.setTittleForNavigationController(text: "История")
@@ -124,8 +123,14 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
 
 extension DebtListPresenter: DebtListInteractorOutputProtocol {
     func recieveInitalData(sectionsITo: [Section], sectionToMe: [Section]) {
-        state.sectionsITo = sectionsITo
-        state.sectionsToMe = sectionToMe
+        debtListModel.sectionsITo = sectionsITo
+        debtListModel.sectionsToMe = sectionToMe
+    }
+    
+    func didRecieveNewRow(sectionsITo: [Section], sectionToMe: [Section]) {
+        debtListModel.sectionsITo = sectionsITo
+        debtListModel.sectionsToMe = sectionToMe
+        view.reloadDataForTableView()
     }
 }
 
@@ -133,6 +138,15 @@ extension DebtListPresenter: DebtListInteractorOutputProtocol {
 
 extension DebtListPresenter: DebtListCellDelegate {
     func didButtonInCellTapped(_ cell: DebtListCell) {
-        <#code#>
+        
+    }
+}
+
+//MARK: - DataScreenViewControllerDelegate
+
+extension DebtListPresenter: DataScreenViewControllerDelegate {
+    func didTapSaveBarButton(lastDebt: Debt?, newDebt: Debt) {
+        view.popViewController()
+        interactor.createNewRow(isI: debtListModel.isI, isActive: debtListModel.isActive, lastDebt: lastDebt, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
     }
 }
