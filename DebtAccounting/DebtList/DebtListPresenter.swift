@@ -19,17 +19,19 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     var router: DebtListRouterInputProtocol!
     var debtListModel: DebtListModel!
     
+    let dateService = DateService.shared
+    
     init(view: DebtListViewControllerInputProtocol, isActive: Bool) {
         self.view = view
         self.debtListModel = DebtListModel(isActive: isActive)
     }
     
-    func viewDidLoad() {
+    func viewDidLoad(with header: TableViewHeader) {
         if debtListModel.isActive {
-            view.setTextForTableViewHeader(text: "Активные долги")
+            header.setDataInHeader(text: "Активные долги")
             view.setImageForRightBarButton(withSystemName: "plus")
         } else {
-            view.setTextForTableViewHeader(text: "История")
+            header.setDataInHeader(text: "История")
             view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
         }
         interactor.loadInitalData(isActive: debtListModel.isActive)
@@ -49,7 +51,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     
     func rightBarButtonTapped() {
         if debtListModel.isActive {
-            router.openDataViewController(debt: nil,isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
+            router.openDataViewController(debt: nil, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         } else {
             view.toogleEditTableView()
         }
@@ -90,15 +92,15 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                 print("DebtListPresenter/configureCell: model is nil")
                 return
             }
-            let cellState = StateModelDebtListCell(debt: debt, delegate: self, isRub: debtListModel.isRub)
-            cell.stateModelDebtListCell = cellState
+            let debtListCellModel = DebtListCellModel(debt: debt, delegate: self, isRub: debtListModel.isRub)
+            cell.debtListCellModel = debtListCellModel
         } else {
             guard let debt = debtListModel.sectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
                 print("DebtListPresenter/configureCell: model is nil")
                 return
             }
-            let cellState = StateModelDebtListCell(debt: debt, delegate: self, isRub: debtListModel.isRub)
-            cell.stateModelDebtListCell = cellState
+            let debtListCellModel = DebtListCellModel(debt: debt, delegate: self, isRub: debtListModel.isRub)
+            cell.debtListCellModel = debtListCellModel
         }
     }
     
@@ -115,6 +117,34 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
             }
         } else {
             view.setTittleForNavigationController(text: "")
+        }
+    }
+    
+    func configureSectionHeader(header: TableSectionHeader, section: Int) {
+        if debtListModel.isI {
+            guard let sectionDate = debtListModel.sectionsITo[section].date else {return}
+            let text = dateService.monthAndYear(date: sectionDate)
+            header.setDataInHeader(text: text)
+        } else {
+            guard let sectionDate = debtListModel.sectionsToMe[section].date else {return}
+            let text = dateService.monthAndYear(date: sectionDate)
+            header.setDataInHeader(text: text)
+        }
+    }
+    
+    func didSelectedRow(at indexPath: IndexPath) {
+        if debtListModel.isI {
+            guard let debt = debtListModel.sectionsITo[indexPath.section].debts?[indexPath.row] as? Debt else {
+                print("DebtListPresenter/didSelectedRow: debt is nil")
+                return
+            }
+            router.openDataViewController(debt: debt, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
+        } else {
+            guard let debt = debtListModel.sectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
+                print("DebtListPresenter/didSelectedRow: debt is nil")
+                return
+            }
+            router.openDataViewController(debt: debt, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         }
     }
 }

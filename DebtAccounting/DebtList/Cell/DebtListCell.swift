@@ -4,7 +4,7 @@ protocol DebtListCellDelegate: AnyObject {
     func didButtonInCellTapped(_ cell: DebtListCell)
 }
 
-struct StateModelDebtListCell {
+struct DebtListCellModel {
     var dateFormatter = DateService.shared
     var conversionRateService = ConversionRateService.shared
     
@@ -22,7 +22,7 @@ struct StateModelDebtListCell {
 final class DebtListCell: UITableViewCell {
     static let reuseIdentifier = "DebtListCell"
     
-    var stateModelDebtListCell: StateModelDebtListCell? {
+    var debtListCellModel: DebtListCellModel? {
         didSet {
             updateData()
         }
@@ -110,8 +110,8 @@ final class DebtListCell: UITableViewCell {
     }
     
     private func updateData() {
-        guard let stateModelDebtListCell else {return}
-        let debt = stateModelDebtListCell.debt
+        guard let debtListCellModel else {return}
+        let debt = debtListCellModel.debt
         guard let purshase = debt.purshase else {return}
         guard let name = debt.name else {return}
         guard let date = debt.date else {return}
@@ -124,25 +124,25 @@ final class DebtListCell: UITableViewCell {
             nameLabel.text = "Должник: \(name)"
         }
         
-        if stateModelDebtListCell.isRub {
+        if debtListCellModel.isRub {
             sumLabel.text = "Сумма: \(debt.sum) руб"
         } else {
-            guard let rate = stateModelDebtListCell.conversionRateService.conversionRate?.rate else {return}
+            guard let rate = debtListCellModel.conversionRateService.conversionRate?.rate else {return}
             let dollars = Double(debt.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             sumLabel.text = "Сумма: \(roundedNumber) $"
         }
         
         if debt.isActive {
-            button.setImage(UIImage(systemName: "gobackward"), for: .normal)
-        } else {
             button.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        } else {
+            button.setImage(UIImage(systemName: "gobackward"), for: .normal)
         }
         
-        dateLabel.text = stateModelDebtListCell.dateFormatter.dayMonthAndYear(date: date)
+        dateLabel.text = debtListCellModel.dateFormatter.dayMonthAndYear(date: date)
     }
     
     @objc func didButtonInCellTapped() {
-        stateModelDebtListCell?.delegate?.didButtonInCellTapped(self)
+        debtListCellModel?.delegate?.didButtonInCellTapped(self)
     }
 }

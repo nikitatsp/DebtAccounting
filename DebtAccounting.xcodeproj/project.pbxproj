@@ -26,6 +26,9 @@
 		4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */; };
 		4A7C8C782C4B1DCF00FA76DD /* DataScreenInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */; };
 		4A7C8C7A2C4B1DE800FA76DD /* DataScreenConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8C792C4B1DE800FA76DD /* DataScreenConfigurator.swift */; };
+		4A7C8CBA2C4C8CEA00FA76DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFEE3A92C2CAEFC0044EC71 /* Assets.xcassets */; };
+		4A7C8CBC2C4C8D0F00FA76DD /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AD71FAA2C38C80A002AB995 /* Launch Screen.storyboard */; };
+		4A7C8CBE2C4D5F1100FA76DD /* TableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C8CBD2C4D5F1100FA76DD /* TableViewHeader.swift */; };
 		4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */; };
 		4A9D95942C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */; };
 		4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */; };
@@ -67,6 +70,7 @@
 		4A7C8C742C4B1DB000FA76DD /* DataScreenViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenViewPresenter.swift; sourceTree = "<group>"; };
 		4A7C8C772C4B1DCF00FA76DD /* DataScreenInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenInteractor.swift; sourceTree = "<group>"; };
 		4A7C8C792C4B1DE800FA76DD /* DataScreenConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScreenConfigurator.swift; sourceTree = "<group>"; };
+		4A7C8CBD2C4D5F1100FA76DD /* TableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewHeader.swift; sourceTree = "<group>"; };
 		4A9D958F2C2DB6D2000F4D45 /* DebtActiveTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewController.swift; sourceTree = "<group>"; };
 		4A9D95932C2DE2CE000F4D45 /* DebtActiveTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtActiveTableViewCell.swift; sourceTree = "<group>"; };
 		4A9D95952C2E16F4000F4D45 /* DataCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCreateViewController.swift; sourceTree = "<group>"; };
@@ -108,7 +112,6 @@
 		4A466BA82C35C48400256315 /* TableViewHeader */ = {
 			isa = PBXGroup;
 			children = (
-				4A466BA92C35C4A000256315 /* TableSectionHeader.swift */,
 			);
 			path = TableViewHeader;
 			sourceTree = "<group>";
@@ -158,6 +161,8 @@
 				4A4858442C4724B500952463 /* DebtListRouter.swift */,
 				4A4858462C4724C500952463 /* DebtListConfiguarator.swift */,
 				4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */,
+				4A466BA92C35C4A000256315 /* TableSectionHeader.swift */,
+				4A7C8CBD2C4D5F1100FA76DD /* TableViewHeader.swift */,
 			);
 			path = DebtList;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 			buildPhases = (
 				4AFEE3962C2CAEFB0044EC71 /* Sources */,
 				4AFEE3972C2CAEFB0044EC71 /* Frameworks */,
+				4A7C8CB92C4C8CB000FA76DD /* Resources */,
 			);
 			buildRules = (
 			);
@@ -340,6 +346,18 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		4A7C8CB92C4C8CB000FA76DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A7C8CBC2C4C8D0F00FA76DD /* Launch Screen.storyboard in Resources */,
+				4A7C8CBA2C4C8CEA00FA76DD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4AFEE3962C2CAEFB0044EC71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -361,6 +379,7 @@
 				4A4858452C4724B500952463 /* DebtListRouter.swift in Sources */,
 				4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */,
 				4ACA63BD2C31D29B001DD177 /* DebtHistoryTableViewCell.swift in Sources */,
+				4A7C8CBE2C4D5F1100FA76DD /* TableViewHeader.swift in Sources */,
 				4ACA63C82C3316F3001DD177 /* DataEditViewController.swift in Sources */,
 				4A466BBA2C3612B300256315 /* ExchangeRateResponse.swift in Sources */,
 				4ACA63C22C31FDE0001DD177 /* ActiveProfile.swift in Sources */,

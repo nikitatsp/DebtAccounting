@@ -31,8 +31,15 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         var newSectionsITo = sectionsITo
         var newSectionsToMe = sectionsToMe
         
+        if let lastDebt {
+            context.delete(lastDebt)
+        }
         
-        guard let newDebtDate = newDebt.date else {return}
+        guard let newDebtDate = newDebt.date else {
+            print("Ошибка из-за новой даты")
+            return
+        }
+        
         if isI {
             if let indexOfSection = dateService.indexOfSection(in: newSectionsITo, withDate: newDebtDate) {
                 newSectionsITo[indexOfSection].addToDebts(newDebt)
@@ -65,13 +72,13 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
                 
                 newSectionsToMe.sort { $0.date ?? Date() < $1.date ?? Date() }
             }
-            
-            do {
-                try context.save()
-                presenter.didRecieveNewRow(sectionsITo: newSectionsITo, sectionToMe: newSectionsToMe)
-            } catch {
-                print(error.localizedDescription)
-            }
+        }
+        
+        do {
+            try context.save()
+            presenter.didRecieveNewRow(sectionsITo: newSectionsITo, sectionToMe: newSectionsToMe)
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

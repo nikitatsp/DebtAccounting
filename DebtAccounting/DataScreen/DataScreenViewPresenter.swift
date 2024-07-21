@@ -30,6 +30,7 @@ final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
         
         if let debt = dataScreenModel.debt {
             view.fillDataScreen(date: debt.date, purshase: debt.purshase, name: debt.name, sum: debt.sum, telegram: debt.telegram, phone: debt.phone)
+            view.updateSaveButton(isEnabled: true)
         }
     }
     
