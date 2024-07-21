@@ -51,7 +51,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     
     func rightBarButtonTapped() {
         if debtListModel.isActive {
-            router.openDataViewController(debt: nil, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
+            router.openDataViewController(debt: nil, indexOfLastSection: nil, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         } else {
             view.toogleEditTableView()
         }
@@ -138,13 +138,13 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                 print("DebtListPresenter/didSelectedRow: debt is nil")
                 return
             }
-            router.openDataViewController(debt: debt, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
+            router.openDataViewController(debt: debt, indexOfLastSection: indexPath.section, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         } else {
             guard let debt = debtListModel.sectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
                 print("DebtListPresenter/didSelectedRow: debt is nil")
                 return
             }
-            router.openDataViewController(debt: debt, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
+            router.openDataViewController(debt: debt, indexOfLastSection: indexPath.section, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         }
     }
 }
@@ -152,15 +152,19 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
 //MARK: - DebtListInteractorOutputProtocol
 
 extension DebtListPresenter: DebtListInteractorOutputProtocol {
+    func didRecieveNewRow(sectionsITo: [Section]) {
+        debtListModel.sectionsITo = sectionsITo
+        view.reloadDataForTableView()
+    }
+    
+    func didRecieveNewRow(sectionToMe: [Section]) {
+        debtListModel.sectionsToMe = sectionToMe
+        view.reloadDataForTableView()
+    }
+    
     func recieveInitalData(sectionsITo: [Section], sectionToMe: [Section]) {
         debtListModel.sectionsITo = sectionsITo
         debtListModel.sectionsToMe = sectionToMe
-    }
-    
-    func didRecieveNewRow(sectionsITo: [Section], sectionToMe: [Section]) {
-        debtListModel.sectionsITo = sectionsITo
-        debtListModel.sectionsToMe = sectionToMe
-        view.reloadDataForTableView()
     }
 }
 
@@ -175,8 +179,13 @@ extension DebtListPresenter: DebtListCellDelegate {
 //MARK: - DataScreenViewControllerDelegate
 
 extension DebtListPresenter: DataScreenViewControllerDelegate {
-    func didTapSaveBarButton(lastDebt: Debt?, newDebt: Debt) {
+    func didCreatedNewDebt(newDebt: Debt) {
         view.popViewController()
-        interactor.createNewRow(isI: debtListModel.isI, isActive: debtListModel.isActive, lastDebt: lastDebt, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
+        interactor.createNewRow(isI: debtListModel.isI, isActive: debtListModel.isActive, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
+    }
+    
+    func didEditedDebt(indexOfLastSection: Int, newDebt: Debt) {
+        view.popViewController()
+        interactor.editedRow(isI: debtListModel.isI, isActive: debtListModel.isActive, indexOfLastSection: indexOfLastSection, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
     }
 }

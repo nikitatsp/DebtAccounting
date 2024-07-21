@@ -9,7 +9,7 @@ protocol DataScreenViewControllerInputProtocol: AnyObject {
 }
 
 protocol DataScreenViewControllerOutputProtocol {
-    init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, delegate: DataScreenViewControllerDelegate)
+    init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, indexOfLastSection: Int?, delegate: DataScreenViewControllerDelegate)
     func viewDidLoad()
     func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?)
     func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?)

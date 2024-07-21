@@ -1,6 +1,6 @@
 import UIKit
 
-final class MainViewController: UIViewController {
+final class MainScreenViewController: UIViewController {
     
     private let conversionRateService = ConversionRateService.shared
     private let model = SumProfile.shared

@@ -18,7 +18,7 @@
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isI" attributeType="Boolean" usesScalarValueType="YES"/>
-        <relationship name="debts" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Debt" inverseName="section" inverseEntity="Debt"/>
+        <relationship name="debts" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Debt" inverseName="section" inverseEntity="Debt"/>
     </entity>
     <entity name="Sum" representedClassName="Sum" syncable="YES" codeGenerationType="class">
         <attribute name="isToMe" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

@@ -60,7 +60,7 @@ final class StartViewController: UIViewController {
         tabBarAppearenceForScroll.backgroundColor = .white
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
         
-        let mainViewController = UINavigationController(rootViewController: MainViewController())
+        let mainViewController = UINavigationController(rootViewController: MainScreenViewController())
         
         let activeViewController = DebtListViewController()
         DebtListConfiguarator.shared.configure(withView: activeViewController, isActive: true)
