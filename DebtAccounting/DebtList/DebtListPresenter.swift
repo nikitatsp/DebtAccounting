@@ -184,8 +184,8 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
         interactor.createNewRow(isI: debtListModel.isI, isActive: debtListModel.isActive, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
     }
     
-    func didEditedDebt(indexOfLastSection: Int, newDebt: Debt) {
+    func didEditedDebt(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64) {
         view.popViewController()
-        interactor.editedRow(isI: debtListModel.isI, isActive: debtListModel.isActive, indexOfLastSection: indexOfLastSection, newDebt: newDebt, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
+        interactor.editedRow(isI: debtListModel.isI, isActive: debtListModel.isActive, indexOfLastSection: indexOfLastSection, newDebt: newDebt, lastSum: lastSum, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
     }
 }

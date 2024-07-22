@@ -21,7 +21,7 @@
         <relationship name="debts" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Debt" inverseName="section" inverseEntity="Debt"/>
     </entity>
     <entity name="Sum" representedClassName="Sum" syncable="YES" codeGenerationType="class">
-        <attribute name="isToMe" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isI" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sum" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
 </model>

@@ -2,7 +2,7 @@ import UIKit
 
 protocol DataScreenViewControllerDelegate: AnyObject {
     func didCreatedNewDebt(newDebt: Debt)
-    func didEditedDebt(indexOfLastSection: Int, newDebt: Debt)
+    func didEditedDebt(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64)
     
 }
 
@@ -38,7 +38,7 @@ final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
     }
     
     func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?) {
-        if let lastDebt = dataScreenModel.debt, let indexOfLastSection = dataScreenModel.indexOfLastSection {
+        if let lastDebt = dataScreenModel.debt {
             interactor.editDebt(debt: lastDebt, date: date, purshase: purshase, name: name, sum: sum, telegram: telegram, phone: phone, isI: dataScreenModel.isI, isActive: dataScreenModel.isActive)
         } else {
             interactor.makeNewDebt(date: date, purshase: purshase, name: name, sum: sum, telegram: telegram, phone: phone, isI: dataScreenModel.isI, isActive: dataScreenModel.isActive)
@@ -62,11 +62,11 @@ extension DataScreenViewPresenter: DataScreenInteractorOutputProtocol {
         dataScreenModel.delegate.didCreatedNewDebt(newDebt: debt)
     }
     
-    func didRecieveEditedDebt(debt: Debt) {
+    func didRecieveEditedDebt(debt: Debt, lastSum: Int64) {
         guard let indexOfLastSection = dataScreenModel.indexOfLastSection else {
             print("DataScreenViewPresenter/didRecieveEditedDebt: indexOfLastSection is nil")
             return
         }
-        dataScreenModel.delegate.didEditedDebt(indexOfLastSection: indexOfLastSection, newDebt: debt)
+        dataScreenModel.delegate.didEditedDebt(indexOfLastSection: indexOfLastSection, newDebt: debt, lastSum: lastSum)
     }
 }

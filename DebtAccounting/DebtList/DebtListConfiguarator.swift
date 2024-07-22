@@ -1,15 +1,6 @@
 import Foundation
 
-enum ListType {
-    case active
-    case history
-}
-
-protocol DebtListConfiguaratorInputProtocol {
-    func configure(withView view: DebtListViewController, isActive: Bool)
-}
-
-final class DebtListConfiguarator: DebtListConfiguaratorInputProtocol {
+final class DebtListConfiguarator {
     static let shared = DebtListConfiguarator()
     private init() {}
     

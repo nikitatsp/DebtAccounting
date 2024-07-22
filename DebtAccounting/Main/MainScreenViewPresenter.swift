@@ -2,8 +2,8 @@ import Foundation
 
 struct MainScreenModel {
     var isI: Bool = true
-    var sumI: Int64 = 0
-    var sumToMe: Int64 = 0
+    var sumI: Sum!
+    var sumToMe: Sum!
     var isRub = true
     var conversionRate: Double = ConversionRateService.shared.conversionRate?.rate ?? 0
 }
@@ -11,30 +11,46 @@ struct MainScreenModel {
 final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
     weak var view: MainScreenViewControllerInputProtocol!
     var interactor: MainScreenInteractorInputProtocol!
-    private var mainScreenModel: MainScreenModel
     
-    init(view: MainScreenViewControllerInputProtocol!) {
+    init(view: MainScreenViewControllerInputProtocol) {
         self.view = view
         self.mainScreenModel = MainScreenModel()
     }
     
     private let conversionRateService = ConversionRateService.shared
     private let notifications = Notifications.shared
-    
+    private var mainScreenModel: MainScreenModel
     
     func viewDidLoad() {
+        interactor.loadInitalData()
         addObserver()
     }
     
     private func addObserver() {
-        NotificationCenter.default.addObserver(forName: notifications.sumIDidChange, object: nil, queue: .main) {notification in
-            
-            
+        NotificationCenter.default.addObserver(forName: notifications.sumIDidChange, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            guard let userInfo = notification.userInfo else {
+                print("MainScreenInteractor/addObserverForSumI: userInfo is nil")
+                return
+            }
+            guard let sumI = userInfo["newSumI"] as? Int64 else {
+                print("MainScreenInteractor/addObserverForSumI: sumI is nil")
+                return
+            }
+            interactor.updateSumI(sum: mainScreenModel.sumI, count: sumI)
         }
-
-        NotificationCenter.default.addObserver(forName: notifications.sumToMeDidChange, object: nil, queue: .main) {notification in
-            
-            
+        
+        NotificationCenter.default.addObserver(forName: notifications.sumToMeDidChange, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            guard let userInfo = notification.userInfo else {
+                print("MainScreenInteractor/addObserverForSumToMe: userInfo is nil")
+                return
+            }
+            guard let sumToMe = userInfo["newSumToMe"] as? Int64 else {
+                print("MainScreenInteractor/addObserverForSumToMe: sumToMe is nil")
+                return
+            }
+            interactor.updateSumToMe(sum: mainScreenModel.sumToMe, count: sumToMe)
         }
     }
     
@@ -57,9 +73,9 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
         var sum: Int64 = 0
         
         if isI {
-            sum = mainScreenModel.sumI
+            sum = mainScreenModel.sumI.sum
         } else {
-            sum = mainScreenModel.sumToMe
+            sum = mainScreenModel.sumToMe.sum
         }
         
         if isRub {
@@ -75,5 +91,17 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
 //MARK: - MainScreenInteractorOutputProtocol
 
 extension MainScreenViewPresenter: MainScreenInteractorOutputProtocol {
+    func sumIDidChange(sum: Sum) {
+        mainScreenModel.sumI = sum
+        if mainScreenModel.isI {
+            view.updateSumLabel(text: textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate))
+        }
+    }
     
+    func sumToMeDidChange(sum: Sum) {
+        mainScreenModel.sumToMe = sum
+        if !mainScreenModel.isI {
+            view.updateSumLabel(text: textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate))
+        }
+    }
 }

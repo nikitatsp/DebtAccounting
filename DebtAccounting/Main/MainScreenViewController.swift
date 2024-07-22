@@ -6,6 +6,7 @@ protocol MainScreenViewControllerInputProtocol: AnyObject {
 }
 
 protocol MainScreenViewControllerOutputProtocol {
+    init(view: MainScreenViewControllerInputProtocol)
     func viewDidLoad()
     func segmentedControlValueChanged()
     func didCurrencyBarButtonTapped()
@@ -84,7 +85,7 @@ extension MainScreenViewController: MainScreenViewControllerInputProtocol {
     }
     
     func setImageForCurrencyButton(image: String) {
-        currencyBarButtonItem.image = UIImage(named: image)
+        currencyBarButtonItem.image = UIImage(systemName: image)
     }
 }
 

@@ -9,7 +9,7 @@ protocol DataScreenInteractorInputProtocol {
 
 protocol DataScreenInteractorOutputProtocol: AnyObject {
     func didRecieveNewDebt(debt: Debt)
-    func didRecieveEditedDebt(debt: Debt)
+    func didRecieveEditedDebt(debt: Debt, lastSum: Int64)
 }
 
 final class DataScreenInteractor: DataScreenInteractorInputProtocol {
@@ -34,6 +34,7 @@ final class DataScreenInteractor: DataScreenInteractorInputProtocol {
     }
     
     func editDebt(debt: Debt, date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?, isI: Bool, isActive: Bool) {
+        let lastSum = debt.sum
         debt.date = date
         debt.purshase = purshase
         debt.name = name
@@ -42,6 +43,6 @@ final class DataScreenInteractor: DataScreenInteractorInputProtocol {
         debt.phone = phone
         debt.isI = isI
         debt.isActive = isActive
-        presenter.didRecieveEditedDebt(debt: debt)
+        presenter.didRecieveEditedDebt(debt: debt, lastSum: lastSum)
     }
 }

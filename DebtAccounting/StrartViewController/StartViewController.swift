@@ -60,7 +60,9 @@ final class StartViewController: UIViewController {
         tabBarAppearenceForScroll.backgroundColor = .white
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
         
-        let mainViewController = UINavigationController(rootViewController: MainScreenViewController())
+        
+        let mainScreenViewController = MainScreenViewController()
+        MainScreenConfigurator.shared.configure(withView: mainScreenViewController)
         
         let activeViewController = DebtListViewController()
         DebtListConfiguarator.shared.configure(withView: activeViewController, isActive: true)
@@ -68,11 +70,11 @@ final class StartViewController: UIViewController {
         let historyViewController = DebtListViewController()
         DebtListConfiguarator.shared.configure(withView: historyViewController, isActive: false)
         
-        mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
+        mainScreenViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)
         historyViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "clock.fill"), selectedImage: nil)
         
-        tabBarController.viewControllers = [mainViewController, UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
+        tabBarController.viewControllers = [UINavigationController(rootViewController: mainScreenViewController), UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
         
         window.rootViewController = tabBarController
     }

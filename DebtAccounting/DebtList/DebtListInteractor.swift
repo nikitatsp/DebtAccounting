@@ -4,7 +4,7 @@ protocol DebtListInteractorInputProtocol {
     init(presenter: DebtListInteractorOutputProtocol)
     func loadInitalData(isActive: Bool)
     func createNewRow(isI: Bool, isActive: Bool, newDebt: Debt, sectionsITo: [Section], sectionsToMe: [Section])
-    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, sectionsITo: [Section], sectionsToMe: [Section])
+    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section])
 }
 
 protocol DebtListInteractorOutputProtocol: AnyObject {
@@ -62,6 +62,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             } catch {
                 print(error.localizedDescription)
             }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum]
+            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
         } else {
             if let indexOfSection = dateService.indexOfSection(in: newSectionsToMe, withDate: newDebtDate) {
                 newSectionsToMe[indexOfSection].addToDebts(newDebt)
@@ -85,10 +88,13 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             } catch {
                 print(error.localizedDescription)
             }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum]
+            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
         }
     }
     
-    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, sectionsITo: [Section], sectionsToMe: [Section]) {
+    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section]) {
         var newSectionsITo = sectionsITo
         var newSectionsToMe = sectionsToMe
         
@@ -139,6 +145,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             } catch {
                 print(error.localizedDescription)
             }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
         } else {
             if dateService.compareDatesIgnoringDay(newDebtDate, newSectionsToMe[indexOfLastSection].date ?? Date()) {
                 guard let sortedArr = newSectionsToMe[indexOfLastSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
@@ -181,6 +190,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             } catch {
                 print(error.localizedDescription)
             }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
         }
     }
 }
