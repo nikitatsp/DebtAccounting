@@ -17,7 +17,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     weak var view: DebtListViewControllerInputProtocol!
     var interactor: DebtListInteractorInputProtocol!
     var router: DebtListRouterInputProtocol!
-    var debtListModel: DebtListModel!
+    var debtListModel: DebtListModel
     
     let dateService = DateService.shared
     
