@@ -40,7 +40,7 @@ class DebtListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         configureNavigationItem()
         configureSegmentedControl()
         configureTableView()
@@ -50,16 +50,16 @@ class DebtListViewController: UIViewController {
     }
     
     private func configureNavigationItem() {
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.ypBlack]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.text]
         
         navigationItem.leftBarButtonItem = currencyBarButtonItem
         currencyBarButtonItem.image = UIImage(systemName: "rublesign")
-        currencyBarButtonItem.tintColor = .black
+        currencyBarButtonItem.tintColor = .text
         currencyBarButtonItem.target = self
         currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
         
         navigationItem.rightBarButtonItem = rightBarButtonItem
-        rightBarButtonItem.tintColor = UIColor(named: "YP Black")
+        rightBarButtonItem.tintColor = .text
         rightBarButtonItem.target = self
         rightBarButtonItem.action = #selector(rightBarButtonTapped)
     }
@@ -76,7 +76,7 @@ class DebtListViewController: UIViewController {
     private func configureTableView() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .background
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DebtListCell.self, forCellReuseIdentifier: DebtListCell.reuseIdentifier)

@@ -23,7 +23,7 @@ final class MainScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         configureNavigationItem()
         configureSegmentedControl()
         configureSumLabel()
@@ -36,7 +36,7 @@ final class MainScreenViewController: UIViewController {
         navigationItem.title = "Главная"
         navigationItem.leftBarButtonItem = currencyBarButtonItem
         currencyBarButtonItem.image = UIImage(systemName: "rublesign")
-        currencyBarButtonItem.tintColor = UIColor(named: "YP Black")
+        currencyBarButtonItem.tintColor = .text
         currencyBarButtonItem.target = self
         currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
     }
@@ -54,7 +54,7 @@ final class MainScreenViewController: UIViewController {
         view.addSubview(sumLabel)
         sumLabel.translatesAutoresizingMaskIntoConstraints = false
         sumLabel.font = UIFont.systemFont(ofSize: 35, weight: .bold)
-        sumLabel.textColor = .ypBlack
+        sumLabel.textColor = .text
     }
     
     private func setConstraints() {

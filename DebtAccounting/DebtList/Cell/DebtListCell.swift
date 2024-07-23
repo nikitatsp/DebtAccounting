@@ -39,6 +39,8 @@ final class DebtListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.backgroundColor = .clear
+        contentView.backgroundColor = .clear
         configurePurshaseLabel()
         configureNameLabel()
         configureSumLabel()
@@ -52,26 +54,26 @@ final class DebtListCell: UITableViewCell {
     }
     
     private func configurePurshaseLabel() {
-        purshaseLabel.font = UIFont.systemFont(ofSize: 17)
-        purshaseLabel.textColor = UIColor(named: "YP Black")
+        purshaseLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        purshaseLabel.textColor = .text
         purshaseLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureNameLabel() {
-        nameLabel.font = UIFont.systemFont(ofSize: 17)
-        nameLabel.textColor = UIColor(named: "YP Black")
+        nameLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        nameLabel.textColor = .text
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureSumLabel() {
-        sumLabel.font = UIFont.systemFont(ofSize: 17)
-        sumLabel.textColor = UIColor(named: "YP Black")
+        sumLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        sumLabel.textColor = .text
         sumLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configureDateLabel() {
         dateLabel.font = UIFont.systemFont(ofSize: 17)
-        dateLabel.textColor = UIColor(named: "YP Black")
+        dateLabel.textColor = .text
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -93,7 +95,7 @@ final class DebtListCell: UITableViewCell {
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(didButtonInCellTapped), for: .touchUpInside)
-        button.tintColor = UIColor(named: "YP Black")
+        button.tintColor = .text
     }
     
     private func setConstraints() {
@@ -116,21 +118,72 @@ final class DebtListCell: UITableViewCell {
         guard let name = debt.name else {return}
         guard let date = debt.date else {return}
         
-        purshaseLabel.text = "Покупка: \(purshase)"
+        let purshaseText = "Покупка: \(purshase)"
+        purshaseLabel.text = purshaseText
+        
+        let attributedString = NSMutableAttributedString(string: purshaseText)
+        let boldFont = UIFont.systemFont(ofSize: purshaseLabel.font.pointSize, weight: .bold)
+        let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+        attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 8))
+        let normalFont = UIFont.systemFont(ofSize: purshaseLabel.font.pointSize)
+        let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+        attributedString.addAttributes(normalAttributes, range: NSRange(location: 8, length: purshaseText.count - 8))
+        purshaseLabel.attributedText = attributedString
         
         if debt.isI {
-            nameLabel.text = "Кому: \(name)"
+            let nameText = "Кому: \(name)"
+            nameLabel.text = nameText
+            
+            let attributedString = NSMutableAttributedString(string: nameText)
+            let boldFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize, weight: .bold)
+            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 5))
+            let normalFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize)
+            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+            attributedString.addAttributes(normalAttributes, range: NSRange(location: 5, length: nameText.count - 5))
+            nameLabel.attributedText = attributedString
         } else {
-            nameLabel.text = "Должник: \(name)"
+            let nameText = "Должник: \(name)"
+            nameLabel.text = nameText
+            
+            let attributedString = NSMutableAttributedString(string: nameText)
+            let boldFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize, weight: .bold)
+            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 8))
+            let normalFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize)
+            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+            attributedString.addAttributes(normalAttributes, range: NSRange(location: 8, length: nameText.count - 8))
+            nameLabel.attributedText = attributedString
         }
         
         if debtListCellModel.isRub {
-            sumLabel.text = "Сумма: \(debt.sum) руб"
+            let sumText = "Сумма: \(debt.sum) руб"
+            sumLabel.text = sumText
+            
+            let attributedString = NSMutableAttributedString(string: sumText)
+            let boldFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize, weight: .bold)
+            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 6))
+            let normalFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize)
+            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+            attributedString.addAttributes(normalAttributes, range: NSRange(location: 6, length: sumText.count - 6))
+            sumLabel.attributedText = attributedString
         } else {
             guard let rate = debtListCellModel.conversionRateService.conversionRate?.rate else {return}
             let dollars = Double(debt.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
-            sumLabel.text = "Сумма: \(roundedNumber) $"
+            
+            let sumText = "Сумма: \(roundedNumber) $"
+            sumLabel.text = sumText
+            
+            let attributedString = NSMutableAttributedString(string: sumText)
+            let boldFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize, weight: .bold)
+            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 6))
+            let normalFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize)
+            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+            attributedString.addAttributes(normalAttributes, range: NSRange(location: 6, length: sumText.count - 6))
+            sumLabel.attributedText = attributedString
         }
         
         if debt.isActive {

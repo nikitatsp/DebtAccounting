@@ -9,7 +9,7 @@ final class StartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         fetchConversionRate()
     }
     
@@ -53,11 +53,11 @@ final class StartViewController: UIViewController {
         }
         
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.tintColor = UIColor(named: "YP Black")
+        tabBarController.tabBar.tintColor = .text
         
         let tabBarAppearenceForScroll = UITabBarAppearance()
         tabBarAppearenceForScroll.configureWithDefaultBackground()
-        tabBarAppearenceForScroll.backgroundColor = .white
+        tabBarAppearenceForScroll.backgroundColor = .background
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
         
         

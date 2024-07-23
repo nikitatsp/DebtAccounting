@@ -55,7 +55,7 @@ final class DataScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         configureNavigationItem()
         configureScrollView()
@@ -69,18 +69,17 @@ final class DataScreenViewController: UIViewController {
     }
     
     private func configureNavigationItem() {
-        guard let ypBlackColor = UIColor(named: "YP Black") else {return}
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: ypBlackColor]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.text]
         navigationItem.title = ""
         
         backBarButtonItem.image = UIImage(systemName: "chevron.backward")
-        backBarButtonItem.tintColor = UIColor(named: "YP Black")
+        backBarButtonItem.tintColor = .text
         navigationItem.leftBarButtonItem = backBarButtonItem
         backBarButtonItem.target = self
         backBarButtonItem.action = #selector(didTapBackButton)
         
         saveBarButtonItem.title = "Save"
-        saveBarButtonItem.tintColor = UIColor(named: "YP Black")
+        saveBarButtonItem.tintColor = .text
         navigationItem.rightBarButtonItem = saveBarButtonItem
         saveBarButtonItem.target = self
         saveBarButtonItem.action = #selector(didTapSaveButton)
@@ -123,10 +122,10 @@ final class DataScreenViewController: UIViewController {
     private func configurePurshaseStackView() {
         purshaseLabel.text = "Покупка"
         purshaseLabel.font = UIFont.systemFont(ofSize: 17)
-        purshaseLabel.textColor = UIColor(named: "YP Black")
+        purshaseLabel.textColor = .text
         
         purshaseTextField.font = UIFont.systemFont(ofSize: 17)
-        purshaseTextField.textColor = UIColor(named: "YP Black")
+        purshaseTextField.textColor = .text
         purshaseTextField.borderStyle = .roundedRect
         purshaseTextField.autocapitalizationType = .sentences
         purshaseTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
@@ -143,10 +142,10 @@ final class DataScreenViewController: UIViewController {
     private func configureNameStackView() {
         nameLabel.text = "Должник"
         nameLabel.font = UIFont.systemFont(ofSize: 17)
-        nameLabel.textColor = UIColor(named: "YP Black")
+        nameLabel.textColor = .text
         
         nameTextField.font = UIFont.systemFont(ofSize: 17)
-        nameTextField.textColor = UIColor(named: "YP Black")
+        nameTextField.textColor = .text
         nameTextField.borderStyle = .roundedRect
         nameTextField.autocapitalizationType = .sentences
         nameTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
@@ -163,10 +162,10 @@ final class DataScreenViewController: UIViewController {
     private func configureSumStackView() {
         sumLabel.text = "Сумма"
         sumLabel.font = UIFont.systemFont(ofSize: 17)
-        sumLabel.textColor = UIColor(named: "YP Black")
+        sumLabel.textColor = .text
         
         sumTextField.font = UIFont.systemFont(ofSize: 17)
-        sumTextField.textColor = UIColor(named: "YP Black")
+        sumTextField.textColor = .text
         sumTextField.borderStyle = .roundedRect
         sumTextField.keyboardType = .numberPad
         sumTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
@@ -183,10 +182,10 @@ final class DataScreenViewController: UIViewController {
     private func configureTelegramStackView() {
         telegramLabel.text = "Телеграм"
         telegramLabel.font = UIFont.systemFont(ofSize: 17)
-        telegramLabel.textColor = UIColor(named: "YP Black")
+        telegramLabel.textColor = .text
         
         telegramTextField.font = UIFont.systemFont(ofSize: 17)
-        telegramTextField.textColor = UIColor(named: "YP Black")
+        telegramTextField.textColor = .text
         telegramTextField.borderStyle = .roundedRect
         telegramTextField.delegate = self
         
@@ -201,10 +200,10 @@ final class DataScreenViewController: UIViewController {
     private func configurePhoneStackView() {
         phoneLabel.text = "Телефон"
         phoneLabel.font = UIFont.systemFont(ofSize: 17)
-        phoneLabel.textColor = UIColor(named: "YP Black")
+        phoneLabel.textColor = .text
         
         phoneTextField.font = UIFont.systemFont(ofSize: 17)
-        phoneTextField.textColor = UIColor(named: "YP Black")
+        phoneTextField.textColor = .text
         phoneTextField.borderStyle = .roundedRect
         phoneTextField.keyboardType = .numberPad
         phoneTextField.delegate = self
