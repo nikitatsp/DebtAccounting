@@ -232,9 +232,9 @@ extension DebtListPresenter: DebtListInteractorOutputProtocol {
     func isRubDidChange(isRub: Bool) {
         debtListModel.isRub = isRub
         if debtListModel.isRub {
-            view.setImageForCurrencyButton(withSystemName: "dollarsign")
-        } else {
             view.setImageForCurrencyButton(withSystemName: "rublesign")
+        } else {
+            view.setImageForCurrencyButton(withSystemName: "dollarsign")
         }
         view.reloadDataForTableView()
     }
@@ -282,6 +282,6 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
     
     func didEditedDebt(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64) {
         view.popViewController()
-        interactor.editedRow(isI: debtListModel.isI, isActive: debtListModel.isActive, indexOfLastSection: indexOfLastSection, newDebt: newDebt, lastSum: lastSum, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
+        interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, lastSum: lastSum, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
     }
 }

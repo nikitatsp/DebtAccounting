@@ -10,7 +10,7 @@ protocol DebtListInteractorInputProtocol {
     func removeIRow(indexPath: IndexPath, sectionsITo: [Section])
     func removeToMeRow(indexPath: IndexPath, sectionsToMe: [Section])
     func toogleIsActive(debt: Debt)
-    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section])
+    func editedRow(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section])
 }
 
 protocol DebtListInteractorOutputProtocol: AnyObject {
@@ -40,12 +40,12 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
     }
     
     func toogleIsRub(isRub: Bool) {
-        var newIsRub = !isRub
+        let newIsRub = !isRub
         presenter.isRubDidChange(isRub: newIsRub)
     }
     
     func toogleIsI(isI: Bool) {
-        var newIsI = !isI
+        let newIsI = !isI
         presenter.isIDidChange(isI: newIsI)
     }
     
@@ -166,105 +166,92 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         }
     }
     
-    func editedRow(isI: Bool, isActive: Bool, indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section]) {
-//        var newSectionsITo = sectionsITo
-//        var newSectionsToMe = sectionsToMe
-//        
-//        guard let newDebtDate = newDebt.date else {
-//            print("Ошибка из-за новой даты")
-//            return
-//        }
-//        
-//        if isI {
-//            if dateService.compareDatesIgnoringDay(newDebtDate, newSectionsITo[indexOfLastSection].date ?? Date()) {
-//                guard let sortedArr = newSectionsITo[indexOfLastSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-//                newSectionsITo[indexOfLastSection].debts = NSOrderedSet(array: sortedArr)
-//            } else {
-//                
-//                guard let lastSectionDebtsCount = newSectionsITo[indexOfLastSection].debts?.count else {
-//                    print("DebtListInteractor/editedRow: lastSectionDebtsCount is nil")
-//                    return
-//                }
-//                
-//                if lastSectionDebtsCount > 1 {
-//                    newSectionsITo[indexOfLastSection].removeFromDebts(newDebt)
-//                } else {
-//                    newSectionsITo[indexOfLastSection].removeFromDebts(newDebt)
-//                    context.delete(newSectionsITo[indexOfLastSection])
-//                    newSectionsITo.remove(at: indexOfLastSection)
-//                }
-//                
-//                if let indexOfSection = dateService.indexOfSection(in: newSectionsITo, withDate: newDebtDate) {
-//                    newSectionsITo[indexOfSection].addToDebts(newDebt)
-//                    
-//                    guard let sortedArr = newSectionsITo[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-//                    newSectionsITo[indexOfSection].debts = NSOrderedSet(array: sortedArr)
-//                } else {
-//                    let section = Section(context: context)
-//                    section.date = newDebtDate
-//                    section.isActive = isActive
-//                    section.isI = isI
-//                    section.addToDebts(newDebt)
-//                    newSectionsITo.append(section)
-//                    
-//                    newSectionsITo.sort { $0.date ?? Date() < $1.date ?? Date() }
-//                }
-//            }
-//            
-//            do {
-//                try context.save()
-//                presenter.didRecieveNewRow(sectionsITo: newSectionsITo)
-//            } catch {
-//                print(error.localizedDescription)
-//            }
-//            
-//            let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum - lastSum]
-//            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
-//        } else {
-//            if dateService.compareDatesIgnoringDay(newDebtDate, newSectionsToMe[indexOfLastSection].date ?? Date()) {
-//                guard let sortedArr = newSectionsToMe[indexOfLastSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-//                newSectionsToMe[indexOfLastSection].debts = NSOrderedSet(array: sortedArr)
-//            } else {
-//                
-//                guard let lastSectionDebtsCount = newSectionsToMe[indexOfLastSection].debts?.count else {
-//                    print("DebtListInteractor/editedRow: lastSectionDebtsCount is nil")
-//                    return
-//                }
-//                
-//                if lastSectionDebtsCount > 1 {
-//                    newSectionsToMe[indexOfLastSection].removeFromDebts(newDebt)
-//                } else {
-//                    newSectionsToMe[indexOfLastSection].removeFromDebts(newDebt)
-//                    context.delete(newSectionsToMe[indexOfLastSection])
-//                    newSectionsToMe.remove(at: indexOfLastSection)
-//                }
-//                
-//                if let indexOfSection = dateService.indexOfSection(in: newSectionsToMe, withDate: newDebtDate) {
-//                    newSectionsToMe[indexOfSection].addToDebts(newDebt)
-//                    
-//                    guard let sortedArr = newSectionsToMe[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-//                    newSectionsToMe[indexOfSection].debts = NSOrderedSet(array: sortedArr)
-//                } else {
-//                    let section = Section(context: context)
-//                    section.date = newDebtDate
-//                    section.isActive = isActive
-//                    section.isI = isI
-//                    section.addToDebts(newDebt)
-//                    newSectionsToMe.append(section)
-//                    
-//                    newSectionsToMe.sort { $0.date ?? Date() < $1.date ?? Date() }
-//                }
-//            }
-//            
-//            do {
-//                try context.save()
-//                presenter.didRecieveNewRow(sectionToMe: newSectionsToMe)
-//            } catch {
-//                print(error.localizedDescription)
-//            }
-//            
-//            let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum - lastSum]
-//            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
-//        }
+    func editedRow(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section]) {
+        var newSectionsITo = sectionsITo
+        var newSectionsToMe = sectionsToMe
+        
+        guard let newDebtDate = newDebt.date else {
+            print("Ошибка из-за новой даты")
+            return
+        }
+        
+        if newDebt.isI {
+            if dateService.compareDatesIgnoringDay(newDebtDate, newSectionsITo[indexOfLastSection].date ?? Date()) {
+                guard let sortedArr = newSectionsITo[indexOfLastSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+                newSectionsITo[indexOfLastSection].debts = NSOrderedSet(array: sortedArr)
+            } else {
+                
+                guard let lastSectionDebtsCount = newSectionsITo[indexOfLastSection].debts?.count else {
+                    print("DebtListInteractor/editedRow: lastSectionDebtsCount is nil")
+                    return
+                }
+                
+                if lastSectionDebtsCount > 1 {
+                    newSectionsITo[indexOfLastSection].removeFromDebts(newDebt)
+                } else {
+                    newSectionsITo[indexOfLastSection].removeFromDebts(newDebt)
+                    coreDataService.deleteFromContex(object: newSectionsITo[indexOfLastSection])
+                    newSectionsITo.remove(at: indexOfLastSection)
+                }
+                
+                if let indexOfSection = dateService.indexOfSection(in: newSectionsITo, withDate: newDebtDate) {
+                    newSectionsITo[indexOfSection].addToDebts(newDebt)
+                    
+                    guard let sortedArr = newSectionsITo[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+                    newSectionsITo[indexOfSection].debts = NSOrderedSet(array: sortedArr)
+                } else {
+                    let section = debtListService.createNewSection(with: newDebt)
+                    section.addToDebts(newDebt)
+                    newSectionsITo.append(section)
+                    
+                    newSectionsITo.sort { $0.date ?? Date() < $1.date ?? Date() }
+                }
+            }
+            
+            coreDataService.saveContextWith { [weak self] in
+                self?.presenter.didRecieveNewRow(sectionsITo: newSectionsITo)
+            }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
+        } else {
+            if dateService.compareDatesIgnoringDay(newDebtDate, newSectionsToMe[indexOfLastSection].date ?? Date()) {
+                guard let sortedArr = newSectionsToMe[indexOfLastSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+                newSectionsToMe[indexOfLastSection].debts = NSOrderedSet(array: sortedArr)
+            } else {
+                
+                guard let lastSectionDebtsCount = newSectionsToMe[indexOfLastSection].debts?.count else {
+                    print("DebtListInteractor/editedRow: lastSectionDebtsCount is nil")
+                    return
+                }
+                
+                if lastSectionDebtsCount > 1 {
+                    newSectionsToMe[indexOfLastSection].removeFromDebts(newDebt)
+                } else {
+                    newSectionsToMe[indexOfLastSection].removeFromDebts(newDebt)
+                    coreDataService.deleteFromContex(object: newSectionsToMe[indexOfLastSection])
+                    newSectionsToMe.remove(at: indexOfLastSection)
+                }
+                
+                if let indexOfSection = dateService.indexOfSection(in: newSectionsToMe, withDate: newDebtDate) {
+                    newSectionsToMe[indexOfSection].addToDebts(newDebt)
+                    
+                    guard let sortedArr = newSectionsToMe[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+                    newSectionsToMe[indexOfSection].debts = NSOrderedSet(array: sortedArr)
+                } else {
+                    let section = debtListService.createNewSection(with: newDebt)
+                    section.addToDebts(newDebt)
+                    newSectionsToMe.append(section)
+                    newSectionsToMe.sort { $0.date ?? Date() < $1.date ?? Date() }
+                }
+            }
+            
+            coreDataService.saveContextWith { [weak self] in
+                self?.presenter.didRecieveNewRow(sectionToMe: newSectionsToMe)
+            }
+            
+            let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+        }
     }
 }
