@@ -9,6 +9,7 @@ protocol DebtListViewControllerInputProtocol: AnyObject {
     func reloadDataForTableView()
     func toogleEditTableView()
     func popViewController()
+    func indexPathForRow(cell: DebtListCell) -> IndexPath?
 }
 
 protocol DebtListViewControllerOutputProtocol {
@@ -139,6 +140,14 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
     
     func popViewController() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func indexPathForRow(cell: DebtListCell) -> IndexPath? {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            print("DebtListViewController/indexPathForRow: indexPath is nil")
+            return nil
+        }
+        return indexPath
     }
 }
 

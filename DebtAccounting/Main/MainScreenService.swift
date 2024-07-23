@@ -58,14 +58,4 @@ final class MainScreenService {
             return nil
         }
     }
-    
-    func saveContextWith(completion: @escaping() -> Void) {
-        do {
-            try context.save()
-            completion()
-        } catch {
-            print(error.localizedDescription)
-            return
-        }
-    }
 }

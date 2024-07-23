@@ -69,6 +69,7 @@ final class StartViewController: UIViewController {
         
         let historyViewController = DebtListViewController()
         DebtListConfiguarator.shared.configure(withView: historyViewController, isActive: false)
+        _ = historyViewController.view
         
         mainScreenViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)

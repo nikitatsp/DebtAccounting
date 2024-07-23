@@ -36,6 +36,9 @@
 		4A9F799B2C4DD87900728B54 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F799A2C4DD87900728B54 /* Notifications.swift */; };
 		4A9F799D2C4EBEA900728B54 /* MainScreenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F799C2C4EBEA900728B54 /* MainScreenService.swift */; };
 		4A9F799F2C4ECC5B00728B54 /* MainScreenConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F799E2C4ECC5B00728B54 /* MainScreenConfigurator.swift */; };
+		4A9F79A22C4FF6AF00728B54 /* MainScreenViewPresenterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F79A12C4FF6AF00728B54 /* MainScreenViewPresenterHelper.swift */; };
+		4A9F79A52C4FFBF700728B54 /* DebtListPresenterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F79A42C4FFBF700728B54 /* DebtListPresenterHelper.swift */; };
+		4A9F79A72C50034300728B54 /* DebtListInteractorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9F79A62C50034300728B54 /* DebtListInteractorHelper.swift */; };
 		4ABAE2802C4DD34D007AE8B6 /* MainScreenViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABAE27F2C4DD34D007AE8B6 /* MainScreenViewPresenter.swift */; };
 		4ABAE2822C4DD365007AE8B6 /* MainScreenInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABAE2812C4DD365007AE8B6 /* MainScreenInteractor.swift */; };
 		4ACA63B92C31D1F4001DD177 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA63B82C31D1F4001DD177 /* Model.swift */; };
@@ -83,6 +86,9 @@
 		4A9F799A2C4DD87900728B54 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		4A9F799C2C4EBEA900728B54 /* MainScreenService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenService.swift; sourceTree = "<group>"; };
 		4A9F799E2C4ECC5B00728B54 /* MainScreenConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenConfigurator.swift; sourceTree = "<group>"; };
+		4A9F79A12C4FF6AF00728B54 /* MainScreenViewPresenterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewPresenterHelper.swift; sourceTree = "<group>"; };
+		4A9F79A42C4FFBF700728B54 /* DebtListPresenterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListPresenterHelper.swift; sourceTree = "<group>"; };
+		4A9F79A62C50034300728B54 /* DebtListInteractorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebtListInteractorHelper.swift; sourceTree = "<group>"; };
 		4ABAE27F2C4DD34D007AE8B6 /* MainScreenViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewPresenter.swift; sourceTree = "<group>"; };
 		4ABAE2812C4DD365007AE8B6 /* MainScreenInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenInteractor.swift; sourceTree = "<group>"; };
 		4ACA63B82C31D1F4001DD177 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -164,14 +170,15 @@
 		4A48583D2C47243B00952463 /* DebtList */ = {
 			isa = PBXGroup;
 			children = (
-				4A7C8C6C2C4AE26300FA76DD /* Cell */,
-				4ABAE27E2C4DD30F007AE8B6 /* Headers */,
 				4A48583E2C47247000952463 /* DebtListViewController.swift */,
 				4A4858422C47249000952463 /* DebtListPresenter.swift */,
 				4A4858402C47248500952463 /* DebtListInteractor.swift */,
 				4A4858442C4724B500952463 /* DebtListRouter.swift */,
 				4A4858462C4724C500952463 /* DebtListConfiguarator.swift */,
 				4A7C8C6A2C4ACE1A00FA76DD /* DebtListService.swift */,
+				4A9F79A32C4FFBE100728B54 /* Helpers */,
+				4ABAE27E2C4DD30F007AE8B6 /* Headers */,
+				4A7C8C6C2C4AE26300FA76DD /* Cell */,
 			);
 			path = DebtList;
 			sourceTree = "<group>";
@@ -204,6 +211,23 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
+		4A9F79A02C4FF69500728B54 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				4A9F79A12C4FF6AF00728B54 /* MainScreenViewPresenterHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		4A9F79A32C4FFBE100728B54 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				4A9F79A42C4FFBF700728B54 /* DebtListPresenterHelper.swift */,
+				4A9F79A62C50034300728B54 /* DebtListInteractorHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		4ABAE27E2C4DD30F007AE8B6 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +258,7 @@
 		4ACA63B52C31D18D001DD177 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				4A9F79A02C4FF69500728B54 /* Helpers */,
 				4AFEE3A12C2CAEFB0044EC71 /* MainScreenViewController.swift */,
 				4ABAE27F2C4DD34D007AE8B6 /* MainScreenViewPresenter.swift */,
 				4ABAE2812C4DD365007AE8B6 /* MainScreenInteractor.swift */,
@@ -396,6 +421,7 @@
 			files = (
 				4A9F799F2C4ECC5B00728B54 /* MainScreenConfigurator.swift in Sources */,
 				4A7C8C7A2C4B1DE800FA76DD /* DataScreenConfigurator.swift in Sources */,
+				4A9F79A22C4FF6AF00728B54 /* MainScreenViewPresenterHelper.swift in Sources */,
 				4A48583F2C47247000952463 /* DebtListViewController.swift in Sources */,
 				4A466BBF2C36167400256315 /* ConversionRate.swift in Sources */,
 				4ACA63C62C3201FE001DD177 /* DateProfile.swift in Sources */,
@@ -410,6 +436,7 @@
 				4A9D95962C2E16F4000F4D45 /* DataCreateViewController.swift in Sources */,
 				4A466BAC2C36092600256315 /* StartViewController.swift in Sources */,
 				4A7C8C752C4B1DB000FA76DD /* DataScreenViewPresenter.swift in Sources */,
+				4A9F79A52C4FFBF700728B54 /* DebtListPresenterHelper.swift in Sources */,
 				4A4858452C4724B500952463 /* DebtListRouter.swift in Sources */,
 				4A9D95902C2DB6D2000F4D45 /* DebtActiveTableViewController.swift in Sources */,
 				4ACA63BD2C31D29B001DD177 /* DebtHistoryTableViewCell.swift in Sources */,
@@ -437,6 +464,7 @@
 				4A466BAA2C35C4A000256315 /* TableSectionHeader.swift in Sources */,
 				4A9D959E2C309ADF000F4D45 /* HistoryProfile.swift in Sources */,
 				4A466BB72C360E9200256315 /* ExchangeRateService.swift in Sources */,
+				4A9F79A72C50034300728B54 /* DebtListInteractorHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

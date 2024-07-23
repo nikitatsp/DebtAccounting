@@ -43,7 +43,6 @@ final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
         } else {
             interactor.makeNewDebt(date: date, purshase: purshase, name: name, sum: sum, telegram: telegram, phone: phone, isI: dataScreenModel.isI, isActive: dataScreenModel.isActive)
         }
-        
     }
     
     func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?) {

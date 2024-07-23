@@ -1,7 +1,7 @@
 import UIKit
 
 protocol DebtListCellDelegate: AnyObject {
-    func didButtonInCellTapped(_ cell: DebtListCell)
+    func didButtonInCellTapped(_ cell: DebtListCell, debt: Debt)
 }
 
 struct DebtListCellModel {
@@ -22,7 +22,7 @@ struct DebtListCellModel {
 final class DebtListCell: UITableViewCell {
     static let reuseIdentifier = "DebtListCell"
     
-    var debtListCellModel: DebtListCellModel? {
+    var debtListCellModel: DebtListCellModel! {
         didSet {
             updateData()
         }
@@ -143,6 +143,6 @@ final class DebtListCell: UITableViewCell {
     }
     
     @objc func didButtonInCellTapped() {
-        debtListCellModel?.delegate?.didButtonInCellTapped(self)
+        debtListCellModel?.delegate?.didButtonInCellTapped(self, debt: debtListCellModel.debt)
     }
 }

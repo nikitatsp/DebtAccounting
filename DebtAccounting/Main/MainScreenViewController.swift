@@ -2,7 +2,7 @@ import UIKit
 
 protocol MainScreenViewControllerInputProtocol: AnyObject {
     func updateSumLabel(text: String)
-    func setImageForCurrencyButton(image: String)
+    func setImageForCurrencyButton(with systemName: String)
 }
 
 protocol MainScreenViewControllerOutputProtocol {
@@ -84,8 +84,8 @@ extension MainScreenViewController: MainScreenViewControllerInputProtocol {
         sumLabel.text = text
     }
     
-    func setImageForCurrencyButton(image: String) {
-        currencyBarButtonItem.image = UIImage(systemName: image)
+    func setImageForCurrencyButton(with systemName: String) {
+        currencyBarButtonItem.image = UIImage(systemName: systemName)
     }
 }
 

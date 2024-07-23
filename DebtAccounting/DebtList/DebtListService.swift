@@ -63,4 +63,15 @@ final class DebtListService {
             }
         }
     }
+    
+    func createNewSection(with newDebt: Debt) -> Section {
+        let section = Section(context: context)
+        section.date = newDebt.date
+        section.isActive = newDebt.isActive
+        section.isI = newDebt.isI
+        section.addToDebts(newDebt)
+        return section
+    }
+    
+    
 }
