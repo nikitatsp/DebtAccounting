@@ -6,6 +6,7 @@ struct DebtListModel {
     var isRub = true
     var sectionsITo: [Section] = []
     var sectionsToMe: [Section] = []
+    var isEditTable = false
 }
 
 final class DebtListPresenter: DebtListViewControllerOutputProtocol {
@@ -25,9 +26,10 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     func viewDidLoad(with header: TableViewHeader) {
         if debtListModel.isActive {
             header.setDataInHeader(text: "Активные долги")
+            view.setImageForRightBarButton(withSystemName: "plus")
         } else {
-            view.removeRightBarButton()
             header.setDataInHeader(text: "История")
+            view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
             
         }
         interactor.loadInitalData(isActive: debtListModel.isActive)
@@ -117,6 +119,12 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
         if debtListModel.isActive {
             router.openDataViewController(debt: nil, indexOfLastSection: nil, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         } else {
+            debtListModel.isEditTable.toggle()
+            if debtListModel.isEditTable {
+                view.setImageForRightBarButton(withSystemName: "checkmark.circle")
+            } else {
+                view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
+            }
             view.toogleEditTableView()
         }
     }

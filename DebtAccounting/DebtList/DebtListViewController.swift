@@ -5,7 +5,7 @@ import UIKit
 protocol DebtListViewControllerInputProtocol: AnyObject {
     func setTittleForNavigationController(text: String)
     func setImageForCurrencyButton(withSystemName name: String)
-    func removeRightBarButton()
+    func setImageForRightBarButton(withSystemName name: String)
     func reloadDataForTableView()
     func toogleEditTableView()
     func popViewController()
@@ -27,6 +27,7 @@ protocol DebtListViewControllerOutputProtocol {
     func didSelectedRow(at indexPath: IndexPath)
     func shouldShowMenu() -> Bool
     func didDeleteButtonInMenuForRowDidTapped(indexPath: IndexPath)
+    func commitDeleteEdittingStyle(indexPath: IndexPath)
 }
 
 //MARK: - DebtListViewController
@@ -61,7 +62,6 @@ class DebtListViewController: UIViewController {
         currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
         
         navigationItem.rightBarButtonItem = rightBarButtonItem
-        rightBarButtonItem.image = UIImage(systemName: "plus")
         rightBarButtonItem.tintColor = .text
         rightBarButtonItem.target = self
         rightBarButtonItem.action = #selector(rightBarButtonTapped)
@@ -135,6 +135,10 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
     
     func setImageForCurrencyButton(withSystemName name: String) {
         currencyBarButtonItem.image = UIImage(systemName: name)
+    }
+    
+    func setImageForRightBarButton(withSystemName name: String) {
+        rightBarButtonItem.image = UIImage(systemName: name)
     }
     
     func removeRightBarButton() {
@@ -219,6 +223,16 @@ extension DebtListViewController: UITableViewDelegate {
         return UIContextMenuConfiguration { [weak self] menuElement in
             guard let self else {return nil}
             return self.configureMenuForRow(for: indexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            presenter.commitDeleteEdittingStyle(indexPath: indexPath)
         }
     }
 }
