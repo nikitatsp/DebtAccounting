@@ -105,11 +105,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         
         coreDataService.saveContextWith { [weak self] in
             if debt.isI {
-//                self?.presenter.didRemovedRow(sectionsITo: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
-                self?.presenter.didRecieveNewRow(sectionsITo: newSections)
+                self?.presenter.didRemovedRow(sectionsITo: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
             } else {
-//                self?.presenter.didRemovedRow(sectionToMe: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
-                self?.presenter.didRecieveNewRow(sectionToMe: newSections)
+                self?.presenter.didRemovedRow(sectionToMe: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
             }
         }
     }

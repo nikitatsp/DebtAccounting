@@ -152,10 +152,12 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
     }
     
     func removeRowsAt(indexPath: IndexPath, shouldDeleteSection: Bool) {
-        tableView.deleteRows(at: [indexPath], with: .fade)
-        if shouldDeleteSection {
-            tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
-        }
+        tableView.performBatchUpdates({
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            if shouldDeleteSection {
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+            }
+        }, completion: nil)
     }
 }
 
