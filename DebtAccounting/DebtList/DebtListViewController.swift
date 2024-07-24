@@ -10,6 +10,7 @@ protocol DebtListViewControllerInputProtocol: AnyObject {
     func toogleEditTableView()
     func popViewController()
     func indexPathForRow(cell: DebtListCell) -> IndexPath?
+    func removeRowsAt(indexPath: IndexPath, shouldDeleteSection: Bool)
 }
 
 protocol DebtListViewControllerOutputProtocol {
@@ -148,6 +149,13 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
             return nil
         }
         return indexPath
+    }
+    
+    func removeRowsAt(indexPath: IndexPath, shouldDeleteSection: Bool) {
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        if shouldDeleteSection {
+            tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+        }
     }
 }
 

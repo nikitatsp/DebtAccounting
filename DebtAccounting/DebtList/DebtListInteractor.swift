@@ -5,10 +5,8 @@ protocol DebtListInteractorInputProtocol {
     func loadInitalData(isActive: Bool)
     func toogleIsRub(isRub: Bool)
     func toogleIsI(isI: Bool)
-    func insertNewIRow(newDebt: Debt, sectionsITo: [Section])
-    func insertNewToMeRow(newDebt: Debt, sectionsToMe: [Section])
-    func removeIRow(indexPath: IndexPath, sectionsITo: [Section])
-    func removeToMeRow(indexPath: IndexPath, sectionsToMe: [Section])
+    func insertNewRow(sections: [Section], newDebt: Debt)
+    func removeRow(indexPath: IndexPath, sections: [Section], shouldDeleteDebt: Bool)
     func toogleIsActive(debt: Debt)
     func editedRow(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64, sectionsITo: [Section], sectionsToMe: [Section])
 }
@@ -18,6 +16,8 @@ protocol DebtListInteractorOutputProtocol: AnyObject {
     func isIDidChange(isI: Bool)
     func didRecieveNewRow(sectionsITo: [Section])
     func didRecieveNewRow(sectionToMe: [Section])
+    func didRemovedRow(sectionsITo: [Section], indexPath: IndexPath, shouldRemoveSection: Bool)
+    func didRemovedRow(sectionToMe: [Section], indexPath: IndexPath, shouldRemoveSection: Bool)
 }
 
 final class DebtListInteractor: DebtListInteractorInputProtocol {
@@ -49,101 +49,68 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         presenter.isIDidChange(isI: newIsI)
     }
     
-    func insertNewIRow(newDebt: Debt, sectionsITo: [Section]) {
-        var newSectionsITo = sectionsITo
+    func insertNewRow(sections: [Section], newDebt: Debt) {
+        var newSections = sections
         
         guard let newDebtDate = newDebt.date else {
             print("Ошибка из-за новой даты")
             return
         }
         
-        if let indexOfSection = dateService.indexOfSection(in: newSectionsITo, withDate: newDebtDate) {
-            newSectionsITo[indexOfSection].addToDebts(newDebt)
-            guard let sortedArr = newSectionsITo[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-            newSectionsITo[indexOfSection].debts = NSOrderedSet(array: sortedArr)
+        if let indexOfSection = dateService.indexOfSection(in: newSections, withDate: newDebtDate) {
+            newSections[indexOfSection].addToDebts(newDebt)
+            guard let sortedArr = newSections[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
+            newSections[indexOfSection].debts = NSOrderedSet(array: sortedArr)
         } else {
             let section = debtListService.createNewSection(with: newDebt)
-            newSectionsITo.append(section)
-            newSectionsITo.sort { $0.date ?? Date() < $1.date ?? Date() }
+            newSections.append(section)
+            newSections.sort { $0.date ?? Date() < $1.date ?? Date() }
         }
         
         coreDataService.saveContextWith { [weak self] in
-            self?.presenter.didRecieveNewRow(sectionsITo: newSectionsITo)
+            if newDebt.isI {
+                self?.presenter.didRecieveNewRow(sectionsITo: newSections)
+            } else {
+                self?.presenter.didRecieveNewRow(sectionToMe: newSections)
+            }
         }
     }
     
-    func insertNewToMeRow(newDebt: Debt, sectionsToMe: [Section]) {
-        var newSectionsToMe = sectionsToMe
+    func removeRow(indexPath: IndexPath, sections: [Section], shouldDeleteDebt: Bool) {
+        var newSections = sections
+        var shouldRemoveSection = false
         
-        guard let newDebtDate = newDebt.date else {
-            print("Ошибка из-за новой даты")
-            return
-        }
-        
-        if let indexOfSection = dateService.indexOfSection(in: newSectionsToMe, withDate: newDebtDate) {
-            newSectionsToMe[indexOfSection].addToDebts(newDebt)
-            guard let sortedArr = newSectionsToMe[indexOfSection].debts?.sortedArray(using: [NSSortDescriptor(key: "date", ascending: true)]) else {return}
-            newSectionsToMe[indexOfSection].debts = NSOrderedSet(array: sortedArr)
-        } else {
-            let section = debtListService.createNewSection(with: newDebt)
-            newSectionsToMe.append(section)
-            newSectionsToMe.sort { $0.date ?? Date() < $1.date ?? Date() }
-        }
-        
-        coreDataService.saveContextWith { [weak self] in
-            self?.presenter.didRecieveNewRow(sectionToMe: newSectionsToMe)
-        }
-    }
-    
-    func removeIRow(indexPath: IndexPath, sectionsITo: [Section]) {
-        var newSectionsITo = sectionsITo
-        
-        guard let sectionCount = newSectionsITo[indexPath.section].debts?.count else {
+        guard let sectionCount = newSections[indexPath.section].debts?.count else {
             print("DebtListInteractor/newSectionsITo: sectionCount is nil")
             return
         }
         
-        guard let debt = newSectionsITo[indexPath.section].debts?[indexPath.row] as? Debt else {
+        guard let debt = newSections[indexPath.section].debts?[indexPath.row] as? Debt else {
             print("DebtListInteractor/newSectionsITo: debt is nil")
             return
         }
         
         if sectionCount > 1 {
-            newSectionsITo[indexPath.section].removeFromDebts(debt)
+            newSections[indexPath.section].removeFromDebts(debt)
         } else {
-            newSectionsITo[indexPath.section].removeFromDebts(debt)
-            coreDataService.deleteFromContex(object: newSectionsITo[indexPath.section])
-            newSectionsITo.remove(at: indexPath.section)
+            newSections[indexPath.section].removeFromDebts(debt)
+            coreDataService.deleteFromContex(object: newSections[indexPath.section])
+            newSections.remove(at: indexPath.section)
+            shouldRemoveSection = true
+        }
+        
+        if shouldDeleteDebt {
+            coreDataService.deleteFromContex(object: debt)
         }
         
         coreDataService.saveContextWith { [weak self] in
-            self?.presenter.didRecieveNewRow(sectionsITo: newSectionsITo)
-        }
-    }
-    
-    func removeToMeRow(indexPath: IndexPath, sectionsToMe: [Section]) {
-        var newSectionsToMe = sectionsToMe
-        
-        guard let sectionCount = newSectionsToMe[indexPath.section].debts?.count else {
-            print("DebtListInteractor/newSectionsITo: sectionCount is nil")
-            return
-        }
-        
-        guard let debt = newSectionsToMe[indexPath.section].debts?[indexPath.row] as? Debt else {
-            print("DebtListInteractor/newSectionsITo: debt is nil")
-            return
-        }
-        
-        if sectionCount > 1 {
-            newSectionsToMe[indexPath.section].removeFromDebts(debt)
-        } else {
-            newSectionsToMe[indexPath.section].removeFromDebts(debt)
-            coreDataService.deleteFromContex(object: newSectionsToMe[indexPath.section])
-            newSectionsToMe.remove(at: indexPath.section)
-        }
-        
-        coreDataService.saveContextWith { [weak self] in
-            self?.presenter.didRecieveNewRow(sectionToMe: newSectionsToMe)
+            if debt.isI {
+//                self?.presenter.didRemovedRow(sectionsITo: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
+                self?.presenter.didRecieveNewRow(sectionsITo: newSections)
+            } else {
+//                self?.presenter.didRemovedRow(sectionToMe: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
+                self?.presenter.didRecieveNewRow(sectionToMe: newSections)
+            }
         }
     }
     

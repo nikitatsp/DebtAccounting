@@ -47,7 +47,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                     return
                 }
                 
-                self.interactor.insertNewIRow(newDebt: newDebt, sectionsITo: self.debtListModel.sectionsITo)
+                self.interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
                 
                 let userInfoSum: [AnyHashable: Any] = ["newSumI": newDebt.sum]
                 NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
@@ -64,7 +64,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                     return
                 }
                 
-                self.interactor.insertNewToMeRow(newDebt: newDebt, sectionsToMe: debtListModel.sectionsToMe)
+                self.interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
                 
                 let userInfoSum: [AnyHashable: Any] = ["newSumToMe": newDebt.sum]
                 NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
@@ -84,7 +84,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                     return
                 }
                 
-                self.interactor.insertNewIRow(newDebt: newDebt, sectionsITo: self.debtListModel.sectionsITo)
+                self.interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
                 
                 let userInfoSum: [AnyHashable: Any] = ["newSumI": -newDebt.sum]
                 NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
@@ -101,7 +101,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
                     return
                 }
                 
-                self.interactor.insertNewToMeRow(newDebt: newDebt, sectionsToMe: debtListModel.sectionsToMe)
+                self.interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
                 
                 let userInfoSum: [AnyHashable: Any] = ["newSumToMe": -newDebt.sum]
                 NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
@@ -214,7 +214,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
 
 //MARK: - DebtListInteractorOutputProtocol
 
-extension DebtListPresenter: DebtListInteractorOutputProtocol {    
+extension DebtListPresenter: DebtListInteractorOutputProtocol {
     func didRecieveNewRow(sectionsITo: [Section]) {
         debtListModel.sectionsITo = sectionsITo
         if debtListModel.isI {
@@ -243,6 +243,16 @@ extension DebtListPresenter: DebtListInteractorOutputProtocol {
         debtListModel.isI = isI
         view.reloadDataForTableView()
     }
+    
+    func didRemovedRow(sectionsITo: [Section], indexPath: IndexPath, shouldRemoveSection: Bool) {
+        debtListModel.sectionsITo = sectionsITo
+        view.removeRowsAt(indexPath: indexPath, shouldDeleteSection: shouldRemoveSection)
+    }
+    
+    func didRemovedRow(sectionToMe: [Section], indexPath: IndexPath, shouldRemoveSection: Bool) {
+        debtListModel.sectionsToMe = sectionToMe
+        view.removeRowsAt(indexPath: indexPath, shouldDeleteSection: shouldRemoveSection)
+    }
 }
 
 //MARK: - DebtListCellDelegate
@@ -255,9 +265,9 @@ extension DebtListPresenter: DebtListCellDelegate {
         }
         
         if debtListModel.isI {
-            interactor.removeIRow(indexPath: indexPath, sectionsITo: debtListModel.sectionsITo)
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsITo, shouldDeleteDebt: false)
         } else {
-            interactor.removeToMeRow(indexPath: indexPath, sectionsToMe: debtListModel.sectionsToMe)
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsToMe, shouldDeleteDebt: false)
         }
         
         interactor.toogleIsActive(debt: debt)
@@ -269,12 +279,13 @@ extension DebtListPresenter: DebtListCellDelegate {
 extension DebtListPresenter: DataScreenViewControllerDelegate {
     func didCreatedNewDebt(newDebt: Debt) {
         view.popViewController()
+        
         if newDebt.isI {
-            interactor.insertNewIRow(newDebt: newDebt, sectionsITo: debtListModel.sectionsITo)
+            interactor.insertNewRow(sections: debtListModel.sectionsITo, newDebt: newDebt)
             let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum]
             NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
         } else {
-            interactor.insertNewToMeRow(newDebt: newDebt, sectionsToMe: debtListModel.sectionsToMe)
+            interactor.insertNewRow(sections: debtListModel.sectionsToMe, newDebt: newDebt)
             let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum]
             NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
         }
