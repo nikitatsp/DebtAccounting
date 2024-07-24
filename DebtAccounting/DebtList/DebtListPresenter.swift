@@ -25,10 +25,10 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     func viewDidLoad(with header: TableViewHeader) {
         if debtListModel.isActive {
             header.setDataInHeader(text: "Активные долги")
-            view.setImageForRightBarButton(withSystemName: "plus")
         } else {
+            view.removeRightBarButton()
             header.setDataInHeader(text: "История")
-            view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
+            
         }
         interactor.loadInitalData(isActive: debtListModel.isActive)
         addObserver(isActive: debtListModel.isActive)
@@ -168,7 +168,11 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     }
     
     func commitDeleteEdittingStyle(indexPath: IndexPath) {
-        
+        if debtListModel.isI {
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsITo, shouldDeleteDebt: true)
+        } else {
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsToMe, shouldDeleteDebt: true)
+        }
     }
     
     func scrollViewDidScroll(_ contentOffset: CGPoint) {
@@ -209,6 +213,31 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
             }
             router.openDataViewController(debt: debt, indexOfLastSection: indexPath.section, isI: debtListModel.isI, isActive: debtListModel.isActive, delegate: self)
         }
+    }
+    
+    func canEditRowAt() -> Bool {
+        if debtListModel.isActive {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func shouldShowMenu() -> Bool {
+        if debtListModel.isActive {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func didDeleteButtonInMenuForRowDidTapped(indexPath: IndexPath) {
+        if debtListModel.isI {
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsITo, shouldDeleteDebt: true)
+        } else {
+            interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsToMe, shouldDeleteDebt: true)
+        }
+        
     }
 }
 

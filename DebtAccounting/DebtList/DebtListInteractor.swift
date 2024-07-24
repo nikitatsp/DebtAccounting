@@ -94,13 +94,10 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             newSections[indexPath.section].removeFromDebts(debt)
         } else {
             newSections[indexPath.section].removeFromDebts(debt)
-            coreDataService.deleteFromContex(object: newSections[indexPath.section])
+            let section = newSections[indexPath.section]
             newSections.remove(at: indexPath.section)
+            coreDataService.deleteFromContex(object: section)
             shouldRemoveSection = true
-        }
-        
-        if shouldDeleteDebt {
-            coreDataService.deleteFromContex(object: debt)
         }
         
         coreDataService.saveContextWith { [weak self] in
@@ -109,6 +106,11 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
             } else {
                 self?.presenter.didRemovedRow(sectionToMe: newSections, indexPath: indexPath, shouldRemoveSection: shouldRemoveSection)
             }
+        }
+        
+        if shouldDeleteDebt {
+            coreDataService.deleteFromContex(object: debt)
+            coreDataService.saveContextWith { }
         }
     }
     

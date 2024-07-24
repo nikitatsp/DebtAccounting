@@ -5,7 +5,7 @@ import UIKit
 protocol DebtListViewControllerInputProtocol: AnyObject {
     func setTittleForNavigationController(text: String)
     func setImageForCurrencyButton(withSystemName name: String)
-    func setImageForRightBarButton(withSystemName name: String)
+    func removeRightBarButton()
     func reloadDataForTableView()
     func toogleEditTableView()
     func popViewController()
@@ -23,9 +23,10 @@ protocol DebtListViewControllerOutputProtocol {
     func configureSectionHeader(header: TableSectionHeader, section: Int)
     func didCurrencyBarButtonTapped()
     func rightBarButtonTapped()
-    func commitDeleteEdittingStyle(indexPath: IndexPath)
     func segmentedControlDidChange()
     func didSelectedRow(at indexPath: IndexPath)
+    func shouldShowMenu() -> Bool
+    func didDeleteButtonInMenuForRowDidTapped(indexPath: IndexPath)
 }
 
 //MARK: - DebtListViewController
@@ -60,6 +61,7 @@ class DebtListViewController: UIViewController {
         currencyBarButtonItem.action = #selector(didCurrencyBarButtonTapped)
         
         navigationItem.rightBarButtonItem = rightBarButtonItem
+        rightBarButtonItem.image = UIImage(systemName: "plus")
         rightBarButtonItem.tintColor = .text
         rightBarButtonItem.target = self
         rightBarButtonItem.action = #selector(rightBarButtonTapped)
@@ -103,6 +105,14 @@ class DebtListViewController: UIViewController {
         tableHeaderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 60)
     }
     
+    private func configureMenuForRow(for indexPath: IndexPath) -> UIMenu {
+        let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] action in
+            self?.presenter.didDeleteButtonInMenuForRowDidTapped(indexPath: indexPath)
+        }
+        
+        return UIMenu(title: "", children: [deleteAction])
+    }
+    
     @objc private func didCurrencyBarButtonTapped() {
         presenter.didCurrencyBarButtonTapped()
     }
@@ -127,8 +137,8 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
         currencyBarButtonItem.image = UIImage(systemName: name)
     }
     
-    func setImageForRightBarButton(withSystemName name: String) {
-        rightBarButtonItem.image = UIImage(systemName: name)
+    func removeRightBarButton() {
+        navigationItem.rightBarButtonItem = nil
     }
     
     func reloadDataForTableView() {
@@ -187,27 +197,29 @@ extension DebtListViewController: UITableViewDataSource {
         return headerView
     }
     
-        func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-            30
-        }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        30
+    }
 }
 
 //MARK: - UITableViewDelegate
 
 extension DebtListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            presenter.commitDeleteEdittingStyle(indexPath: indexPath)
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.didSelectedRow(at: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        if !presenter.shouldShowMenu() {
+            return nil
+        }
+        
+        return UIContextMenuConfiguration { [weak self] menuElement in
+            guard let self else {return nil}
+            return self.configureMenuForRow(for: indexPath)
+        }
     }
 }
 
