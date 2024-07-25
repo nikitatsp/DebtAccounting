@@ -316,13 +316,18 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
         if debtListModel.isI {
             interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsITo)
             
-            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
-            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
+            
+            if debtListModel.isActive {
+                let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
+                NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
+            }
         } else {
             interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsToMe)
             
-            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
-            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+            if debtListModel.isActive {
+                let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
+                NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+            }
         }
     }
 }

@@ -111,6 +111,20 @@ final class DebtListCell: UITableViewCell {
         ])
     }
     
+    private func attributeString(label: UILabel, firstText: String, secondText: String) {
+        let text = "\(firstText) \(secondText)"
+        label.text = text
+        
+        let attributedString = NSMutableAttributedString(string: text)
+        let boldFont = UIFont.systemFont(ofSize: label.font.pointSize, weight: .bold)
+        let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
+        attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: firstText.count))
+        let normalFont = UIFont.systemFont(ofSize: label.font.pointSize)
+        let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
+        attributedString.addAttributes(normalAttributes, range: NSRange(location: firstText.count, length: text.count - firstText.count))
+        label.attributedText = attributedString
+    }
+    
     private func updateData() {
         guard let debtListCellModel else {return}
         let debt = debtListCellModel.debt
@@ -118,72 +132,22 @@ final class DebtListCell: UITableViewCell {
         guard let name = debt.name else {return}
         guard let date = debt.date else {return}
         
-        let purshaseText = "Покупка: \(purshase)"
-        purshaseLabel.text = purshaseText
-        
-        let attributedString = NSMutableAttributedString(string: purshaseText)
-        let boldFont = UIFont.systemFont(ofSize: purshaseLabel.font.pointSize, weight: .bold)
-        let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
-        attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 8))
-        let normalFont = UIFont.systemFont(ofSize: purshaseLabel.font.pointSize)
-        let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
-        attributedString.addAttributes(normalAttributes, range: NSRange(location: 8, length: purshaseText.count - 8))
-        purshaseLabel.attributedText = attributedString
+        attributeString(label: purshaseLabel, firstText: "Покупка:", secondText: purshase)
         
         if debt.isI {
-            let nameText = "Кому: \(name)"
-            nameLabel.text = nameText
-            
-            let attributedString = NSMutableAttributedString(string: nameText)
-            let boldFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize, weight: .bold)
-            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
-            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 5))
-            let normalFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize)
-            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
-            attributedString.addAttributes(normalAttributes, range: NSRange(location: 5, length: nameText.count - 5))
-            nameLabel.attributedText = attributedString
+            attributeString(label: nameLabel, firstText: "Кому:", secondText: name)
         } else {
-            let nameText = "Должник: \(name)"
-            nameLabel.text = nameText
-            
-            let attributedString = NSMutableAttributedString(string: nameText)
-            let boldFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize, weight: .bold)
-            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
-            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 8))
-            let normalFont = UIFont.systemFont(ofSize: nameLabel.font.pointSize)
-            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
-            attributedString.addAttributes(normalAttributes, range: NSRange(location: 8, length: nameText.count - 8))
-            nameLabel.attributedText = attributedString
+            attributeString(label: nameLabel, firstText: "Должник:", secondText: name)
         }
         
         if debtListCellModel.isRub {
-            let sumText = "Сумма: \(debt.sum) руб"
-            sumLabel.text = sumText
-            
-            let attributedString = NSMutableAttributedString(string: sumText)
-            let boldFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize, weight: .bold)
-            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
-            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 6))
-            let normalFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize)
-            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
-            attributedString.addAttributes(normalAttributes, range: NSRange(location: 6, length: sumText.count - 6))
-            sumLabel.attributedText = attributedString
+            attributeString(label: sumLabel, firstText: "Сумма:", secondText: "\(debt.sum) руб")
         } else {
             guard let rate = debtListCellModel.conversionRateService.conversionRate?.rate else {return}
             let dollars = Double(debt.sum) * rate
             let roundedNumber = Double(String(format: "%.2f", dollars))!
             
-            let sumText = "Сумма: \(roundedNumber) $"
-            sumLabel.text = sumText
-            
-            let attributedString = NSMutableAttributedString(string: sumText)
-            let boldFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize, weight: .bold)
-            let boldAttributes: [NSAttributedString.Key: Any] = [.font: boldFont]
-            attributedString.addAttributes(boldAttributes, range: NSRange(location: 0, length: 6))
-            let normalFont = UIFont.systemFont(ofSize: sumLabel.font.pointSize)
-            let normalAttributes: [NSAttributedString.Key: Any] = [.font: normalFont]
-            attributedString.addAttributes(normalAttributes, range: NSRange(location: 6, length: sumText.count - 6))
-            sumLabel.attributedText = attributedString
+            attributeString(label: sumLabel, firstText: "Сумма:", secondText: "\(roundedNumber) $")
         }
         
         if debt.isActive {
