@@ -1,10 +1,27 @@
-Привет, это мое айос приложение для учета долгов. 
 
--использовано три экрана
--используется CoreData для хранения и удаления долгов
--используется URLSession для загрузки актуального курса валют
--долги сортируются по секциям в зависимости от даты
+# DebtAccounting
 
-<img width="342" alt="image" src="https://github.com/user-attachments/assets/ee27b5db-bdc4-4300-ba0d-26b25375297b">
-<img width="347" alt="image" src="https://github.com/user-attachments/assets/b0a22ffc-4fed-47b4-9062-b3666fe2a2e4">
-<img width="340" alt="image" src="https://github.com/user-attachments/assets/e32d1f4a-94fd-4e11-afa8-727ebef863f9">
+**DebtAccounting** is an iOS application designed to help users keep track of their debts efficiently. The app consists of three main screens and leverages Core Data for data storage. Table cells are sorted into sections based on the date, ensuring an organized and user-friendly experience. The app's screens are built using the VIPER architecture, while the table cells follow the MVVM architecture pattern.
+
+## Screenshots
+
+### Main Screen
+![Main Screen Placeholder](https://github.com/user-attachments/assets/4716fe58-64da-4bfa-b92d-3951812892fb)
+
+### Active Debts
+![Active Debts Placeholder](https://github.com/user-attachments/assets/6e3dd44d-1ff2-4140-ac0b-f63518a189b7)
+
+
+### History Debts Screen
+![History Debts Screen Placeholder](https://github.com/user-attachments/assets/f32ffca2-3d14-4ace-ae99-75630e5ad92d)
+
+
+## Features
+
+- **Core Data Integration**: The app uses Core Data for robust and efficient data storage.
+- **Date-Based Sorting**: Debts are organized into sections based on their dates.
+- **VIPER Architecture**: Ensures modularity and separation of concerns in the app's design.
+- **MVVM Architecture for Table Cells**: Promotes clean code and maintainability for table views.
+- **Currency Conversion**: Switch between Rubles and US Dollars. Exchange rates are fetched using URLSession.
+
+
