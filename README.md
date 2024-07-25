@@ -5,19 +5,19 @@
 ## Screenshots
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/ad985092-55b5-4b3e-989d-270a29348bf6" alt="Main Screen" width="250"/>
-    &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/a910ea38-595c-4ca2-9ed8-208fac019e7e" alt="Active Debts" width="250"/>
-    &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/32741f24-207d-4f9b-bd5d-1c98d228c191" alt="History Debts Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/ad985092-55b5-4b3e-989d-270a29348bf6" alt="Main Screen" width="150"/>
+    &nbsp;
+    <img src="https://github.com/user-attachments/assets/a910ea38-595c-4ca2-9ed8-208fac019e7e" alt="Active Debts" width="150"/>
+    &nbsp;
+    <img src="https://github.com/user-attachments/assets/32741f24-207d-4f9b-bd5d-1c98d228c191" alt="History Debts Screen" width="150"/>
 </p>
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/b07d8a2f-bc89-4bd3-ba61-ccc39945ea97" alt="Main Screen" width="250"/>
-    &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/1e222381-2e89-4180-93d7-3232ef0250b1" alt="Active Debts" width="250"/>
-    &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/308c0daf-71af-451b-a69b-36e6352d9f89" alt="History Debts Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/b07d8a2f-bc89-4bd3-ba61-ccc39945ea97" alt="Main Screen" width="150"/>
+    &nbsp;
+    <img src="https://github.com/user-attachments/assets/1e222381-2e89-4180-93d7-3232ef0250b1" alt="Active Debts" width="150"/>
+    &nbsp;
+    <img src="https://github.com/user-attachments/assets/308c0daf-71af-451b-a69b-36e6352d9f89" alt="History Debts Screen" width="150"/>
 </p>
 
 ## Features
