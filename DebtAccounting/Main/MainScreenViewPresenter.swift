@@ -52,7 +52,7 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
         if isI {
             interactor.updateSumI(sum: mainScreenModel.sumI, count: newSum)
         } else {
-            interactor.updateSumI(sum: mainScreenModel.sumToMe, count: newSum)
+            interactor.updateSumToMe(sum: mainScreenModel.sumToMe, count: newSum)
         }
     }
     
