@@ -1,23 +1,23 @@
 # DebtAccounting
 
-**DebtAccounting** is an iOS application designed to help users keep track of their debts efficiently. The app consists of three main screens and leverages Core Data for data storage. Table cells are sorted into sections based on the date, ensuring an organized and user-friendly experience. The app's screens are built using the VIPER architecture, while the table cells follow the MVVM architecture pattern.
+**DebtAccounting** is an iOS application designed to help users keep track of their debts efficiently. The app consists of three main screens and leverages Core Data for data storage. Table cells are sorted into sections based on the date, ensuring an organized and user-friendly experience. The app's screens are built using the VIPER architecture, while the table cells follow the MVVM architecture pattern. If you change theme on your phone, app also change colortheme.
 
 ## Screenshots
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/aa92fb76-dd9d-4887-b791-e0c08c1dea62" alt="Main Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/ad985092-55b5-4b3e-989d-270a29348bf6" alt="Main Screen" width="250"/>
     &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/ac1e20c8-9b86-4632-afc6-069210189308" alt="Active Debts" width="250"/>
+    <img src="https://github.com/user-attachments/assets/a910ea38-595c-4ca2-9ed8-208fac019e7e" alt="Active Debts" width="250"/>
     &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/f157fba5-2028-4adf-b11b-b8bd4c16dcfc" alt="History Debts Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/32741f24-207d-4f9b-bd5d-1c98d228c191" alt="History Debts Screen" width="250"/>
 </p>
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/4716fe58-64da-4bfa-b92d-3951812892fb" alt="Main Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/b07d8a2f-bc89-4bd3-ba61-ccc39945ea97" alt="Main Screen" width="250"/>
     &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/6e3dd44d-1ff2-4140-ac0b-f63518a189b7" alt="Active Debts" width="250"/>
+    <img src="https://github.com/user-attachments/assets/1e222381-2e89-4180-93d7-3232ef0250b1" alt="Active Debts" width="250"/>
     &nbsp;&nbsp;
-    <img src="https://github.com/user-attachments/assets/f32ffca2-3d14-4ace-ae99-75630e5ad92d" alt="History Debts Screen" width="250"/>
+    <img src="https://github.com/user-attachments/assets/308c0daf-71af-451b-a69b-36e6352d9f89" alt="History Debts Screen" width="250"/>
 </p>
 
 ## Features
