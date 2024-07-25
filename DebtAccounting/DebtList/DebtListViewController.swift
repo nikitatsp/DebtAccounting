@@ -43,13 +43,17 @@ class DebtListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .background
+        setBackgroundColor()
         configureNavigationItem()
         configureSegmentedControl()
         configureTableView()
         setConstraints()
         configureTableHeaderView()
         presenter.viewDidLoad(with: tableHeaderView)
+    }
+    
+    private func setBackgroundColor() {
+        view.backgroundColor = .background
     }
     
     private func configureNavigationItem() {
@@ -126,54 +130,6 @@ class DebtListViewController: UIViewController {
     }
 }
 
-//MARK: - DebtListViewControllerInputProtocol
-
-extension DebtListViewController: DebtListViewControllerInputProtocol {
-    func setTittleForNavigationController(text: String) {
-        navigationItem.title = text
-    }
-    
-    func setImageForCurrencyButton(withSystemName name: String) {
-        currencyBarButtonItem.image = UIImage(systemName: name)
-    }
-    
-    func setImageForRightBarButton(withSystemName name: String) {
-        rightBarButtonItem.image = UIImage(systemName: name)
-    }
-    
-    func removeRightBarButton() {
-        navigationItem.rightBarButtonItem = nil
-    }
-    
-    func reloadDataForTableView() {
-        tableView.reloadData()
-    }
-    
-    func toogleEditTableView() {
-        tableView.setEditing(!tableView.isEditing, animated: true)
-    }
-    
-    func popViewController() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func indexPathForRow(cell: DebtListCell) -> IndexPath? {
-        guard let indexPath = tableView.indexPath(for: cell) else {
-            print("DebtListViewController/indexPathForRow: indexPath is nil")
-            return nil
-        }
-        return indexPath
-    }
-    
-    func removeRowsAt(indexPath: IndexPath, shouldDeleteSection: Bool) {
-        tableView.performBatchUpdates({
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            if shouldDeleteSection {
-                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
-            }
-        }, completion: nil)
-    }
-}
 
 //MARK: - UITableViewDataSource
 
@@ -227,13 +183,62 @@ extension DebtListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        true
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             presenter.commitDeleteEdittingStyle(indexPath: indexPath)
         }
+    }
+}
+
+//MARK: - DebtListViewControllerInputProtocol
+
+extension DebtListViewController: DebtListViewControllerInputProtocol {
+    func setTittleForNavigationController(text: String) {
+        navigationItem.title = text
+    }
+    
+    func setImageForCurrencyButton(withSystemName name: String) {
+        currencyBarButtonItem.image = UIImage(systemName: name)
+    }
+    
+    func setImageForRightBarButton(withSystemName name: String) {
+        rightBarButtonItem.image = UIImage(systemName: name)
+    }
+    
+    func removeRightBarButton() {
+        navigationItem.rightBarButtonItem = nil
+    }
+    
+    func reloadDataForTableView() {
+        tableView.reloadData()
+    }
+    
+    func toogleEditTableView() {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+    }
+    
+    func popViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func indexPathForRow(cell: DebtListCell) -> IndexPath? {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            print("DebtListViewController/indexPathForRow: indexPath is nil")
+            return nil
+        }
+        return indexPath
+    }
+    
+    func removeRowsAt(indexPath: IndexPath, shouldDeleteSection: Bool) {
+        tableView.performBatchUpdates({
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            if shouldDeleteSection {
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+            }
+        }, completion: nil)
     }
 }
 

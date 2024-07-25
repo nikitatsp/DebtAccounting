@@ -192,7 +192,7 @@ final class DebtListCell: UITableViewCell {
             button.setImage(UIImage(systemName: "gobackward"), for: .normal)
         }
         
-        dateLabel.text = debtListCellModel.dateFormatter.dayMonthAndYear(date: date)
+        dateLabel.text = debtListCellModel.dateFormatter.dateFormatterDayMonthAndYear.string(from: date)
     }
     
     @objc func didButtonInCellTapped() {

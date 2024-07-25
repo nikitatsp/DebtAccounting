@@ -32,6 +32,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
             view.setImageForRightBarButton(withSystemName: "slider.horizontal.3")
             
         }
+        
         interactor.loadInitalData(isActive: debtListModel.isActive)
         addObserver(isActive: debtListModel.isActive)
     }
@@ -40,74 +41,53 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
         if debtListModel.isActive {
             NotificationCenter.default.addObserver(forName: notifications.sectionsIToActiveDidChange, object: nil, queue: .main) { [weak self] notification in
                 guard let self else {return}
-                guard let userInfo = notification.userInfo else {
-                    print("DebtListPresenter/addObserver: userInfo is nil")
-                    return
-                }
-                guard let newDebt = userInfo["newRow"] as? Debt else {
-                    print("DebtListPresenter/addObserver: newRow is nil")
-                    return
-                }
-                
-                self.interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
-                
-                let userInfoSum: [AnyHashable: Any] = ["newSumI": newDebt.sum]
-                NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
+                self.actionForNotification(notification: notification, isI: true, isActive: true)
             }
             
             NotificationCenter.default.addObserver(forName: notifications.sectionsToMeActiveDidChange, object: nil, queue: .main) { [weak self] notification in
                 guard let self else {return}
-                guard let userInfo = notification.userInfo else {
-                    print("DebtListPresenter/addObserver: userInfo is nil")
-                    return
-                }
-                guard let newDebt = userInfo["newRow"] as? Debt else {
-                    print("DebtListPresenter/addObserver: newRow is nil")
-                    return
-                }
-                
-                self.interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
-                
-                let userInfoSum: [AnyHashable: Any] = ["newSumToMe": newDebt.sum]
-                NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
+                self.actionForNotification(notification: notification, isI: false, isActive: true)
             }
         } else {
             NotificationCenter.default.addObserver(forName: notifications.sectionsIToHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
-                print("Получена нотификация")
-                guard let self else {
-                    print("не получена нотификация")
-                    return}
-                guard let userInfo = notification.userInfo else {
-                    print("DebtListPresenter/addObserver: userInfo is nil")
-                    return
-                }
-                guard let newDebt = userInfo["newRow"] as? Debt else {
-                    print("DebtListPresenter/addObserver: newRow is nil")
-                    return
-                }
-                
-                self.interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
-                
-                let userInfoSum: [AnyHashable: Any] = ["newSumI": -newDebt.sum]
-                NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
+                guard let self else {return}
+                self.actionForNotification(notification: notification, isI: true, isActive: false)
             }
             
             NotificationCenter.default.addObserver(forName: notifications.sectionsToMeHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
                 guard let self else {return}
-                guard let userInfo = notification.userInfo else {
-                    print("DebtListPresenter/addObserver: userInfo is nil")
-                    return
-                }
-                guard let newDebt = userInfo["newRow"] as? Debt else {
-                    print("DebtListPresenter/addObserver: newRow is nil")
-                    return
-                }
-                
-                self.interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
-                
-                let userInfoSum: [AnyHashable: Any] = ["newSumToMe": -newDebt.sum]
-                NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
+                self.actionForNotification(notification: notification, isI: false, isActive: false)
             }
+        }
+    }
+    
+    private func actionForNotification(notification: Notification, isI: Bool, isActive: Bool) {
+        guard let userInfo = notification.userInfo else {
+            print("DebtListPresenter/addObserver: userInfo is nil")
+            return
+        }
+        guard let newDebt = userInfo["newRow"] as? Debt else {
+            print("DebtListPresenter/addObserver: newRow is nil")
+            return
+        }
+        
+        if isI {
+            interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
+        } else {
+            interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
+        }
+        
+        var userInfoSum: [AnyHashable: Any] = [:]
+        if isActive {
+            userInfoSum = ["newSum": newDebt.sum]
+        } else {
+            userInfoSum = ["newSum": -newDebt.sum]
+        }
+        
+        if isI {
+            NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
+        } else {
+            NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
         }
     }
     
@@ -198,11 +178,11 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     func configureSectionHeader(header: TableSectionHeader, section: Int) {
         if debtListModel.isI {
             guard let sectionDate = debtListModel.sectionsITo[section].date else {return}
-            let text = dateService.monthAndYear(date: sectionDate)
+            let text = dateService.dateFormatterMonthAndYear.string(from: sectionDate)
             header.setDataInHeader(text: text)
         } else {
             guard let sectionDate = debtListModel.sectionsToMe[section].date else {return}
-            let text = dateService.monthAndYear(date: sectionDate)
+            let text = dateService.dateFormatterMonthAndYear.string(from: sectionDate)
             header.setDataInHeader(text: text)
         }
     }
@@ -319,17 +299,30 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
         
         if newDebt.isI {
             interactor.insertNewRow(sections: debtListModel.sectionsITo, newDebt: newDebt)
-            let userInfo: [AnyHashable: Any] = ["newSumI": newDebt.sum]
+            
+            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum]
             NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
         } else {
             interactor.insertNewRow(sections: debtListModel.sectionsToMe, newDebt: newDebt)
-            let userInfo: [AnyHashable: Any] = ["newSumToMe": newDebt.sum]
+            
+            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum]
             NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
         }
     }
     
     func didEditedDebt(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64) {
         view.popViewController()
-        interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, lastSum: lastSum, sectionsITo: debtListModel.sectionsITo, sectionsToMe: debtListModel.sectionsToMe)
+        
+        if debtListModel.isI {
+            interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsITo)
+            
+            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
+        } else {
+            interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsToMe)
+            
+            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
+            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+        }
     }
 }

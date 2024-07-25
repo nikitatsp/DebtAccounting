@@ -24,37 +24,35 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
     
     func viewDidLoad() {
         interactor.loadInitalData()
-        addObserverForSumIDidChange()
-        addObserverForSumToMeDidChange()
+        addObserver()
     }
     
-    private func addObserverForSumIDidChange() {
+    private func addObserver() {
         NotificationCenter.default.addObserver(forName: notifications.sumIDidChange, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
-            guard let userInfo = notification.userInfo else {
-                print("MainScreenInteractor/addObserverForSumI: userInfo is nil")
-                return
-            }
-            guard let sumI = userInfo["newSumI"] as? Int64 else {
-                print("MainScreenInteractor/addObserverForSumI: sumI is nil")
-                return
-            }
-            interactor.updateSumI(sum: mainScreenModel.sumI, count: sumI)
+            self.actionForNotification(notification: notification, isI: true)
+        }
+        
+        NotificationCenter.default.addObserver(forName: notifications.sumToMeDidChange, object: nil, queue: .main) { [weak self] notification in
+            guard let self else {return}
+            self.actionForNotification(notification: notification, isI: false)
         }
     }
     
-    private func addObserverForSumToMeDidChange() {
-        NotificationCenter.default.addObserver(forName: notifications.sumToMeDidChange, object: nil, queue: .main) { [weak self] notification in
-            guard let self else {return}
-            guard let userInfo = notification.userInfo else {
-                print("MainScreenInteractor/addObserverForSumToMe: userInfo is nil")
-                return
-            }
-            guard let sumToMe = userInfo["newSumToMe"] as? Int64 else {
-                print("MainScreenInteractor/addObserverForSumToMe: sumToMe is nil")
-                return
-            }
-            interactor.updateSumToMe(sum: mainScreenModel.sumToMe, count: sumToMe)
+    private func actionForNotification(notification: Notification, isI: Bool) {
+        guard let userInfo = notification.userInfo else {
+            print("MainScreenInteractor/addObserverForSumI: userInfo is nil")
+            return
+        }
+        guard let newSum = userInfo["newSum"] as? Int64 else {
+            print("MainScreenInteractor/addObserverForSumI: sumI is nil")
+            return
+        }
+        
+        if isI {
+            interactor.updateSumI(sum: mainScreenModel.sumI, count: newSum)
+        } else {
+            interactor.updateSumI(sum: mainScreenModel.sumToMe, count: newSum)
         }
     }
     
