@@ -12,6 +12,14 @@
     <img src="https://github.com/user-attachments/assets/f32ffca2-3d14-4ace-ae99-75630e5ad92d" alt="History Debts Screen" width="250"/>
 </p>
 
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/4716fe58-64da-4bfa-b92d-3951812892fb" alt="Main Screen" width="250"/>
+    &nbsp;&nbsp;
+    <img src="https://github.com/user-attachments/assets/6e3dd44d-1ff2-4140-ac0b-f63518a189b7" alt="Active Debts" width="250"/>
+    &nbsp;&nbsp;
+    <img src="https://github.com/user-attachments/assets/f32ffca2-3d14-4ace-ae99-75630e5ad92d" alt="History Debts Screen" width="250"/>
+</p>
+
 ## Features
 
 - **Core Data Integration**: The app uses Core Data for robust and efficient data storage.
