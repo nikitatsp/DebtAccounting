@@ -1,6 +1,6 @@
 # DebtAccounting
 
-**DebtAccounting** is an iOS application designed to help users keep track of their debts efficiently. The app consists of three main screens and leverages Core Data for data storage. Table cells are sorted into sections based on the date, ensuring an organized and user-friendly experience. The app's screens are built using the VIPER architecture, while the table cells follow the MVVM architecture pattern. If you change theme on your phone, app also change colortheme.
+**DebtAccounting** is an ios application. The application has three screens: on the first screen the total debt, on the second screen the active debts, and on the third the debt history. The app hav You can add and edit your debts. You can track the debts owed to you and the debts that you have taken out. You can edit existing debts. The currency can be changed from rubles to dollars with the current exchange rate. The app adapts to the theme on your smartphone.
 
 ## Screenshots
 
@@ -22,8 +22,8 @@
 
 ## Features
 
-- **Core Data Integration**: The app uses Core Data for robust and efficient data storage.
+- **Core Data Integration**: The app uses Core Data for data storage.
 - **Date-Based Sorting**: Debts are organized into sections based on their dates.
-- **VIPER Architecture**: Ensures modularity and separation of concerns in the app's design.
-- **MVVM Architecture for Table Cells**: Promotes clean code and maintainability for table views.
+- **VIPER Architecture** for screens.
+- **MVVM Architecture** for table cells.
 - **Currency Conversion**: Switch between Rubles and US Dollars. Exchange rates are fetched using URLSession.
