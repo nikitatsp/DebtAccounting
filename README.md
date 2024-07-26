@@ -1,6 +1,6 @@
 # DebtAccounting
 
-**DebtAccounting** is an ios application. The application has three screens: on the first screen the total debt, on the second screen the active debts, and on the third the debt history. The app hav You can add and edit your debts. You can track the debts owed to you and the debts that you have taken out. You can edit existing debts. The currency can be changed from rubles to dollars with the current exchange rate. The app adapts to the theme on your smartphone.
+**DebtAccounting** is an ios application. The application has three screens: on the first screen the total debt, on the second screen the active debts, and on the third the debt history. You can add and edit your debts. You can track the debts owed to you and the debts that you have taken out. You can edit existing debts. The currency can be changed from rubles to dollars with the current exchange rate. The app adapts to the theme on your smartphone.
 
 ## Screenshots
 
