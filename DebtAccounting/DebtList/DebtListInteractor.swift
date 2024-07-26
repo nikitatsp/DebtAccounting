@@ -12,10 +12,10 @@ protocol DebtListInteractorInputProtocol {
 }
 
 protocol DebtListInteractorOutputProtocol: AnyObject {
-    func isRubDidChange(isRub: Bool)
-    func isIDidChange(isI: Bool)
-    func didRecieveNewRow(sectionsITo: [Section])
-    func didRecieveNewRow(sectionToMe: [Section])
+    func isRubDidChange(newIsRub: Bool)
+    func isIDidChange(newIsI: Bool)
+    func didSectionsIToUpdated(newSectionsITo: [Section])
+    func didSectionsToMeUpdated(newSectionsToMe: [Section])
     func didRemovedRow(sectionsITo: [Section], indexPath: IndexPath, shouldRemoveSection: Bool)
     func didRemovedRow(sectionToMe: [Section], indexPath: IndexPath, shouldRemoveSection: Bool)
 }
@@ -36,18 +36,18 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
     func loadInitalData(isActive: Bool) {
         let sectionsITo = debtListService.loadInitalDataITo(for: isActive)
         let sectionsToMe = debtListService.loadInitalDataToMe(for: isActive)
-        presenter.didRecieveNewRow(sectionsITo: sectionsITo)
-        presenter.didRecieveNewRow(sectionToMe: sectionsToMe)
+        presenter.didSectionsIToUpdated(newSectionsITo: sectionsITo)
+        presenter.didSectionsToMeUpdated(newSectionsToMe: sectionsToMe)
     }
     
     func toogleIsRub(isRub: Bool) {
         let newIsRub = !isRub
-        presenter.isRubDidChange(isRub: newIsRub)
+        presenter.isRubDidChange(newIsRub: newIsRub)
     }
     
     func toogleIsI(isI: Bool) {
         let newIsI = !isI
-        presenter.isIDidChange(isI: newIsI)
+        presenter.isIDidChange(newIsI: newIsI)
     }
     
     func insertNewRow(sections: [Section], newDebt: Debt) {
@@ -55,9 +55,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         
         coreDataService.saveContextWith { [weak self] in
             if newDebt.isI {
-                self?.presenter.didRecieveNewRow(sectionsITo: newSections)
+                self?.presenter.didSectionsIToUpdated(newSectionsITo: newSections)
             } else {
-                self?.presenter.didRecieveNewRow(sectionToMe: newSections)
+                self?.presenter.didSectionsToMeUpdated(newSectionsToMe: newSections)
             }
         }
     }
@@ -80,9 +80,9 @@ final class DebtListInteractor: DebtListInteractorInputProtocol {
         
         coreDataService.saveContextWith { [weak self] in
             if newDebt.isI {
-                self?.presenter.didRecieveNewRow(sectionsITo: newSections)
+                self?.presenter.didSectionsIToUpdated(newSectionsITo: newSections)
             } else {
-                self?.presenter.didRecieveNewRow(sectionToMe: newSections)
+                self?.presenter.didSectionsToMeUpdated(newSectionsToMe: newSections)
             }
         }
     }

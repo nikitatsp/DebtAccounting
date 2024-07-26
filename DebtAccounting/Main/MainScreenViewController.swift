@@ -1,5 +1,7 @@
 import UIKit
 
+//MARK: - Protocols
+
 protocol MainScreenViewControllerInputProtocol: AnyObject {
     func updateSumLabel(text: String)
     func setImageForCurrencyButton(with systemName: String)
@@ -30,7 +32,6 @@ final class MainScreenViewController: UIViewController {
         setConstraints()
         presenter.viewDidLoad()
     }
-    
     
     private func configureNavigationItem() {
         navigationItem.title = "Главная"

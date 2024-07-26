@@ -16,18 +16,18 @@ protocol DebtListViewControllerInputProtocol: AnyObject {
 protocol DebtListViewControllerOutputProtocol {
     init(view: DebtListViewControllerInputProtocol, isActive: Bool)
     func viewDidLoad(with header: TableViewHeader)
-    func scrollViewDidScroll(_ contentOffset: CGPoint)
+    func didCurrencyBarButtonTapped()
+    func rightBarButtonTapped()
+    func segmentedControlDidChange()
     func numberOfSections() -> Int
     func numberOfRowsInSection(at index: Int) -> Int
     func configureCell(_ cell: DebtListCell, with indexPath: IndexPath)
     func configureSectionHeader(header: TableSectionHeader, section: Int)
-    func didCurrencyBarButtonTapped()
-    func rightBarButtonTapped()
-    func segmentedControlDidChange()
     func didSelectedRow(at indexPath: IndexPath)
+    func commitDeleteEdittingStyle(indexPath: IndexPath)
     func shouldShowMenu() -> Bool
     func didDeleteButtonInMenuForRowDidTapped(indexPath: IndexPath)
-    func commitDeleteEdittingStyle(indexPath: IndexPath)
+    func scrollViewDidScroll(_ contentOffset: CGPoint)
 }
 
 //MARK: - DebtListViewController
@@ -109,14 +109,6 @@ class DebtListViewController: UIViewController {
         tableHeaderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 60)
     }
     
-    private func configureMenuForRow(for indexPath: IndexPath) -> UIMenu {
-        let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] action in
-            self?.presenter.didDeleteButtonInMenuForRowDidTapped(indexPath: indexPath)
-        }
-        
-        return UIMenu(title: "", children: [deleteAction])
-    }
-    
     @objc private func didCurrencyBarButtonTapped() {
         presenter.didCurrencyBarButtonTapped()
     }
@@ -193,6 +185,14 @@ extension DebtListViewController: UITableViewDelegate {
     }
 }
 
+//MARK: - UIScrollViewDelegate
+
+extension DebtListViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        presenter.scrollViewDidScroll(scrollView.contentOffset)
+    }
+}
+
 //MARK: - DebtListViewControllerInputProtocol
 
 extension DebtListViewController: DebtListViewControllerInputProtocol {
@@ -242,10 +242,14 @@ extension DebtListViewController: DebtListViewControllerInputProtocol {
     }
 }
 
-//MARK: - UIScrollViewDelegate
+//MARK: - Utilities
 
-extension DebtListViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        presenter.scrollViewDidScroll(scrollView.contentOffset)
+extension DebtListViewController {
+    private func configureMenuForRow(for indexPath: IndexPath) -> UIMenu {
+        let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] action in
+            self?.presenter.didDeleteButtonInMenuForRowDidTapped(indexPath: indexPath)
+        }
+        
+        return UIMenu(title: "", children: [deleteAction])
     }
 }

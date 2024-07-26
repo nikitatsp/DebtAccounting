@@ -1,5 +1,7 @@
 import Foundation
 
+//MARK: - Protocols
+
 protocol MainScreenInteractorInputProtocol {
     init(presenter: MainScreenInteractorOutputProtocol)
     func loadInitalData()
@@ -10,11 +12,13 @@ protocol MainScreenInteractorInputProtocol {
 }
 
 protocol MainScreenInteractorOutputProtocol: AnyObject {
-    func sumIDidChange(sum: Sum)
-    func sumToMeDidChange(sum: Sum)
-    func isIDidChange(isI: Bool)
-    func isRubDidChange(isRub: Bool)
+    func sumIDidChange(newSum: Sum)
+    func sumToMeDidChange(newSum: Sum)
+    func isIDidChange(newIsI: Bool)
+    func isRubDidChange(newIsRub: Bool)
 }
+
+//MARK: - MainScreenInteractorInputProtocol
 
 final class MainScreenInteractor: MainScreenInteractorInputProtocol {
     weak var presenter: MainScreenInteractorOutputProtocol!
@@ -35,31 +39,31 @@ final class MainScreenInteractor: MainScreenInteractorInputProtocol {
             print("MainScreenInteractor/loadInitalData: sumToMe is nil")
             return
         }
-        presenter.sumIDidChange(sum: sumI)
-        presenter.sumToMeDidChange(sum: sumToMe)
+        presenter.sumIDidChange(newSum: sumI)
+        presenter.sumToMeDidChange(newSum: sumToMe)
     }
     
     func toogleIsI(isI: Bool) {
         let newIsI = !isI
-        presenter.isIDidChange(isI: newIsI)
+        presenter.isIDidChange(newIsI: newIsI)
     }
     
     func toogleIsRub(isRub: Bool) {
         let newIsRub = !isRub
-        presenter.isRubDidChange(isRub: newIsRub)
+        presenter.isRubDidChange(newIsRub: newIsRub)
     }
     
     func updateSumI(sum: Sum, count: Int64) {
         sum.sum += count
         coreDataService.saveContextWith { [weak self] in
-            self?.presenter.sumIDidChange(sum: sum)
+            self?.presenter.sumIDidChange(newSum: sum)
         }
     }
     
     func updateSumToMe(sum: Sum, count: Int64) {
         sum.sum += count
         coreDataService.saveContextWith { [weak self] in
-            self?.presenter.sumToMeDidChange(sum: sum)
+            self?.presenter.sumToMeDidChange(newSum: sum)
         }
     }
 }

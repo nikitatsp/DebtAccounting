@@ -1,5 +1,7 @@
 import Foundation
 
+//MARK: - MainScreenModel
+
 struct MainScreenModel {
     var isI: Bool = true
     var sumI: Sum!
@@ -7,6 +9,8 @@ struct MainScreenModel {
     var isRub = true
     var conversionRate: Double = ConversionRateService.shared.conversionRate?.rate ?? 0
 }
+
+//MARK: - MainScreenViewControllerOutputProtocol
 
 final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
     weak var view: MainScreenViewControllerInputProtocol!
@@ -39,6 +43,51 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
         }
     }
     
+    func segmentedControlValueChanged() {
+        interactor.toogleIsI(isI: mainScreenModel.isI)
+    }
+    
+    func didCurrencyBarButtonTapped() {
+        interactor.toogleIsRub(isRub: mainScreenModel.isRub)
+    }
+}
+
+//MARK: - MainScreenInteractorOutputProtocol
+
+extension MainScreenViewPresenter: MainScreenInteractorOutputProtocol {
+    func sumIDidChange(newSum: Sum) {
+        mainScreenModel.sumI = newSum
+        if mainScreenModel.isI {
+            view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
+        }
+    }
+    
+    func sumToMeDidChange(newSum: Sum) {
+        mainScreenModel.sumToMe = newSum
+        if !mainScreenModel.isI {
+            view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
+        }
+    }
+    
+    func isIDidChange(newIsI: Bool) {
+        mainScreenModel.isI = newIsI
+        view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
+    }
+    
+    func isRubDidChange(newIsRub: Bool) {
+        mainScreenModel.isRub = newIsRub
+        if mainScreenModel.isRub {
+            view.setImageForCurrencyButton(with: "rublesign")
+        } else {
+            view.setImageForCurrencyButton(with: "dollarsign")
+        }
+        view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
+    }
+}
+
+//MARK: - Utilities
+
+extension MainScreenViewPresenter {
     private func actionForNotification(notification: Notification, isI: Bool) {
         guard let userInfo = notification.userInfo else {
             print("MainScreenInteractor/addObserverForSumI: userInfo is nil")
@@ -53,47 +102,6 @@ final class MainScreenViewPresenter: MainScreenViewControllerOutputProtocol {
             interactor.updateSumI(sum: mainScreenModel.sumI, count: newSum)
         } else {
             interactor.updateSumToMe(sum: mainScreenModel.sumToMe, count: newSum)
-        }
-    }
-    
-    func segmentedControlValueChanged() {
-        interactor.toogleIsI(isI: mainScreenModel.isI)
-    }
-    
-    func didCurrencyBarButtonTapped() {
-        interactor.toogleIsRub(isRub: mainScreenModel.isRub)
-    }
-}
-
-//MARK: - MainScreenInteractorOutputProtocol
-
-extension MainScreenViewPresenter: MainScreenInteractorOutputProtocol {
-    func sumIDidChange(sum: Sum) {
-        mainScreenModel.sumI = sum
-        if mainScreenModel.isI {
-            view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
-        }
-    }
-    
-    func isIDidChange(isI: Bool) {
-        mainScreenModel.isI = isI
-        view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
-    }
-    
-    func isRubDidChange(isRub: Bool) {
-        mainScreenModel.isRub = isRub
-        if mainScreenModel.isRub {
-            view.setImageForCurrencyButton(with: "rublesign")
-        } else {
-            view.setImageForCurrencyButton(with: "dollarsign")
-        }
-        view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
-    }
-    
-    func sumToMeDidChange(sum: Sum) {
-        mainScreenModel.sumToMe = sum
-        if !mainScreenModel.isI {
-            view.updateSumLabel(text: helper.textForShowInSumLabel(isI: mainScreenModel.isI, isRub: mainScreenModel.isRub, conversionRate: mainScreenModel.conversionRate, mainScreenModel: mainScreenModel))
         }
     }
 }

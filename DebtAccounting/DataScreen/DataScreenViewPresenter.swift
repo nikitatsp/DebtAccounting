@@ -1,10 +1,13 @@
 import UIKit
 
+//MARK: - DataScreenViewControllerDelegate
+
 protocol DataScreenViewControllerDelegate: AnyObject {
     func didCreatedNewDebt(newDebt: Debt)
     func didEditedDebt(indexOfLastSection: Int, newDebt: Debt, lastSum: Int64)
-    
 }
+
+//MARK: - DataScreenModel
 
 struct DataScreenModel {
     var isI: Bool
@@ -13,6 +16,8 @@ struct DataScreenModel {
     var indexOfLastSection: Int?
     weak var delegate: DataScreenViewControllerDelegate!
 }
+
+//MARK: - DataScreenViewPresenter
 
 final class DataScreenViewPresenter: DataScreenViewControllerOutputProtocol {
     weak var view: DataScreenViewControllerInputProtocol!

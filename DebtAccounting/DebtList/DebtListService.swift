@@ -72,6 +72,4 @@ final class DebtListService {
         section.addToDebts(newDebt)
         return section
     }
-    
-    
 }

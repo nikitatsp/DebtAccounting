@@ -1,5 +1,7 @@
 import Foundation
 
+//MARK: - DebtListModel
+
 struct DebtListModel {
     var isI = true
     let isActive: Bool
@@ -9,6 +11,8 @@ struct DebtListModel {
     var isEditTable = false
 }
 
+//MARK: - DebtListViewControllerOutputProtocol
+
 final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     weak var view: DebtListViewControllerInputProtocol!
     var interactor: DebtListInteractorInputProtocol!
@@ -17,6 +21,7 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
     
     private let dateService = DateService.shared
     private let notifications = Notifications.shared
+    private let helper = DebtListPresenterHelper.shared
     
     init(view: DebtListViewControllerInputProtocol, isActive: Bool) {
         self.view = view
@@ -35,60 +40,6 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
         
         interactor.loadInitalData(isActive: debtListModel.isActive)
         addObserver(isActive: debtListModel.isActive)
-    }
-    
-    private func addObserver(isActive: Bool) {
-        if debtListModel.isActive {
-            NotificationCenter.default.addObserver(forName: notifications.sectionsIToActiveDidChange, object: nil, queue: .main) { [weak self] notification in
-                guard let self else {return}
-                self.actionForNotification(notification: notification, isI: true, isActive: true)
-            }
-            
-            NotificationCenter.default.addObserver(forName: notifications.sectionsToMeActiveDidChange, object: nil, queue: .main) { [weak self] notification in
-                guard let self else {return}
-                self.actionForNotification(notification: notification, isI: false, isActive: true)
-            }
-        } else {
-            NotificationCenter.default.addObserver(forName: notifications.sectionsIToHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
-                guard let self else {return}
-                self.actionForNotification(notification: notification, isI: true, isActive: false)
-            }
-            
-            NotificationCenter.default.addObserver(forName: notifications.sectionsToMeHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
-                guard let self else {return}
-                self.actionForNotification(notification: notification, isI: false, isActive: false)
-            }
-        }
-    }
-    
-    private func actionForNotification(notification: Notification, isI: Bool, isActive: Bool) {
-        guard let userInfo = notification.userInfo else {
-            print("DebtListPresenter/addObserver: userInfo is nil")
-            return
-        }
-        guard let newDebt = userInfo["newRow"] as? Debt else {
-            print("DebtListPresenter/addObserver: newRow is nil")
-            return
-        }
-        
-        if isI {
-            interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
-        } else {
-            interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
-        }
-        
-        var userInfoSum: [AnyHashable: Any] = [:]
-        if isActive {
-            userInfoSum = ["newSum": newDebt.sum]
-        } else {
-            userInfoSum = ["newSum": -newDebt.sum]
-        }
-        
-        if isI {
-            NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
-        } else {
-            NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
-        }
     }
     
     func didCurrencyBarButtonTapped() {
@@ -225,29 +176,28 @@ final class DebtListPresenter: DebtListViewControllerOutputProtocol {
         } else {
             interactor.removeRow(indexPath: indexPath, sections: debtListModel.sectionsToMe, shouldDeleteDebt: true)
         }
-        
     }
 }
 
 //MARK: - DebtListInteractorOutputProtocol
 
 extension DebtListPresenter: DebtListInteractorOutputProtocol {
-    func didRecieveNewRow(sectionsITo: [Section]) {
-        debtListModel.sectionsITo = sectionsITo
+    func didSectionsIToUpdated(newSectionsITo: [Section]) {
+        debtListModel.sectionsITo = newSectionsITo
         if debtListModel.isI {
             view.reloadDataForTableView()
         }
     }
     
-    func didRecieveNewRow(sectionToMe: [Section]) {
-        debtListModel.sectionsToMe = sectionToMe
+    func didSectionsToMeUpdated(newSectionsToMe: [Section]) {
+        debtListModel.sectionsToMe = newSectionsToMe
         if !debtListModel.isI {
             view.reloadDataForTableView()
         }
     }
     
-    func isRubDidChange(isRub: Bool) {
-        debtListModel.isRub = isRub
+    func isRubDidChange(newIsRub: Bool) {
+        debtListModel.isRub = newIsRub
         if debtListModel.isRub {
             view.setImageForCurrencyButton(withSystemName: "rublesign")
         } else {
@@ -256,8 +206,8 @@ extension DebtListPresenter: DebtListInteractorOutputProtocol {
         view.reloadDataForTableView()
     }
     
-    func isIDidChange(isI: Bool) {
-        debtListModel.isI = isI
+    func isIDidChange(newIsI: Bool) {
+        debtListModel.isI = newIsI
         view.reloadDataForTableView()
     }
     
@@ -299,14 +249,10 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
         
         if newDebt.isI {
             interactor.insertNewRow(sections: debtListModel.sectionsITo, newDebt: newDebt)
-            
-            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum]
-            NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
+            helper.publicSumNotification(name: notifications.sumIDidChange, sum: newDebt.sum)
         } else {
             interactor.insertNewRow(sections: debtListModel.sectionsToMe, newDebt: newDebt)
-            
-            let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum]
-            NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+            helper.publicSumNotification(name: notifications.sumToMeDidChange, sum: newDebt.sum)
         }
     }
     
@@ -315,19 +261,78 @@ extension DebtListPresenter: DataScreenViewControllerDelegate {
         
         if debtListModel.isI {
             interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsITo)
-            
-            
-            if debtListModel.isActive {
-                let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
-                NotificationCenter.default.post(name: Notifications.shared.sumIDidChange, object: nil, userInfo: userInfo)
-            }
         } else {
             interactor.editedRow(indexOfLastSection: indexOfLastSection, newDebt: newDebt, sections: debtListModel.sectionsToMe)
-            
-            if debtListModel.isActive {
-                let userInfo: [AnyHashable: Any] = ["newSum": newDebt.sum - lastSum]
-                NotificationCenter.default.post(name: Notifications.shared.sumToMeDidChange, object: nil, userInfo: userInfo)
+        }
+        
+        if debtListModel.isActive {
+            if debtListModel.isI {
+                if debtListModel.isActive {
+                    helper.publicSumNotification(name: notifications.sumIDidChange, sum: newDebt.sum - lastSum)
+                }
+            } else {
+                if debtListModel.isActive {
+                    helper.publicSumNotification(name: notifications.sumToMeDidChange, sum: newDebt.sum - lastSum)
+                }
             }
+        }
+    }
+}
+
+//MARK: - Utilities
+
+extension DebtListPresenter {
+    private func addObserver(isActive: Bool) {
+        if debtListModel.isActive {
+            NotificationCenter.default.addObserver(forName: notifications.sectionsIToActiveDidChange, object: nil, queue: .main) { [weak self] notification in
+                guard let self else {return}
+                self.actionForNotification(notification: notification, isI: true, isActive: true)
+            }
+            
+            NotificationCenter.default.addObserver(forName: notifications.sectionsToMeActiveDidChange, object: nil, queue: .main) { [weak self] notification in
+                guard let self else {return}
+                self.actionForNotification(notification: notification, isI: false, isActive: true)
+            }
+        } else {
+            NotificationCenter.default.addObserver(forName: notifications.sectionsIToHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
+                guard let self else {return}
+                self.actionForNotification(notification: notification, isI: true, isActive: false)
+            }
+            
+            NotificationCenter.default.addObserver(forName: notifications.sectionsToMeHistoryDidChange, object: nil, queue: .main) { [weak self] notification in
+                guard let self else {return}
+                self.actionForNotification(notification: notification, isI: false, isActive: false)
+            }
+        }
+    }
+    
+    private func actionForNotification(notification: Notification, isI: Bool, isActive: Bool) {
+        guard let userInfo = notification.userInfo else {
+            print("DebtListPresenter/addObserver: userInfo is nil")
+            return
+        }
+        guard let newDebt = userInfo["newRow"] as? Debt else {
+            print("DebtListPresenter/addObserver: newRow is nil")
+            return
+        }
+        
+        if isI {
+            interactor.insertNewRow(sections: self.debtListModel.sectionsITo, newDebt: newDebt)
+        } else {
+            interactor.insertNewRow(sections: self.debtListModel.sectionsToMe, newDebt: newDebt)
+        }
+        
+        var userInfoSum: [AnyHashable: Any] = [:]
+        if isActive {
+            userInfoSum = ["newSum": newDebt.sum]
+        } else {
+            userInfoSum = ["newSum": -newDebt.sum]
+        }
+        
+        if isI {
+            NotificationCenter.default.post(name: self.notifications.sumIDidChange, object: nil, userInfo: userInfoSum)
+        } else {
+            NotificationCenter.default.post(name: self.notifications.sumToMeDidChange, object: nil, userInfo: userInfoSum)
         }
     }
 }
