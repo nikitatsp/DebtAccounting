@@ -9,4 +9,20 @@ final class CoreDataService {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         return appDelegate.persistentContainer.viewContext
     }
+    
+    func saveContextWith(completion: @escaping() -> Void) {
+        do {
+            let context = getContext()
+            try context.save()
+            completion()
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+    }
+    
+    func deleteFromContex(object: NSManagedObject) {
+        let context = getContext()
+        context.delete(object)
+    }
 }

@@ -9,7 +9,7 @@ final class StartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         fetchConversionRate()
     }
     
@@ -53,22 +53,29 @@ final class StartViewController: UIViewController {
         }
         
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.tintColor = UIColor(named: "YP Black")
+        tabBarController.tabBar.tintColor = .text
         
         let tabBarAppearenceForScroll = UITabBarAppearance()
         tabBarAppearenceForScroll.configureWithDefaultBackground()
-        tabBarAppearenceForScroll.backgroundColor = .white
+        tabBarAppearenceForScroll.backgroundColor = .background
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearenceForScroll
         
-        let mainViewController = UINavigationController(rootViewController: MainViewController())
-        let activeViewController = DebtActiveTableViewController()
-        let historyViewController = DebtHistoryTableViewController()
         
-        mainViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
+        let mainScreenViewController = MainScreenViewController()
+        MainScreenConfigurator.shared.configure(withView: mainScreenViewController)
+        
+        let activeViewController = DebtListViewController()
+        DebtListConfiguarator.shared.configure(withView: activeViewController, isActive: true)
+        
+        let historyViewController = DebtListViewController()
+        DebtListConfiguarator.shared.configure(withView: historyViewController, isActive: false)
+        _ = historyViewController.view
+        
+        mainScreenViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "house.circle.fill"), selectedImage: nil)
         activeViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.circle.fill"), selectedImage: nil)
         historyViewController.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "clock.fill"), selectedImage: nil)
         
-        tabBarController.viewControllers = [mainViewController, UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
+        tabBarController.viewControllers = [UINavigationController(rootViewController: mainScreenViewController), UINavigationController(rootViewController: activeViewController), UINavigationController(rootViewController: historyViewController)]
         
         window.rootViewController = tabBarController
     }

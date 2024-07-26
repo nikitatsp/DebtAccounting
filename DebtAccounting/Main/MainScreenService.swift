@@ -1,18 +1,15 @@
-import UIKit
+import Foundation
 import CoreData
 
-final class SumProfile {
-    static let shared = SumProfile()
+final class MainScreenService {
+    static let shared = MainScreenService()
     private init() {}
     
     private let context = CoreDataService.shared.getContext()
     
-    let didChangeSumITo = NSNotification.Name("didChangeSumITo")
-    let didChangeSumToMe = NSNotification.Name("didChangeSumToMe")
-    
-    lazy var sumITo: Sum? = {
+    func loadSumI() -> Sum? {
         let fetchRequest: NSFetchRequest<Sum> = Sum.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "isToMe == %d", false)
+        fetchRequest.predicate = NSPredicate(format: "isI == %d", true)
         do {
             let sumItoArr = try context.fetch(fetchRequest)
             
@@ -20,7 +17,7 @@ final class SumProfile {
                 return sumITo
             } else {
                 let sumITo = Sum(context: context)
-                sumITo.isToMe = false
+                sumITo.isI = true
                 
                 do {
                     try context.save()
@@ -34,11 +31,11 @@ final class SumProfile {
             print(error.localizedDescription)
             return nil
         }
-    }()
+    }
     
-    lazy var sumToMe: Sum? = {
+    func loadSumToMe() -> Sum? {
         let fetchRequest: NSFetchRequest<Sum> = Sum.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "isToMe == %d", true)
+        fetchRequest.predicate = NSPredicate(format: "isI == %d", false)
         do {
             let sumToMeArr = try context.fetch(fetchRequest)
             
@@ -46,7 +43,7 @@ final class SumProfile {
                 return sumToMe
             } else {
                 let sumToMe = Sum(context: context)
-                sumToMe.isToMe = true
+                sumToMe.isI = false
                 
                 do {
                     try context.save()
@@ -60,5 +57,5 @@ final class SumProfile {
             print(error.localizedDescription)
             return nil
         }
-    }()
+    }
 }

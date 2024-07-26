@@ -1,18 +1,24 @@
 import UIKit
-import CoreData
 
-protocol DataEditViewControllerDelegate: AnyObject {
-    func didTapBackButton()
-    func didTapEditSaveBarButton(indexPath: IndexPath, model: Model, firstModel: Model)
+//MARK: - Protocols
+
+protocol DataScreenViewControllerInputProtocol: AnyObject {
+    func setTextInNameLabel(text: String)
+    func updateSaveButton(isEnabled: Bool)
+    func fillDataScreen(date: Date?, purshase: String?, name: String?, sum: Int64, telegram: String?, phone: String?)
 }
 
-final class DataEditViewController: UIViewController {
-    private let dateFormatter = DateService.shared
-    private let context = CoreDataService.shared.getContext()
-    
-    var indexPath: IndexPath?
-    var model: Model?
-    weak var delegate: DataEditViewControllerDelegate?
+protocol DataScreenViewControllerOutputProtocol {
+    init(view: DataScreenViewControllerInputProtocol, isI: Bool, isActive: Bool, debt: Debt?, indexOfLastSection: Int?, delegate: DataScreenViewControllerDelegate)
+    func viewDidLoad()
+    func didTapSaveButton(date: Date, purshase: String?, name: String?, sum: String?, telegram: String?, phone: String?)
+    func textFieldDidChange(purshaseText: String?, nameText: String?, sumText: String?)
+}
+
+//MARK: - DataScreenViewController
+
+final class DataScreenViewController: UIViewController {
+    var presenter: DataScreenViewControllerOutputProtocol!
     
     var activeTextField: UITextField?
     
@@ -49,7 +55,7 @@ final class DataEditViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .background
         
         configureNavigationItem()
         configureScrollView()
@@ -58,25 +64,26 @@ final class DataEditViewController: UIViewController {
         setConstraints()
         hideKeyboardWhenTappedAround()
         observeKeyboard()
-        configureCells()
+        
+        presenter.viewDidLoad()
     }
     
     private func configureNavigationItem() {
-        guard let ypBlackColor = UIColor(named: "YP Black") else {return}
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: ypBlackColor]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.text]
         navigationItem.title = ""
         
         backBarButtonItem.image = UIImage(systemName: "chevron.backward")
-        backBarButtonItem.tintColor = UIColor(named: "YP Black")
+        backBarButtonItem.tintColor = .text
         navigationItem.leftBarButtonItem = backBarButtonItem
         backBarButtonItem.target = self
         backBarButtonItem.action = #selector(didTapBackButton)
         
         saveBarButtonItem.title = "Save"
-        saveBarButtonItem.tintColor = UIColor(named: "YP Black")
+        saveBarButtonItem.tintColor = .text
         navigationItem.rightBarButtonItem = saveBarButtonItem
         saveBarButtonItem.target = self
         saveBarButtonItem.action = #selector(didTapSaveButton)
+        saveBarButtonItem.isEnabled = false
     }
     
     private func configureScrollView() {
@@ -101,7 +108,6 @@ final class DataEditViewController: UIViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             heightContentView
         ])
-        
     }
     
     private func configureDatePicker() {
@@ -109,20 +115,21 @@ final class DataEditViewController: UIViewController {
         datePicker.datePickerMode = .date
         datePicker.locale = Locale(identifier: "ru_RU")
         datePicker.date = Date()
-        view.addSubview(datePicker)
+        contentView.addSubview(datePicker)
         datePicker.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func configurePurshaseStackView() {
         purshaseLabel.text = "Покупка"
         purshaseLabel.font = UIFont.systemFont(ofSize: 17)
-        purshaseLabel.textColor = UIColor(named: "YP Black")
+        purshaseLabel.textColor = .text
         
         purshaseTextField.font = UIFont.systemFont(ofSize: 17)
-        purshaseTextField.textColor = UIColor(named: "YP Black")
+        purshaseTextField.textColor = .text
         purshaseTextField.borderStyle = .roundedRect
         purshaseTextField.autocapitalizationType = .sentences
         purshaseTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
+        purshaseTextField.delegate = self
         
         purshaseStackView.addArrangedSubview(purshaseLabel)
         purshaseStackView.addArrangedSubview(purshaseTextField)
@@ -135,13 +142,14 @@ final class DataEditViewController: UIViewController {
     private func configureNameStackView() {
         nameLabel.text = "Должник"
         nameLabel.font = UIFont.systemFont(ofSize: 17)
-        nameLabel.textColor = UIColor(named: "YP Black")
+        nameLabel.textColor = .text
         
         nameTextField.font = UIFont.systemFont(ofSize: 17)
-        nameTextField.textColor = UIColor(named: "YP Black")
+        nameTextField.textColor = .text
         nameTextField.borderStyle = .roundedRect
         nameTextField.autocapitalizationType = .sentences
         nameTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
+        nameTextField.delegate = self
         
         nameStackView.addArrangedSubview(nameLabel)
         nameStackView.addArrangedSubview(nameTextField)
@@ -154,13 +162,14 @@ final class DataEditViewController: UIViewController {
     private func configureSumStackView() {
         sumLabel.text = "Сумма"
         sumLabel.font = UIFont.systemFont(ofSize: 17)
-        sumLabel.textColor = UIColor(named: "YP Black")
+        sumLabel.textColor = .text
         
         sumTextField.font = UIFont.systemFont(ofSize: 17)
-        sumTextField.textColor = UIColor(named: "YP Black")
+        sumTextField.textColor = .text
         sumTextField.borderStyle = .roundedRect
         sumTextField.keyboardType = .numberPad
         sumTextField.addTarget(self, action: #selector(editingChanged), for: .editingChanged)
+        sumTextField.delegate = self
         
         sumStackView.addArrangedSubview(sumLabel)
         sumStackView.addArrangedSubview(sumTextField)
@@ -173,11 +182,12 @@ final class DataEditViewController: UIViewController {
     private func configureTelegramStackView() {
         telegramLabel.text = "Телеграм"
         telegramLabel.font = UIFont.systemFont(ofSize: 17)
-        telegramLabel.textColor = UIColor(named: "YP Black")
+        telegramLabel.textColor = .text
         
         telegramTextField.font = UIFont.systemFont(ofSize: 17)
-        telegramTextField.textColor = UIColor(named: "YP Black")
+        telegramTextField.textColor = .text
         telegramTextField.borderStyle = .roundedRect
+        telegramTextField.delegate = self
         
         telegramStackView.addArrangedSubview(telegramLabel)
         telegramStackView.addArrangedSubview(telegramTextField)
@@ -190,12 +200,13 @@ final class DataEditViewController: UIViewController {
     private func configurePhoneStackView() {
         phoneLabel.text = "Телефон"
         phoneLabel.font = UIFont.systemFont(ofSize: 17)
-        phoneLabel.textColor = UIColor(named: "YP Black")
+        phoneLabel.textColor = .text
         
         phoneTextField.font = UIFont.systemFont(ofSize: 17)
-        phoneTextField.textColor = UIColor(named: "YP Black")
+        phoneTextField.textColor = .text
         phoneTextField.borderStyle = .roundedRect
         phoneTextField.keyboardType = .numberPad
+        phoneTextField.delegate = self
         
         phoneStackView.addArrangedSubview(phoneLabel)
         phoneStackView.addArrangedSubview(phoneTextField)
@@ -223,7 +234,7 @@ final class DataEditViewController: UIViewController {
         mainStackView.distribution = .fillEqually
         mainStackView.spacing = 35
         
-        view.addSubview(mainStackView)
+        contentView.addSubview(mainStackView)
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -240,61 +251,21 @@ final class DataEditViewController: UIViewController {
     }
     
     @objc private func didTapBackButton() {
-        delegate?.didTapBackButton()
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func didTapSaveButton() {
-        guard let purshaseText = purshaseTextField.text else { print("Выход из за покупки")
-            return}
-        guard let nameText = nameTextField.text else { print("Выход из за имени")
-            return}
-        guard let sumtext = sumTextField.text, let sum = Int(sumtext) else { print("Выход из за суммы")
-            return}
-        guard let isToMe = model?.isToMe else { print("Выход из-за isToMe")
-            return}
-        guard let isHist = model?.isHist else { print("Выход из-за isHist")
-            return
-        }
-        guard let indexPath else { print("Выход из-за indexPath")
-            return
-        }
-        guard let model else {return}
-        
-        let secondModel = Model(context: context)
-        secondModel.purshase = purshaseText
-        secondModel.name = nameText
-        secondModel.sum = Int64(sum)
-        secondModel.isToMe = isToMe
-        secondModel.isHist = isHist
-        secondModel.date = datePicker.date
-        
-        if phoneTextField.text != "" {
-            if let phoneText = phoneTextField.text {
-                if let phone = Int64(phoneText) {
-                    secondModel.phone = phone
-                }
-            }
-        }
-        
-        if telegramTextField.text != "" {
-            secondModel.telegram = telegramTextField.text
-        }
-        
-        delegate?.didTapEditSaveBarButton(indexPath: indexPath, model: secondModel, firstModel: model)
-        
+        presenter.didTapSaveButton(date: datePicker.date, purshase: purshaseTextField.text!, name: nameTextField.text!, sum: sumTextField.text!, telegram: telegramTextField.text, phone: phoneTextField.text)
     }
     
     @objc private func editingChanged() {
-        let isPurshaseFieldFilled = !(purshaseTextField.text?.isEmpty ?? true)
-        let isNameFieldFilled = !(nameTextField.text?.isEmpty ?? true)
-        let isSumFieldFilled = !(sumTextField.text?.isEmpty ?? true)
-        saveBarButtonItem.isEnabled = isNameFieldFilled && isSumFieldFilled && isPurshaseFieldFilled
+        presenter.textFieldDidChange(purshaseText: purshaseTextField.text, nameText: nameTextField.text, sumText: sumTextField.text)
     }
 }
 
 //MARK: - ObserveKeyboard
 
-extension DataEditViewController {
+extension DataScreenViewController {
     private func observeKeyboard() {
         NotificationCenter.default.addObserver(forName: UIWindow.keyboardWillShowNotification, object: nil, queue: .main) { [weak self] notification in
             guard let self else {return}
@@ -321,24 +292,37 @@ extension DataEditViewController {
     }
 }
 
-//MARK: - configureCells
+//MARK: - UITextFieldDelegate
 
-extension DataEditViewController {
-    private func configureCells() {
-        guard let model else {return}
-        guard let date = model.date else {return}
-        guard let purshase = model.purshase else {return}
-        
-        datePicker.date = date
-        purshaseTextField.text = purshase
-        nameTextField.text = model.name
-        sumTextField.text = "\(model.sum)"
-        telegramTextField.text = model.telegram
-        
-        if model.phone == 0 {
-            phoneTextField.text = ""
-        } else {
-            phoneTextField.text = "\(model.phone)"
+extension DataScreenViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if activeTextField == textField {
+            activeTextField = nil
         }
+    }
+}
+
+//MARK: - DataScreenViewControllerInputProtocol
+
+extension DataScreenViewController: DataScreenViewControllerInputProtocol {
+    func setTextInNameLabel(text: String) {
+        nameLabel.text = text
+    }
+    
+    func updateSaveButton(isEnabled: Bool) {
+        saveBarButtonItem.isEnabled = isEnabled
+    }
+    
+    func fillDataScreen(date: Date?, purshase: String?, name: String?, sum: Int64, telegram: String?, phone: String?) {
+        datePicker.date = date ?? Date()
+        purshaseTextField.text = purshase
+        nameTextField.text = name
+        sumTextField.text = "\(sum)"
+        telegramTextField.text = telegram
+        phoneTextField.text = phone
     }
 }

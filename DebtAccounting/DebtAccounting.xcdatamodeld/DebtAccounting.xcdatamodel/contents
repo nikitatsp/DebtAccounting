@@ -3,25 +3,25 @@
     <entity name="ConversionRate" representedClassName="ConversionRate" syncable="YES" codeGenerationType="class">
         <attribute name="rate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="Model" representedClassName="Model" syncable="YES" codeGenerationType="class">
+    <entity name="Debt" representedClassName="Debt" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="isHist" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isToMe" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isI" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
-        <attribute name="phone" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String"/>
         <attribute name="purshase" attributeType="String"/>
         <attribute name="sum" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="telegram" optional="YES" attributeType="String"/>
-        <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="models" inverseEntity="Section"/>
+        <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="debts" inverseEntity="Section"/>
     </entity>
     <entity name="Section" representedClassName="Section" syncable="YES" codeGenerationType="class">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="isHist" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="isToMe" attributeType="Boolean" usesScalarValueType="YES"/>
-        <relationship name="models" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Model" inverseName="section" inverseEntity="Model"/>
+        <attribute name="isActive" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isI" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="debts" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Debt" inverseName="section" inverseEntity="Debt"/>
     </entity>
     <entity name="Sum" representedClassName="Sum" syncable="YES" codeGenerationType="class">
-        <attribute name="isToMe" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isI" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sum" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
 </model>

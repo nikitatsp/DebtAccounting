@@ -1,32 +1,24 @@
 import Foundation
 
-struct DateService {
+final class DateService {
     static let shared = DateService()
     private init() {}
     
-    func monthAndYear(date: Date) -> String {
+    lazy var dateFormatterMonthAndYear = {
         let dateFormatter = DateFormatter()
-        
         dateFormatter.locale = Locale(identifier: "ru_RU")
-        
         dateFormatter.dateFormat = "LLLL yyyy 'год'"
         
-        let formattedDate = dateFormatter.string(from: date)
-        
-        return formattedDate
-    }
+        return dateFormatter
+    }()
     
-    func dayMonthAndYear(date: Date) -> String {
+    lazy var dateFormatterDayMonthAndYear = {
         let dateFormatter = DateFormatter()
-        
         dateFormatter.locale = Locale(identifier: "ru_RU")
-        
         dateFormatter.dateFormat = "d MMMM yyyy 'года'"
         
-        let formattedDate = dateFormatter.string(from: date)
-        
-        return formattedDate
-    }
+        return dateFormatter
+    }()
     
     func indexOfSection(in sections: [Section], withDate date: Date) -> Int? {
         let calendar = Calendar.current
